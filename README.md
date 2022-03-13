@@ -1,7 +1,7 @@
 # TownOfPlus
 ![TownOfPlusImage](https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlus.png)  
 #### 製作者のTwitter : [Twitter](https://twitter.com/tugaruyukkuri)
-#### 製作者のYoutube : [Youtube](https://www.youtube.com/channel/UCrz7cxutC8A-UZGtMJCyPWw)
+#### 製作者のYoutube : [Youtube](https://youtube.com/channel/UCWRBQawRK2uw_kvqFAPrcZQ)
 # Modについて
 * This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
 * このmodは、AmongUsまたはInnerslothLLCとは提携しておらず、そこに含まれるコンテンツは、InnerslothLLCによって承認または後援されていません。  ここに含まれる資料の一部は、InnerslothLLCの所有物です。  ©InnerslothLLC。
@@ -55,8 +55,8 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 ## PC以外を追い出す
 Steam、Epic以外を部屋から追い出します。
 # クレジット
-[BepInEx](https://github.com/BepInEx/BepInEx)様  
-[TheOtherRoles](https://github.com/Eisbison/TheOtherRoles)様  
-[TheOtherRoles-GM](https://github.com/yukinogatari/TheOtherRoles-GM)様  
-[TownOfHost](https://github.com/tukasa0001/TownOfHost)様  
-[SuperNewRoles](https://github.com/ykundesu/SuperNewRoles)様
+[BepInEx](https://github.com/BepInEx/BepInEx)-[BepInEx](https://github.com/BepInEx)様  
+[TheOtherRoles](https://github.com/Eisbison/TheOtherRoles)-[Eisbison](https://github.com/Eisbison)様  
+[TheOtherRoles-GM](https://github.com/yukinogatari/TheOtherRoles-GM)-[Virtual_Dusk](https://twitter.com/Virtual_Dusk)様  
+[TownOfHost](https://github.com/tukasa0001/TownOfHost)-[EmptyBottle](https://twitter.com/XenonBottle)様  
+[SuperNewRoles](https://github.com/ykundesu/SuperNewRoles)-[ykundesu](https://twitter.com/SuperNewRoles)様
