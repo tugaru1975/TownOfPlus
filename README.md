@@ -39,8 +39,16 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 [チャットコマンド](#チャットコマンド)あり
 ## 虹色のスキン
 特定のスキンを虹色にします。
+|||||
+|---|---|---|---|
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Beanie.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Folded.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Frosted.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Greatest_Headset_MIRA.png" width="50px">
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Greh.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Headslug_hat.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Hooded_Figure.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Lit_Up.png" width="50px">
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/OSHA_Compliant.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Swarshburgalor.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/The_Ol'_Ball_Game.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/What_is_up%2C_Doc%20.png" width="50px">
 ## 虹色のバイザー
 特定のバイザーを虹色にします。
+||||
+|---|---|---|
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/visor/Lollipop.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/visor/Masque'd_Up_blue.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/visor/Note_2_Self.png" width="50px">
 ## 虹色の名前
 名前を虹色にします。
 ## 半透明の名前
@@ -57,7 +65,7 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 ## PC以外を追い出す
 Steam、Epic以外を部屋から追い出します。
 # チャットコマンド
-| **コマンド (略) [コマンド] **|**内容**|
+| **コマンド (略) [コマンド]**|**内容**|
 |---|---|
 | **常時実行可能** |
 |`/help`|コマンドの一覧を表示|
@@ -76,7 +84,7 @@ Steam、Epic以外を部屋から追い出します。
 | **[コード隠し](#コード隠し)有効時のみ** |
 |`/ChangeLobbyCode(CLC)`|ロビーコードの名前を変更できます|
 | **[ランダムマップ](#ランダムマップ)有効時のみ** |
-|`/RandomMap(RM) [マップ名]`<br>===マップコマンド一覧===<br>マップ名 [コマンド]<br>TheSkeld [`Skeld(S)`]<br>MIRA HQ [`MIRA(MH)`]<br>Polus [`Polus(P)`]<br>AirShip [`AirShip(AS)`]|選択したものからランダムにマップを選ぶ|
+|`/RandomMap(RM) [マップ名]`<br>===マップコマンド一覧===<br>マップ名 [`コマンド`]<br>TheSkeld [`Skeld(S)`]<br>MIRA HQ [`MIRA(MH)`]<br>Polus [`Polus(P)`]<br>AirShip [`AirShip(AS)`]|選択したものからランダムにマップを選ぶ|
 | **[偽のレベル](#偽のレベル)有効時のみ** |
 |`/FakeLevel(FL) [数(1~100)]`|レベルを指定出来ます|
 # その他機能
@@ -97,7 +105,8 @@ Steam、Epic以外を部屋から追い出します。
 |チャットの切り取り機能|`Control`+`X`|
 |チャットのペースト機能|チャット内にペースト`Control`+`V`<br>直接ペースト(改行対応)`Shift`+`Control`+`V`|
 # プルリクや案について
-可能な限りどんどん送ってほしいです!!  
+どんどん送ってもらって大丈夫です。  
+むしろ助かります。
 # クレジット
 [BepInEx](https://github.com/BepInEx/BepInEx)-[BepInEx](https://github.com/BepInEx)様  
 [TheOtherRoles](https://github.com/Eisbison/TheOtherRoles)-[Eisbison](https://github.com/Eisbison)様  
