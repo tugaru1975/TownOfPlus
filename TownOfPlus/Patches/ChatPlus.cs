@@ -148,15 +148,15 @@ namespace TownOfPlus
             public static bool Addedchat(ChatController __instance)
             {
                 var canceled = false;
-                var ChatText = "";
-                ChatText = text;
+                var argsText = "";
+                argsText = text;
+                argsText += " ";
                 //コマンドかどうか
                 if (text.Substring(0, 1) == "/")
                 {
                     canceled = true;
-                    ChatText += " ";
                 }
-                string[] args = ChatText.Split(' ');
+                string[] args = argsText.Split(' ');
                 var AddChat = "";
                 var RpcSendChat = "";
                 var SetText = "";
@@ -165,6 +165,7 @@ namespace TownOfPlus
                 Command0 = args[0];
                 //小文字化
                 Command0 = Command0.ToLower();
+                Command1 = Command1.ToLower();
                 switch (Command0)
                 {
                     case "/help":
