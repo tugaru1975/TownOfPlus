@@ -147,15 +147,27 @@ namespace TownOfPlus
             public static int LobbyLimit = 15;
             public static bool Addedchat(ChatController __instance)
             {
-                string[] args = text.Split(' ');
+                var canceled = false;
+                var ChatText = "";
+                ChatText = text;
+                //コマンドかどうか
+                if (text.Substring(0, 1) == "/")
+                {
+                    canceled = true;
+                    ChatText += " ";
+                }
+                string[] args = ChatText.Split(' ');
                 var AddChat = "";
                 var RpcSendChat = "";
-                var canceled = false;
-                switch (args[0])
+                var SetText = "";
+                var Command0 = "";
+                var Command1 = args[1];
+                Command0 = args[0];
+                //小文字化
+                Command0 = Command0.ToLower();
+                switch (Command0)
                 {
                     case "/help":
-                    case "/Help":
-                        canceled = true;
                         AddChat =
                             ("/LobbySetting(LS) : この部屋の設定を表示" +
                             "\n/ShowPlatform(SP) : 参加者の機種の表示");
@@ -166,28 +178,28 @@ namespace TownOfPlus
                         }
                         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost)
                         {
-                            AddChat += ("\n/Kick(kick) [名前] : Kick表示なしでKickできます");
-                        }  
+                            AddChat += ("\n/Kick [名前] : Kickできます");
+                        }
                         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost)
                         {
-                            AddChat += ("\n/Ban(ban) [名前] : ban表示なしでbanできます");
+                            AddChat += ("\n/Ban [名前] : banできます");
                         }
                         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started
                             && (AmongUsClient.Instance.AmHost || AmongUsClient.Instance.GameMode == GameModes.FreePlay))
                         {
-                            AddChat += ("\n/Name(name) [変更したい名前] : 名前を変えられます\n※部屋名は立て直してから変わります");
+                            AddChat += ("\n/Name [変更したい名前] : 名前を変えられます\n※部屋名は立て直してから変わります");
                         }
                         if (PlayerControl.LocalPlayer.Data.IsDead || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
                         {
-                            AddChat += ("\n/Tp(tp) [名前] : 特定の人にテレポートします");
+                            AddChat += ("\n/Tp [名前] : 特定の人にテレポートします");
                         }
                         if (AmongUsClient.Instance.GameMode == GameModes.FreePlay)
                         {
-                            AddChat += ("\n/Tpme(tpme) [名前] : 特定の人を自分にテレポートします");
+                            AddChat += ("\n/Tpme [名前] : 特定の人を自分にテレポートします");
                         }
                         if (AmongUsClient.Instance.GameMode == GameModes.FreePlay)
                         {
-                            AddChat += ("\n/Kill(kill) [名前] : 指定した人をキルします");
+                            AddChat += ("\n/Kill [名前] : 指定した人をキルします");
                         }
                         if (main.RandomMaps.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
                         {
@@ -209,9 +221,8 @@ namespace TownOfPlus
                         }
                         break;
 
-                    case "/LS":
-                    case "/LobbySetting":
-                        canceled = true;
+                    case "/ls":
+                    case "/lobbysetting":
                         var MapName = "";
                         var ConfirmImpostor = "";
                         var AnonymousVotes = "";
@@ -254,14 +265,14 @@ namespace TownOfPlus
                             $"ショートタスク:{PlayerControl.GameOptions.NumShortTasks}\n");
                         break;
 
-                    case "/LMP":
-                    case "/LobbyMaxPlayer":
-                        canceled = true;
+                    case "/lmp":
+                    case "/lobbymaxplayer":
                         if (!(AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started
                             && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.CanBan())) break;
                         if (!Int32.TryParse(args[1], out LobbyLimit))
                         {
                             AddChat = ("/LobbyMaxPlayer(LMP) [人数(4~15)]");
+                            SetText = args[0];
                         }
                         else
                         {
@@ -276,41 +287,41 @@ namespace TownOfPlus
                             else
                             {
                                 AddChat = ("最大人数が同じです");
+                                SetText = args[0];
                             }
                         }
                         break;
 
-                    case "/RM":
-                    case "/RandomMap":
-                        canceled = true;
+                    case "/rm":
+                    case "/randommap":
                         if (!(main.RandomMaps.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)) break;
-                        if (args.Length < 2)
+                        if (args.Length < 3)
                         {
                             RandomMap(__instance);
                             break;
                         }
-                        switch (args[1])
+                        switch (Command1)
                         {
-                            case "S":
-                            case "Skeld":
+                            case "s":
+                            case "skeld":
                                 main.AddTheSkeld = !main.AddTheSkeld;
                                 RandomMap(__instance);
                                 break;
 
-                            case "MH":
-                            case "MIRA":
+                            case "mh":
+                            case "mira":
                                 main.AddMIRAHQ = !main.AddMIRAHQ;
                                 RandomMap(__instance);
                                 break;
 
-                            case "P":
-                            case "Polus":
+                            case "o":
+                            case "polus":
                                 main.AddPolus = !main.AddPolus;
                                 RandomMap(__instance);
                                 break;
 
-                            case "AS":
-                            case "AirShip":
+                            case "as":
+                            case "airship":
                                 main.AddAirShip = !main.AddAirShip;
                                 RandomMap(__instance);
                                 break;
@@ -322,28 +333,28 @@ namespace TownOfPlus
                                             "MIRA HQ [MIRA(MH)]\n" +
                                             "Polus [Polus(P)]\n" +
                                             "AirShip [AirShip(AS)]");
+                                SetText = args[0];
                                 break;
                         }
                         break;
 
-                    case "/CLC":
-                    case "/ChangeLobbyCode":
-                        canceled = true;
+                    case "/clc":
+                    case "/changelobbycode":
                         if (!(main.HideLobbyCodes.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)) break;
-                        if (args.Length < 2)
+                        if (args.Length > 2)
                         {
-                            main.LobbyCode = main.Name;
+                            main.LobbyCode = args[1];                        
+
                         }
                         else
                         {
-                            main.LobbyCode = args[1];
+                            main.LobbyCode = main.Name;
                         }
                         AddChat = ($"コードが[{main.LobbyCode}]になりました");
                         break;
 
-                    case "/FL":
-                    case "/FakeLevel":
-                        canceled = true;
+                    case "/fl":
+                    case "/fakelevel":
                         if (!(main.FakeLevel.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)) break;
                         if (Int32.TryParse(args[1], out main.SetLevel))
                         {
@@ -356,10 +367,8 @@ namespace TownOfPlus
                                    "/FakeLevel(FL) [数(1~100)] でレベルを変更します");
                         break;
                     case "/kick":
-                    case "/Kick":
-                        canceled = true;
-                        if (!(AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && (args.Length > 1))) break;
-                        string playerkickName = text.Substring(6);
+                        if (!(AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && (args.Length > 2))) break;
+                        string playerkickName = text.Substring(args[0].Length + 1);
                         PlayerControl kicktarget = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(playerkickName));
                         if (kicktarget != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
                         {
@@ -367,15 +376,14 @@ namespace TownOfPlus
                             if (Kickclient != null)
                             {
                                 AmongUsClient.Instance.KickPlayer(Kickclient.Id, false);
+                                AddChat = playerkickName + "をKickしました";
                             }
                         }
                         break;
 
                     case "/ban":
-                    case "/Ban":
-                        canceled = true;
-                        if (!(AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && (args.Length > 1))) break;
-                        string playerbanName = text.Substring(5);
+                        if (!(AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && (args.Length > 2))) break;
+                        string playerbanName = text.Substring(args[0].Length + 1);
                         PlayerControl bantarget = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(playerbanName));
                         if (bantarget != null && AmongUsClient.Instance != null && AmongUsClient.Instance.CanBan())
                         {
@@ -383,58 +391,53 @@ namespace TownOfPlus
                             if (Banclient != null)
                             {
                                 AmongUsClient.Instance.KickPlayer(Banclient.Id, true);
+                                AddChat = playerbanName + "をbanしました";
                             }
                         }
                         break;
 
                     case "/tp":
-                    case "/Tp":
-                        canceled = true;
-                        if (!(PlayerControl.LocalPlayer.Data.IsDead || AmongUsClient.Instance.GameMode == GameModes.FreePlay && (args.Length > 1))) break;
-                        string TpplayerName = text.Substring(4).ToLower();
+                        if (!(PlayerControl.LocalPlayer.Data.IsDead || AmongUsClient.Instance.GameMode == GameModes.FreePlay && (args.Length > 2))) break;
+                        string TpplayerName = text.Substring(args[0].Length + 1).ToLower();
                         PlayerControl Tptarget = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.ToLower().Equals(TpplayerName));
                         if (Tptarget != null)
                         {
                             PlayerControl.LocalPlayer.transform.position = Tptarget.transform.position;
+                            AddChat = TpplayerName + "にテレポートしました";
                         }
                         break;
                     case "/tpme":
-                    case "/Tpme":
-                        canceled = true;
-                        if (!(PlayerControl.LocalPlayer.Data.IsDead || AmongUsClient.Instance.GameMode == GameModes.FreePlay && (args.Length > 1))) break;
-                        string TpmeplayerName = text.Substring(6).ToLower();
+                        if (!(PlayerControl.LocalPlayer.Data.IsDead || AmongUsClient.Instance.GameMode == GameModes.FreePlay && (args.Length > 2))) break;
+                        string TpmeplayerName = text.Substring(args[0].Length + 1).ToLower();
                         PlayerControl Tpmetarget = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.ToLower().Equals(TpmeplayerName));
                         if (Tpmetarget != null)
                         {
                             Tpmetarget.transform.position = PlayerControl.LocalPlayer.transform.position;
+                            AddChat = TpmeplayerName + "がテレポートしました";
                         }
                         break;
 
                     case "/name":
-                    case "/Name":
-                        canceled = true;
                         if (!(AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started
                             && (AmongUsClient.Instance.AmHost || AmongUsClient.Instance.GameMode == GameModes.FreePlay))) break;
-                        SaveManager.PlayerName = text.Substring(6);
+                        SaveManager.PlayerName = text.Substring(args[0].Length + 1);
                         AddChat = ($"名前が[{SaveManager.PlayerName}]になりました");
                         PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
                         break;
 
                     case "/kill":
-                    case "/Kill":
-                        canceled = true;
-                        if (!(AmongUsClient.Instance.GameMode == GameModes.FreePlay && (args.Length > 1))) break;
-                        string killplayerName = text.Substring(6).ToLower();
+                        if (!(AmongUsClient.Instance.GameMode == GameModes.FreePlay && (args.Length > 2))) break;
+                        string killplayerName = text.Substring(args[0].Length + 1).ToLower();
                         PlayerControl killtarget = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.ToLower().Equals(killplayerName));
                         if (killtarget != null)
                         {
                             killtarget.RpcMurderPlayer(killtarget);
+                            AddChat = killplayerName + "をキルしました";
                         }
                         break;
 
-                    case "/SP":
-                    case "/ShowPlatform":
-                        canceled = true;
+                    case "/sp":
+                    case "/showplatform":
                         foreach (InnerNet.ClientData p in AmongUsClient.Instance.allClients)
                         {
                             var Platform = $"{p.PlatformData.Platform}";
@@ -466,6 +469,11 @@ namespace TownOfPlus
                 {
                     __instance.TextArea.Clear();
                     __instance.quickChatMenu.ResetGlyphs();
+                }
+                if (SetText != "")
+                {
+                    __instance.TimeSinceLastMessage = 2.9f;
+                    __instance.TextArea.SetText(SetText + " ");
                 }
                 text = "";
                 return !canceled;
