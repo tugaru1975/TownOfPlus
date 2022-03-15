@@ -47,7 +47,6 @@ namespace TownOfPlus
                 if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
                 {
                     PlayerControl.LocalPlayer.RpcSetLevel(Level);
-                    PlayerControl.LocalPlayer.SetName($"{Level}");
                 }
             }
             else
