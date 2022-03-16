@@ -1,5 +1,5 @@
 # TownOfPlus
-![TownOfPlusImage](https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlus.png)  
+[![TownOfPlusImage](https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlus.png)](#導入方法)  
 #### 製作者のTwitter : [Twitter](https://twitter.com/tugaruyukkuri)
 #### 製作者のYoutube : [Youtube](https://youtube.com/channel/UCWRBQawRK2uw_kvqFAPrcZQ)
 # Modについて
@@ -107,6 +107,37 @@ Steam、Epic以外を部屋から追い出します。
 # プルリクや案について
 どんどん送ってもらって大丈夫です。  
 むしろ助かります。
+# 導入方法
+## TownOfPlus単体で入れる
+### 1.TownOfPlusのインストール
+[Releases](https://github.com/tugaru1975/TownOfPlus/releases)から  
+`TownOfPlus.zip`をダウンロード  
+展開/解凍すると画像のようなファイルが展開/解凍されます。  
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/TownOfPluszip.png">
+### 2.TownOfPlusをAmongUsに入れる
+まずAmongUsのファイルを開きます。  
+デフォルト状態なら  
+Steam : `C:\Program Files (x86)\Steam\steamapps\common\Among Us`  
+Epic : `C:\Program Files (x86)\Epic Games\AmongUs`  
+にある画像のようなファイルに展開/解凍したTOPファイルを入れます。  
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/AmongUsFile.png">  
+これで導入完了です。  
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/AmongUsTOP.png">
+## 他のmodとTownOfPlusを入れる
+### 1.TownOfPlusのインストール
+[Releases](https://github.com/tugaru1975/TownOfPlus/releases)から  
+`TownOfPlus.dll`をダウンロード  
+画像のようなファイルが保存されます。  
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/TownOfPlusdll.png">
+### 2.TownOfPlusをAmongUsに入れる
+まずModの入っているAmongUsのファイルを開きます。  
+デフォルト状態なら  
+Steam : `C:\Program Files (x86)\Steam\steamapps\common\Among Us`  
+Epic : `C:\Program Files (x86)\Epic Games\AmongUs`  
+にある画像の`BepInEx > plugins`に`TownOfPlus.dll`を入れます。  
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/BepInEx.png"> ＞ <img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/plugins.png">  
+これで導入完了です。  
+<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/TORTOPplugins.png">
 # クレジット
 [BepInEx](https://github.com/BepInEx/BepInEx)-[BepInEx](https://github.com/BepInEx)様  
 [TheOtherRoles](https://github.com/Eisbison/TheOtherRoles)-[Eisbison](https://github.com/Eisbison)様  
