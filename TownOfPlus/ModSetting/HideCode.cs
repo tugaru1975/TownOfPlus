@@ -32,7 +32,7 @@ namespace TownOfPlus
                 if (main.HideLobbyCodes.Value)
                 {
                     flag = false;
-                    __instance.GameRoomName.text = main.LobbyCode;
+                    __instance.GameRoomName.text = main.SetLobbyCode.Value;
                 }
                 else
                 {

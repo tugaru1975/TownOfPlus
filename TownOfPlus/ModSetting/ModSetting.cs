@@ -24,7 +24,11 @@ namespace TownOfPlus
             new SelectionBehaviour("<color=#FF0000>偽のレベル</color>", () => main.FakeLevel.Value = !main.FakeLevel.Value, main.FakeLevel.Value),
             new SelectionBehaviour("ネームプレート非表示", () => main.HideNameplates.Value = !main.HideNameplates.Value, main.HideNameplates.Value),
             new SelectionBehaviour("拡大縮小機能", () => main.Zoom.Value = !main.Zoom.Value, main.Zoom.Value),
-            new SelectionBehaviour("PC以外を追い出す", () => main.OPkick.Value = !main.OPkick.Value, main.OPkick.Value),
+            new SelectionBehaviour("<color=#00bfff>PC以外を追い出す</color>", () => main.OPkick.Value = !main.OPkick.Value, main.OPkick.Value),
+            new SelectionBehaviour("<color=#00bfff>参加者にチャットを送る</color>", () => main.SendJoinPlayer.Value = !main.SendJoinPlayer.Value, main.SendJoinPlayer.Value),
+            new SelectionBehaviour("<color=#00bfff>二段の名前</color>", () => main.DoubleName.Value = !main.DoubleName.Value, main.DoubleName.Value),
+            new SelectionBehaviour("<color=#00bfff>ゲーム中の名前</color>", () => main.ChangeGameName.Value = !main.ChangeGameName.Value, main.ChangeGameName.Value),
+            new SelectionBehaviour("自動コードコピー", () => main.AutoCopyCode.Value = !main.AutoCopyCode.Value, main.AutoCopyCode.Value),
         };
 
         private static GameObject popUp;

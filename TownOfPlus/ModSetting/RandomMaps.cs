@@ -25,7 +25,7 @@ namespace TownOfPlus
             bool RandomMap = true;
             if (main.RandomMaps.Value && AmongUsClient.Instance.AmHost)
             {
-                if (main.AddTheSkeld || main.AddMIRAHQ || main.AddPolus || main.AddAirShip)
+                if (main.AddTheSkeld.Value || main.AddMIRAHQ.Value || main.AddPolus.Value || main.AddAirShip.Value)
                 {
                     var rand = new System.Random();
                     System.Collections.Generic.List<byte> RandomMaps = new System.Collections.Generic.List<byte>();
@@ -34,10 +34,10 @@ namespace TownOfPlus
                       Polus      = 2
                       Dleks      = 3
                       TheAirShip = 4*/
-                    if (main.AddTheSkeld) RandomMaps.Add(0);
-                    if (main.AddMIRAHQ) RandomMaps.Add(1);
-                    if (main.AddPolus) RandomMaps.Add(2);
-                    if (main.AddAirShip) RandomMaps.Add(4);
+                    if (main.AddTheSkeld.Value) RandomMaps.Add(0);
+                    if (main.AddMIRAHQ.Value) RandomMaps.Add(1);
+                    if (main.AddPolus.Value) RandomMaps.Add(2);
+                    if (main.AddAirShip.Value) RandomMaps.Add(4);
                     var MapsId = RandomMaps[rand.Next(RandomMaps.Count)];
                     PlayerControl.GameOptions.MapId = MapsId;
                 }
