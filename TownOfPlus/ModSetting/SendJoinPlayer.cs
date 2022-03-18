@@ -39,7 +39,7 @@ namespace TownOfPlus
                             Count = 50;
                             JoinPlayerList.Add(clientId);
                         }
-                        if (player != PlayerControl.LocalPlayer && Count == 0 && 3.0f <=  HudManager.Instance.Chat.TimeSinceLastMessage)
+                        if (player != PlayerControl.LocalPlayer && Count == 0 && 3.5f <=  HudManager.Instance.Chat.TimeSinceLastMessage)
                         {
                             flag = false;
                             HudManager.Instance.Chat.TimeSinceLastMessage = 0;
