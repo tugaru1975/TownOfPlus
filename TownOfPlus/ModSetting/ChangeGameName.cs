@@ -24,6 +24,7 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class ChangeGameName
     {
+        public static bool resetflag = false;
         public static bool flag = false;
         public static string name = "";
         public static void Prefix(GameStartManager __instance)
@@ -31,33 +32,30 @@ namespace TownOfPlus
             if (!AmongUsClient.Instance.AmHost) return;
             if (main.ChangeGameName.Value)
             {
-                if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
-                {
-                    if (flag == false)
-                    {
-                        name = SaveManager.PlayerName;
-                        SaveManager.PlayerName = main.SetGameName.Value;
-                        PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
-                        flag = true;
-                    }
-                }
-                else
-                {
+                if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
+                { 
+                    flag = true;
                     ResetName();
                 }
+                if (flag == false) return;
+                if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
+                {
+                    name = SaveManager.PlayerName;
+                    SaveManager.PlayerName = main.SetGameName.Value;
+                    PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
+                    flag = false;
+                    resetflag = true;
+                }
             }
-            else
-            {
-                ResetName();
-            }
+            else ResetName();
         }
         private static void ResetName()
         {
-            if (flag == true)
+            if (resetflag == true && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
             {
                 SaveManager.PlayerName = name;
                 PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
-                flag = false;
+                resetflag = false;
             }
         }
     }
