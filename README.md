@@ -1,7 +1,8 @@
 # TownOfPlus
 [![TownOfPlusImage](https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlus.png)](#導入方法)  
 #### 製作者のTwitter : [Twitter](https://twitter.com/tugaruyukkuri)
-#### 製作者のYoutube : [Youtube](https://youtube.com/channel/UCWRBQawRK2uw_kvqFAPrcZQ)
+#### 製作者のYoutube : [Youtube](https://youtube.com/channel/UCWRBQawRK2uw_kvqFAPrcZQ)  
+#### 製作者のマシュマロ(バグ報告等に) : [マシュマロ](https://marshmallow-qa.com/tugaruyukkuri)
 # Modについて
 * This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
 * このmodは、AmongUsまたはInnerslothLLCとは提携しておらず、そこに含まれるコンテンツは、InnerslothLLCによって承認または後援されていません。  ここに含まれる資料の一部は、InnerslothLLCの所有物です。  ©InnerslothLLC。
@@ -12,7 +13,7 @@
 C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが多いです。
 
 このmodを他modと併用する際に不具合があった場合は設定を変更するか、使用を中断してください。  
-(不具合は何らかの方法で報告してくださると助かります。)
+(不具合は[マシュマロ](https://marshmallow-qa.com/tugaruyukkuri)で報告してくださると助かります。)
 
 また野良での使用は禁止にはしませんが、たとえ部屋主にbanされたとしても責任は負いません。  
 参加者に許可を貰うことを推奨します。
