@@ -25,13 +25,13 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 | **設定名** ||
 |---|---|
 | [コード隠し](#コード隠し) | [ロビータイマー](#ロビータイマー) |
-| [ランダムマップ](#ランダムマップ) | [虹色のスキン](#虹色のスキン) |
+| [ランダムマップ](#ランダムマップ) | [虹色の帽子](#虹色の帽子) |
 | [虹色のバイザー](#虹色のバイザー) | [虹色の名前](#虹色の名前) |
 | [半透明の名前](#半透明の名前) | [偽のレベル](#偽のレベル) |
 | [ネームプレート非表示](#ネームプレート非表示) | [拡大縮小機能](#拡大縮小機能) |
 | [PC以外を追い出す](#pc以外を追い出す) | [参加者にチャットを送る](#参加者にチャットを送る) |
 | [二段の名前](#二段の名前) | [ゲーム中の名前](#ゲーム中の名前) |
-| [自動ゲームコードコピー](#自動ゲームコードコピー) |
+| [自動コードコピー](#自動コードコピー) |
 ## コード隠し
 ロビーコードを隠すことができます。  
 [チャットコマンド](#チャットコマンド)あり
@@ -40,7 +40,7 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 ## ランダムマップ
 試合ごとにマップをランダムに変更します。  
 [チャットコマンド](#チャットコマンド)あり
-## 虹色のスキン
+## 虹色の帽子
 特定のスキンを虹色にします。  
 ホストの場合に他プレイヤーも適用
 |||||
@@ -84,8 +84,6 @@ Steam、Epic以外を部屋から追い出します。
 |---|---|
 | **常時実行可能** |
 |`/help`|コマンドの一覧を表示|
-|`/LobbySetting(LS)`|部屋の設定を表示|
-|`/ShowPlatform(SP)`|参加者の機種を表示|
 | **ホストでロビーのみ** |
 |`/LobbyMaxPlayer(LMP) [人数(4~15)]`|部屋の最大人数の変更|
 |`/Kick`|Kickする|
@@ -125,6 +123,16 @@ Steam、Epic以外を部屋から追い出します。
 |チャットの切り取り機能|`Control`+`X`|
 |チャットのペースト機能|チャット内にペースト`Control`+`V`<br>直接ペースト(改行対応)`Shift`+`Control`+`V`|
 |アップデート機能|AmongUs開始画面の右下の<br>ボタンを押してアップデート|
+|部屋設定とプレイヤー一覧|`F3`|
+# 自作カスタムハットの導入
+[TOPHats](https://github.com/tugaru1975/TOPHats)をForkしてください。  
+次に自作ハットを`hats`の中にアップロードします。(png形式のみ)  
+そしてpngファイルをjsonファイルに対応させます。  
+最後にAmongUsファイルにある`BepInEx` > `config` > `com.tugaru.TownOfPlus.cfg`を開き、  
+`[HatURL]`  
+`HatURL = TOPのURL,自分のforkしたURL`を貼り付け、AmongUsを起動し導入成功です。  
+プルーリクエストを送ってくださればTOPで実装いたします。  
+AmongUsファイルにある`TOPHats` > `Test`のなかに自作ハットを入れるとフリープレイで試すことが可能です。
 # プルリクや案について
 どんどん送ってもらって大丈夫です。  
 むしろ助かります。
@@ -161,7 +169,7 @@ Epic : `C:\Program Files (x86)\Epic Games\AmongUs`
 <img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/TORTOPplugins.png">
 # クレジット
 [BepInEx](https://github.com/BepInEx/BepInEx)-[BepInEx](https://github.com/BepInEx)様  
-[TheOtherRoles](https://github.com/Eisbison/TheOtherRoles)-[Eisbison](https://github.com/Eisbison)様  
-[TheOtherRoles-GM](https://github.com/yukinogatari/TheOtherRoles-GM)-[Virtual_Dusk](https://twitter.com/Virtual_Dusk)様  
+[TheOtherRoles](https://github.com/Eisbison/TheOtherRoles),[TheOtherHats](https://github.com/Eisbison/TheOtherHats)-[Eisbison](https://github.com/Eisbison)様  
+[TheOtherRoles-GM](https://github.com/yukinogatari/TheOtherRoles-GM),[TheOtherHats-GM](https://github.com/yukinogatari/TheOtherHats-GM)-[Virtual_Dusk](https://twitter.com/Virtual_Dusk)様  
 [TownOfHost](https://github.com/tukasa0001/TownOfHost)-[EmptyBottle](https://twitter.com/XenonBottle)様  
 [SuperNewRoles](https://github.com/ykundesu/SuperNewRoles)-[ykundesu](https://twitter.com/SuperNewRoles)様
