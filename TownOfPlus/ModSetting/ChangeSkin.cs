@@ -21,7 +21,7 @@ using UnityEngine.UI;
 
 namespace TownOfPlus
 {
-    class Skin
+    class Hat
     {
         //カウントダウン
         private static int CountRainbow = 1;
@@ -38,7 +38,7 @@ namespace TownOfPlus
                 else Countblink -= 1;
             }
         }
-        //スキン
+        //帽子
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
         //ニット帽
         public class ChangeBeanie
@@ -46,7 +46,7 @@ namespace TownOfPlus
             private static int BeanieColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Beanie = new System.Collections.Generic.List<string>();
                 Beanie.Add("hat_Beanie_Black");
                 Beanie.Add("hat_Beanie_Blue");
@@ -80,7 +80,7 @@ namespace TownOfPlus
             private static int HoodColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Hood = new System.Collections.Generic.List<string>();
                 Hood.Add("hat_pk02_HeroCap");
                 Hood.Add("hat_Herohood_Black");
@@ -111,7 +111,7 @@ namespace TownOfPlus
             private static int BaseballColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Baseball = new System.Collections.Generic.List<string>();
                 Baseball.Add("hat_pk01_BaseballCap");
                 Baseball.Add("hat_baseball_Black");
@@ -146,7 +146,7 @@ namespace TownOfPlus
             private static int PaperhatColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Paperhat = new System.Collections.Generic.List<string>();
                 Paperhat.Add("hat_paperhat");
                 Paperhat.Add("hat_Paperhat_Black");
@@ -176,7 +176,7 @@ namespace TownOfPlus
             private static int SlungColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Slung = new System.Collections.Generic.List<string>();
                 Slung.Add("hat_brainslug");
                 Slung.Add("hat_headslug_Purple");
@@ -204,7 +204,7 @@ namespace TownOfPlus
             private static int BandanaColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Bandana = new System.Collections.Generic.List<string>();
                 Bandana.Add("hat_pk04_Bandana");
                 Bandana.Add("hat_Bandana_Blue");
@@ -234,7 +234,7 @@ namespace TownOfPlus
             private static int DocColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Doctor = new System.Collections.Generic.List<string>();
                 Doctor.Add("hat_stethescope");
                 Doctor.Add("hat_Doc_black");
@@ -263,7 +263,7 @@ namespace TownOfPlus
             private static int DoragColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Dorag = new System.Collections.Generic.List<string>();
                 Dorag.Add("hat_pk04_Dorag");
                 Dorag.Add("hat_Dorag_Black");
@@ -294,7 +294,7 @@ namespace TownOfPlus
             private static int HeadphoneColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Headphone = new System.Collections.Generic.List<string>();
                 Headphone.Add("hat_pk03_Headphones");
                 Headphone.Add("hat_GovtHeadset");
@@ -322,7 +322,7 @@ namespace TownOfPlus
             private static int HardhatColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Hardhat = new System.Collections.Generic.List<string>();
                 Hardhat.Add("hat_hardhat");
                 Hardhat.Add("hat_Hardhat_black");
@@ -354,7 +354,7 @@ namespace TownOfPlus
             private static int LightColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Light = new System.Collections.Generic.List<string>();
                 Light.Add("hat_pk06_Lights");
                 Light.Add("hat_w21_lights_white");
@@ -379,7 +379,7 @@ namespace TownOfPlus
             private static int SnowmanColorCount = 1;
             public static void Postfix(HudManager __instance)
             {
-                if (!main.RainbowSkin.Value) return;
+                if (!main.RainbowHat.Value) return;
                 System.Collections.Generic.List<string> Snowman = new System.Collections.Generic.List<string>();
                 Snowman.Add("hat_w21_snowman_greenred");
                 Snowman.Add("hat_w21_snowman_redgreen");
@@ -412,7 +412,7 @@ namespace TownOfPlus
         //        }
         //    }
         //}
-    
+
         //バイザー
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
         //紙

@@ -31,56 +31,61 @@ namespace TownOfPlus
         private static bool flag = false;
         public static void Postfix(HudManager __instance)
         {
-            string name = SaveManager.PlayerName;
+            string TranslucentName = "";
+            if (main.TranslucentName.Value)
+            {
+                var Translucent = main.SetTranslucentName.Value;
+                TranslucentName = (100 - Translucent).ToString("00");
+            }
+            var name = SaveManager.PlayerName;
             if (main.RainbowName.Value)
             {
-                string TranslucentName = "";
-                if (main.TranslucentName.Value) TranslucentName = "75";
                 if (R != 99 && G == 00 && B == 99) R += 3;
                 if (R != 00 && G == 99 && B == 00) R -= 3;
                 if (R == 99 && G != 99 && B == 00) G += 3;
                 if (R == 00 && G != 00 && B == 99) G -= 3;
                 if (R == 00 && G == 99 && B != 99) B += 3;
                 if (R == 99 && G == 00 && B != 00) B -= 3;
-                string Rcount = R.ToString("00");
-                string Gcount = G.ToString("00");
-                string Bcount = B.ToString("00");
+                var Rcount = R.ToString("00");
+                var Gcount = G.ToString("00");
+                var Bcount = B.ToString("00");
                 name = $"<color=#{Rcount}{Gcount}{Bcount}{TranslucentName}>" + name + "</color>";
             }
             else
             {
                 if (main.TranslucentName.Value)
                 {
-                    if (PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+                    var RoleType = PlayerControl.LocalPlayer.Data.Role.Role;
+                    string ColorCode;
+                    if (RoleType == RoleTypes.Impostor || RoleType == RoleTypes.Shapeshifter)
                     {
-                        name = $"<color=#FF000075>" + name + "</color>";
+                        ColorCode = "#FF0000";
                     }
                     else
                     {
-                        if (PlayerControl.LocalPlayer.Data.Role.IsSimpleRole)
+                        if (RoleType == RoleTypes.Engineer || RoleType == RoleTypes.Scientist || RoleType == RoleTypes.GuardianAngel)
                         {
-                            name = $"<color=#FFFFFF75>" + name + "</color>";
+                            ColorCode = "#00FFFF";
                         }
                         else
                         {
-                            name = $"<color=#00FFFF75>" + name + "</color>";
+                            ColorCode = "#FFFFFF";
                         }
-
-
                     }
+                    name = $"<color={ColorCode}{TranslucentName}>" + name + "</color>";
 
                 }
             }
             if (main.RainbowName.Value || main.TranslucentName.Value)
             {
-                if (name != PlayerControl.LocalPlayer.name && PlayerControl.LocalPlayer.CurrentOutfitType == PlayerOutfitType.Default) PlayerControl.LocalPlayer.SetName(name);
+                if (name != PlayerControl.LocalPlayer.name && PlayerControl.LocalPlayer.CurrentOutfitType == PlayerOutfitType.Default) PlayerControl.LocalPlayer.RawSetName(name);
                 flag = true;
             }
             else 
             {
                 if (flag) 
                 {
-                    PlayerControl.LocalPlayer.SetName(SaveManager.PlayerName);
+                    PlayerControl.LocalPlayer.RawSetName(SaveManager.PlayerName);
                     flag = false;
                 }
             } 

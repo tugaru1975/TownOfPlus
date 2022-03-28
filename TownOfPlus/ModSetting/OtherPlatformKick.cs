@@ -17,9 +17,8 @@ namespace TownOfPlus
     {
         public static void Postfix(GameStartManager __instance)
         {
-            if (AmongUsClient.Instance.AmHost)
+            if (AmongUsClient.Instance.AmHost && main.OPkick.Value)
             {
-                if (!main.OPkick.Value) return;
                 foreach (InnerNet.ClientData p in AmongUsClient.Instance.allClients)
                 {
                     if (p.PlatformData.Platform != Platforms.StandaloneEpicPC && p.PlatformData.Platform != Platforms.StandaloneSteamPC)

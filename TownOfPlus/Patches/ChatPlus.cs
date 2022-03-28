@@ -16,6 +16,19 @@ namespace TownOfPlus
 {
     class Chat
     {
+        //Shift + Backspace で全消し
+        [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
+        public static class Delete
+        {
+            public static void Prefix(ChatController __instance)
+            {
+                if (!HudManager.Instance.Chat.IsOpen) return;
+                if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Backspace))
+                {
+                    __instance.TextArea.SetText("");
+                }
+            }
+        }
         //Control+Zで一個戻す Control+Yで一個取り消し
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
         public static class UndoAndRedo
@@ -60,7 +73,7 @@ namespace TownOfPlus
                 }
             }
         }
-        //Control+Cでコピー　Control+Xでカット
+        //Control+Cでコピー　Control+Xでカット 
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
         public static class CopyAndCut
         {
@@ -112,10 +125,14 @@ namespace TownOfPlus
                                 //コマンドを対応させる
                                 text = (CopyWord);
                                 CopyAndPaste = true;
-                                SendChat.Addedchat(__instance);
+                                SendChat.Addchat(__instance);
                             }
                             else
                             {
+                                if(CopyWordCount + __instance.TextArea.text.Length >= 100)
+                                {
+                                    CopyWord = CopyWord.Substring(0, 100 - __instance.TextArea.text.Length);
+                                }
                                 __instance.TextArea.SetText(__instance.TextArea.text + CopyWord);
                             }
 
@@ -137,7 +154,7 @@ namespace TownOfPlus
             {
                 bool chat = false;
                 text = __instance.TextArea.text;
-                SendChat.Addedchat(__instance);
+                SendChat.Addchat(__instance);
                 return !chat;
             }
         }
@@ -146,7 +163,8 @@ namespace TownOfPlus
         {
             public static int LobbyLimit = 15;
             public static int LevelLimit = 100;
-            public static bool Addedchat(ChatController __instance)
+            public static int TranslucentName = 100;
+            public static bool Addchat(ChatController __instance)
             {
                 var canceled = false;
                 var argsText = "";
@@ -170,10 +188,7 @@ namespace TownOfPlus
                 switch (Command0)
                 {
                     case "/help":
-                        AddChat =
-                            ("/LobbySetting(LS) : この部屋の設定を表示" +
-                            "\n/ShowPlatform(SP) : 参加者の機種の表示");
-
+                        AddChat = "===コマンド一覧===";
                         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                         {
                             AddChat += ("\n/LobbyMaxPlayer(LMP) [人数(4~15)] : 部屋の最大人数の変更");
@@ -230,50 +245,11 @@ namespace TownOfPlus
                         {
                             AddChat += ("\n/DoubleName(DN) [変えたい名前] : 名前に二段目を追加します");
                         }
-                        break;
-
-                    case "/ls":
-                    case "/lobbysetting":
-                        var MapName = "";
-                        var ConfirmImpostor = "";
-                        var AnonymousVotes = "";
-                        var KillDistance = "";
-                        var TaskBarMode = "";
-                        if (PlayerControl.GameOptions.MapId == 0) MapName = "The Skeld";
-                        if (PlayerControl.GameOptions.MapId == 1) MapName = "MIRA HQ";
-                        if (PlayerControl.GameOptions.MapId == 2) MapName = "Polus";
-                        if (PlayerControl.GameOptions.MapId == 3) MapName = "Dleks";
-                        if (PlayerControl.GameOptions.MapId == 4) MapName = "AirShip";
-                        if (PlayerControl.GameOptions.ConfirmImpostor) ConfirmImpostor = "オン";
-                        else ConfirmImpostor = "オフ";
-                        if (PlayerControl.GameOptions.AnonymousVotes) AnonymousVotes = "オン";
-                        else AnonymousVotes = "オフ";
-                        if (PlayerControl.GameOptions.KillDistance == 0) KillDistance = "ショート";
-                        if (PlayerControl.GameOptions.KillDistance == 1) KillDistance = "ミドル";
-                        if (PlayerControl.GameOptions.KillDistance == 2) KillDistance = "ロング";
-                        if (((int)PlayerControl.GameOptions.TaskBarMode) == 0) TaskBarMode = "常時";
-                        if (((int)PlayerControl.GameOptions.TaskBarMode) == 1) TaskBarMode = "会議";
-                        if (((int)PlayerControl.GameOptions.TaskBarMode) == 2) TaskBarMode = "行わない";
-
-                        AddChat =
-                            ($"この部屋の設定\n" +
-                            $"マップ名:{MapName}\n" +
-                            $"インポスターの数:{PlayerControl.GameOptions.NumImpostors}\n" +
-                            $"追放を確認:{ConfirmImpostor}\n" +
-                            $"緊急会議:{PlayerControl.GameOptions.NumEmergencyMeetings}\n" +
-                            $"匿名投票:{AnonymousVotes}\n" +
-                            $"緊急ボタンクールダウン:{PlayerControl.GameOptions.EmergencyCooldown}秒\n" +
-                            $"議論タイム:{PlayerControl.GameOptions.DiscussionTime}秒\n" +
-                            $"投票タイム:{PlayerControl.GameOptions.VotingTime}秒\n" +
-                            $"プレイヤーの速度:{PlayerControl.GameOptions.PlayerSpeedMod}x\n" +
-                            $"クルービジョン:{PlayerControl.GameOptions.CrewLightMod}x\n" +
-                            $"インポスタービジョン:{PlayerControl.GameOptions.ImpostorLightMod}x\n" +
-                            $"キルのクールダウン:{PlayerControl.GameOptions.KillCooldown}秒\n" +
-                            $"キル可能距離:{KillDistance}\n" +
-                            $"タスクバーアップデート:{TaskBarMode}\n" +
-                            $"通常タスク:{PlayerControl.GameOptions.NumCommonTasks}\n" +
-                            $"ロングタスク:{PlayerControl.GameOptions.NumLongTasks}\n" +
-                            $"ショートタスク:{PlayerControl.GameOptions.NumShortTasks}\n");
+                        if (main.TranslucentName.Value)
+                        {
+                            AddChat += ("\n/TranslucentName(TN) [数値] : 名前の透明度を変更します");
+                        }
+                        if (AddChat == "===コマンド一覧===") AddChat += ("\n実行可能なコマンドはありません");
                         break;
 
                     case "/lmp":
@@ -366,12 +342,12 @@ namespace TownOfPlus
 
                     case "/fl":
                     case "/fakelevel":
+                        if (!(main.FakeLevel.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)) break;
                         if (args.Length < 3)
                         {
                             AddChat = ($"偽のレベルは[{main.SetLevel.Value}]です"); ;
                             break;
                         }
-                        if (!(main.FakeLevel.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)) break;
                         if (Int32.TryParse(args[1], out LevelLimit))
                         {
                             LevelLimit = Math.Clamp(LevelLimit, 1, 100);
@@ -462,15 +438,6 @@ namespace TownOfPlus
                         }
                         break;
 
-                    case "/sp":
-                    case "/showplatform":
-                        foreach (InnerNet.ClientData p in AmongUsClient.Instance.allClients)
-                        {
-                            var Platform = $"{p.PlatformData.Platform}";
-                            AddChat += $"{p.PlayerName} : {Platform.Replace("Standalone", "")}\n";
-                        }
-                        break;
-
                     case "/sc":
                     case "/sendchat":
                         if (!(main.SendJoinPlayer.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)) break;
@@ -496,6 +463,19 @@ namespace TownOfPlus
                         AddChat = $"二段目の名前が\n{main.SetDoubleName.Value}\nになりました";
                         break;
 
+                    case "/tn":
+                    case "/translucentname":
+                        if (!main.TranslucentName.Value) break;
+                        if (Int32.TryParse(args[1], out TranslucentName) && args.Length > 2)
+                        {
+                            TranslucentName = Math.Clamp(TranslucentName, 1, 100);
+                            main.SetTranslucentName.Value = TranslucentName;
+                            AddChat = ($"名前の透明度が[{main.SetTranslucentName.Value}%]になりました");
+                            break;
+                        }
+                        AddChat = ("\n/TranslucentName(TN) [数値%] : 名前の透明度を変更します");
+                        SetText = args[0];
+                        break;
                     default:
                         break;
                 }
@@ -558,8 +538,6 @@ namespace TownOfPlus
         public static void Postfix(HudManager __instance)
         {
             SaveManager.chatModeType = 1;
-            SaveManager.isGuest = false;
-            SaveManager.ChatModeType = InnerNet.QuickChatModes.FreeChatOrQuickChat;
         }
     }
 }

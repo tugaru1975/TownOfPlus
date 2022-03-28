@@ -68,10 +68,12 @@ namespace TownOfPlus
                     if (Camera.main.orthographicSize != 3.0f)
                     {
                         __instance.UICamera.orthographicSize = 0f;
+                        if (AmongUsClient.Instance.GameMode == GameModes.FreePlay && !PlayerControl.LocalPlayer.Data.IsDead) __instance.ShadowQuad.gameObject.SetActive(false);
                     }
                     else
                     {
                         __instance.UICamera.orthographicSize = 3.0f;
+                        if (AmongUsClient.Instance.GameMode == GameModes.FreePlay && !PlayerControl.LocalPlayer.Data.IsDead) __instance.ShadowQuad.gameObject.SetActive(true);
                     }
                 }
                 else

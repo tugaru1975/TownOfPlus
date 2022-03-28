@@ -11,7 +11,6 @@ using UnhollowerBaseLib;
 using Hazel;
 using Il2CppSystem.Collections.Generic;
 using Il2CppSystem.Linq;
-using Il2CppSystem;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +21,7 @@ namespace TownOfPlus
     {
         public static void Prefix(GameSettingMenu __instance)
         {
-            // 繧ｪ繝ｳ繝ｩ繧､繝ｳ繝｢繝ｼ繝峨〒驛ｨ螻九ｒ遶九※逶ｴ縺輔↑縺上※繧ゅ�槭ャ繝励ｒ螟画峩縺ｧ縺阪ｋ繧医≧縺ｫ螟画峩
+            // オンラインモードで部屋を立て直さなくてもマップを変更できるように変更
             __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
         }
     }
@@ -55,13 +54,24 @@ namespace TownOfPlus
             }
         }
     }
-    [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
-    public static class KillCoolDown0
+    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Update))]
+    public static class KillCoolDown
     {
-        public static void Prefix(GameStartManager __instance)
+        public static void Prefix(GameOptionsMenu __instance)
         {
-            if (PlayerControl.GameOptions.KillCooldown == 0 || PlayerControl.GameOptions.KillCooldown == 0.00001f) PlayerControl.GameOptions.KillCooldown = 0.00001f;
-            else PlayerControl.GameOptions.KillCooldown = (float)(System.Math.Truncate(PlayerControl.GameOptions.KillCooldown * System.Math.Pow(10, 1)) / System.Math.Pow(10, 1));
+            if (AmongUsClient.Instance.AmHost)
+            {
+                if (PlayerControl.GameOptions.KillCooldown == 0 || PlayerControl.GameOptions.KillCooldown == 0.00001f)
+                {
+                    PlayerControl.GameOptions.KillCooldown = 0.00001f;
+                    Helpers.SyncSettings();
+                }
+                else
+                {
+                    PlayerControl.GameOptions.KillCooldown = (float)(System.Math.Truncate(PlayerControl.GameOptions.KillCooldown * System.Math.Pow(10, 1)) / System.Math.Pow(10, 1));
+                    Helpers.SyncSettings();
+                }
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace TownOfPlus
         {
             if (Regex.IsMatch(GUIUtility.systemCopyBuffer, @"[A-Z]{6}"))
             {
-                __instance.GameIdText.SetText(GUIUtility.systemCopyBuffer);
+                if (__instance.GameIdText.text == "") __instance.GameIdText.SetText(GUIUtility.systemCopyBuffer);
             }
         }
     }

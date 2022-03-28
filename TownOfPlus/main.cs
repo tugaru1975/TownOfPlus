@@ -26,7 +26,7 @@ namespace TownOfPlus
         //Modの詳細
         public const string Id = "com.tugaru.TownOfPlus";
         public const string Name = "TownOfPlus";
-        public const string Version = "1.1.2";
+        public const string Version = "1.2.0";
         public static System.Version VersionId = System.Version.Parse(Version);
 
         public Harmony Harmony { get; } = new Harmony(Id);
@@ -37,11 +37,14 @@ namespace TownOfPlus
         //Modアップデート
         public static ConfigEntry<string> ShowPopUpVersion { get; set; }
 
+        //帽子URL
+        public static ConfigEntry<string> HatURL { get; private set; }
+
         //Mod設定
         public static ConfigEntry<bool> HideLobbyCodes { get; private set; }
         public static ConfigEntry<bool> LobbyTimer { get; private set; }
         public static ConfigEntry<bool> RandomMaps { get; private set; }
-        public static ConfigEntry<bool> RainbowSkin { get; private set; }
+        public static ConfigEntry<bool> RainbowHat { get; private set; }
         public static ConfigEntry<bool> RainbowVisor { get; private set; }
         public static ConfigEntry<bool> RainbowName { get; private set; }
         public static ConfigEntry<bool> TranslucentName { get; private set; }
@@ -76,16 +79,30 @@ namespace TownOfPlus
         //ゲーム中の名前
         public static ConfigEntry<string> SetGameName { get; private set; }
 
+        //半透明の名前
+        public static ConfigEntry<int> SetTranslucentName { get; private set; }
+
+        public static string NewHatURL = "";
+
         public override void Load()
         {
+            //Hatファイル作成
+            Directory.CreateDirectory(Path.GetDirectoryName(Application.dataPath) + @"\TOPHats\");
+            Directory.CreateDirectory(Path.GetDirectoryName(Application.dataPath) + @"\TOPHats\Test\");
+
             //アップデート
             ShowPopUpVersion = Config.Bind("Update", "Show PopUp", "0");
+
+            //帽子URL
+            HatURL = Config.Bind("HatURL", "HatURL", "https://raw.githubusercontent.com/tugaru1975/TOPHats/master,https://raw.githubusercontent.com/ユーザー名/プロジェクト名/master");
+
+            NewHatURL = HatURL.Value;
 
             //設定項目
             HideLobbyCodes = Config.Bind("Client Options", "HideLobbyCodes", false);
             LobbyTimer = Config.Bind("Client Options", "LobbyTimer", false);
             RandomMaps = Config.Bind("Client Options", "RandomMapsMode", false);
-            RainbowSkin = Config.Bind("Client Options", "RainbowSkin", false);
+            RainbowHat = Config.Bind("Client Options", "RainbowHat", false);
             RainbowVisor = Config.Bind("Client Options", "RainbowVisor", false);
             RainbowName = Config.Bind("Client Options", "RainbowName", false);
             TranslucentName = Config.Bind("Client Options", "TranslucentName", false);
@@ -118,6 +135,9 @@ namespace TownOfPlus
 
             //ゲーム中の名前
             SetGameName = Config.Bind("SetGameName Options", "SetGameName", "部屋主");
+
+            //半透明の名前
+            SetTranslucentName = Config.Bind("SetTranslucentName Options", "SetTranslucentName", 75);
 
             Harmony.PatchAll();
         }

@@ -37,7 +37,7 @@ namespace TownOfPlus
                     var count = main.SetLevel.Value - 1;
                     if (count == 100)
                     {
-                        Level = (uint)rand.Next(20, 70);
+                        Level = (uint)rand.Next(0, 99);
                     }
                     else
                     {

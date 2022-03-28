@@ -27,22 +27,24 @@ namespace TownOfPlus
         public static bool flag = false;
         public static void Prefix(GameStartManager __instance)
         {
-            if (!AmongUsClient.Instance.AmHost) return;
-            if (main.DoubleName.Value)
+            if (AmongUsClient.Instance.AmHost)
             {
-                if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                if (main.DoubleName.Value)
                 {
-                    PlayerControl.LocalPlayer.RpcSetName($"{main.SetDoubleName.Value}\n<color=#FFFFFF50>{SaveManager.PlayerName}</color>\n");
-                    flag = true;
+                    if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                    {
+                        PlayerControl.LocalPlayer.RpcSetName($"{main.SetDoubleName.Value}\n<color=#FFFFFF50>{SaveManager.PlayerName}</color>\n");
+                        flag = true;
+                    }
+                    else
+                    {
+                        ResetName();
+                    }
                 }
                 else
                 {
                     ResetName();
                 }
-            }
-            else
-            {
-                ResetName();
             }
         }
         private static void ResetName()

@@ -29,25 +29,27 @@ namespace TownOfPlus
         public static string name = "";
         public static void Prefix(GameStartManager __instance)
         {
-            if (!AmongUsClient.Instance.AmHost) return;
-            if (main.ChangeGameName.Value)
+            if (AmongUsClient.Instance.AmHost)
             {
-                if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
-                { 
-                    flag = true;
-                    ResetName();
-                }
-                if (flag == false) return;
-                if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
+                if (main.ChangeGameName.Value)
                 {
-                    name = SaveManager.PlayerName;
-                    SaveManager.PlayerName = main.SetGameName.Value;
-                    PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
-                    flag = false;
-                    resetflag = true;
+                    if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
+                    {
+                        flag = true;
+                        ResetName();
+                    }
+                    if (flag == false) return;
+                    if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
+                    {
+                        name = SaveManager.PlayerName;
+                        SaveManager.PlayerName = main.SetGameName.Value;
+                        PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
+                        flag = false;
+                        resetflag = true;
+                    }
                 }
+                else ResetName();
             }
-            else ResetName();
         }
         private static void ResetName()
         {

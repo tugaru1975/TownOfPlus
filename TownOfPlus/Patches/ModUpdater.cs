@@ -29,6 +29,7 @@ namespace TownOfPlus {
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
     public class ModUpdaterButton {
         private static void Prefix(MainMenuManager __instance) {
+            CustomHatLoader.LaunchHatFetcher();
             ModUpdater.LaunchUpdater();
             if (!ModUpdater.hasUpdate) return;
             var template = GameObject.Find("ExitGameButton");

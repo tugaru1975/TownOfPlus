@@ -17,7 +17,7 @@ namespace TownOfPlus
             new SelectionBehaviour("コード隠し", () => main.HideLobbyCodes.Value = !main.HideLobbyCodes.Value, main.HideLobbyCodes.Value),
             new SelectionBehaviour("<color=#00bfff>ロビータイマー</color>", () => main.LobbyTimer.Value = !main.LobbyTimer.Value, main.LobbyTimer.Value),
             new SelectionBehaviour("<color=#00bfff>ランダムマップ</color>", () => main.RandomMaps.Value = !main.RandomMaps.Value, main.RandomMaps.Value),
-            new SelectionBehaviour("<color=#FF0000>虹色のスキン</color>", () => main.RainbowSkin.Value = !main.RainbowSkin.Value, main.RainbowSkin.Value),
+            new SelectionBehaviour("<color=#FF0000>虹色の帽子</color>", () => main.RainbowHat.Value = !main.RainbowHat.Value, main.RainbowHat.Value),
             new SelectionBehaviour("<color=#FF0000>虹色のバイザー</color>", () => main.RainbowVisor.Value = !main.RainbowVisor.Value, main.RainbowVisor.Value),
             new SelectionBehaviour("虹色の名前", () => main.RainbowName.Value = !main.RainbowName.Value, main.RainbowName.Value),
             new SelectionBehaviour("半透明の名前", () => main.TranslucentName.Value = !main.TranslucentName.Value, main.TranslucentName.Value),
