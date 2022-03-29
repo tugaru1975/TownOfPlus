@@ -152,10 +152,7 @@ namespace TownOfPlus {
             overlayShown = true;
 
             Transform parent;
-            if (MeetingHud.Instance != null)
-                parent = MeetingHud.Instance.transform;
-            else
-                parent = hudManager.transform;
+            parent = hudManager.transform;
 
             infoUnderlay.transform.parent = parent;
             infoOverlayRules.transform.parent = parent;
