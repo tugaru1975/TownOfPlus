@@ -125,14 +125,8 @@ Steam、Epic以外を部屋から追い出します。
 |アップデート機能|AmongUs開始画面の右下の<br>ボタンを押してアップデート|
 |部屋設定とプレイヤー一覧|`F3`|
 # 自作カスタムハットの導入
-[TOPHats](https://github.com/tugaru1975/TOPHats)をForkしてください。  
-次に自作ハットを`hats`の中にアップロードします。(png形式のみ)  
-そしてpngファイルをjsonファイルに対応させます。  
-最後にAmongUsファイルにある`BepInEx` > `config` > `com.tugaru.TownOfPlus.cfg`を開き、  
-`[HatURL]`  
-`HatURL = TOPのURL,自分のforkしたURL`を貼り付け、AmongUsを起動し導入成功です。  
-プルーリクエストを送ってくださればTOPで実装いたします。  
-AmongUsファイルにある`TOPHats` > `Test`のなかに自作ハットを入れるとフリープレイで試すことが可能です。
+https://github.com/tugaru1975/TOPHats/tree/main#readme  
+を参考してください
 # プルリクや案について
 どんどん送ってもらって大丈夫です。  
 むしろ助かります。
