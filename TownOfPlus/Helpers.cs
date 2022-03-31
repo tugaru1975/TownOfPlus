@@ -75,5 +75,24 @@ namespace TownOfPlus {
             var optByte = opt.ToBytes(5);
             return GameOptionsData.FromBytes(optByte);
         }
+
+        public static PlayerControl playerById(byte id)
+        {
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                if (player.PlayerId == id)
+                    return player;
+            return null;
+        }
+
+        public static PlayerControl GetNamePlayer(string name)
+        {
+            PlayerControl player = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(name));
+            return player;
+        }
+
+        public static string GetString(this TranslationController t, StringNames key, params Il2CppSystem.Object[] parts)
+        {
+            return t.GetString(key, parts);
+        }
     }
 }

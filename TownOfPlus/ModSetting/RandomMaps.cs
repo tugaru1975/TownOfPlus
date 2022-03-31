@@ -20,9 +20,8 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.BeginGame))]
     public class GameStartRandomMap
     {
-        public static bool Prefix()
+        public static void Prefix()
         {
-            bool RandomMap = true;
             if (main.RandomMaps.Value && AmongUsClient.Instance.AmHost)
             {
                 if (main.AddTheSkeld.Value || main.AddMIRAHQ.Value || main.AddPolus.Value || main.AddAirShip.Value)
@@ -42,7 +41,6 @@ namespace TownOfPlus
                     PlayerControl.GameOptions.MapId = MapsId;
                 }
             }
-            return RandomMap;
         }
     }
 }

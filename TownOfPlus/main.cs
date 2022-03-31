@@ -26,7 +26,7 @@ namespace TownOfPlus
         //Modの詳細
         public const string Id = "com.tugaru.TownOfPlus";
         public const string Name = "TownOfPlus";
-        public const string Version = "1.2.1";
+        public const string Version = "1.3.0";
         public static System.Version VersionId = System.Version.Parse(Version);
 
         public Harmony Harmony { get; } = new Harmony(Id);
@@ -56,6 +56,10 @@ namespace TownOfPlus
         public static ConfigEntry<bool> DoubleName { get; private set; }
         public static ConfigEntry<bool> ChangeGameName { get; private set; }
         public static ConfigEntry<bool> AutoCopyCode { get; private set; }
+        public static ConfigEntry<bool> RainbowOutline { get; private set; }
+        public static ConfigEntry<bool> CrewColorOutline { get; private set; }
+        public static ConfigEntry<bool> RainbowVent { get; private set; }
+        public static ConfigEntry<bool> CrewColorVent { get; private set; }
 
         //Mod詳細設定
         //ランダムマップ
@@ -114,6 +118,10 @@ namespace TownOfPlus
             DoubleName = Config.Bind("Client Options", "DoubleName", false);
             ChangeGameName = Config.Bind("Client Options", "ChangeGameName", false);
             AutoCopyCode = Config.Bind("Client Options", "AutoCopyCode", false);
+            RainbowOutline = Config.Bind("Client Options", "RainbowOutline", false);
+            CrewColorOutline = Config.Bind("Client Options", "CrewColorOutline", false);
+            RainbowVent = Config.Bind("Client Options", "RainbowVent", false);
+            CrewColorVent = Config.Bind("Client Options", "CrewColorVent", false);
 
             //ランダムマップ
             AddTheSkeld = Config.Bind("RandomMaps Options", "AddTheSkeld", true);
