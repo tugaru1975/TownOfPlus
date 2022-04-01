@@ -139,7 +139,7 @@ namespace TownOfPlus {
             if (overlayShown) return;
 
             HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
-            if (PlayerControl.LocalPlayer == null || hudManager == null || HudManager.Instance.isIntroDisplayed)
+            if (PlayerControl.LocalPlayer == null || hudManager == null || HudManager.Instance.IsIntroDisplayed)
                 return;
 
             if (!initializeOverlays()) return;

@@ -30,14 +30,14 @@ namespace TownOfPlus
             {
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
-                    if (p != PlayerControl.LocalPlayer) p.myRend.material.SetColor("_OutlineColor", Color.HSVToRGB(Time.time % 1, 1, 1));
+                    if (p != PlayerControl.LocalPlayer) p.MyRend.material.SetColor("_OutlineColor", Color.HSVToRGB(Time.time % 1, 1, 1));
                 }
             }
             if (main.CrewColorOutline.Value)
             {
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
-                    if (p != PlayerControl.LocalPlayer) p.myRend.material.SetColor("_OutlineColor", p.myRend.material.GetColor("_BodyColor"));
+                    if (p != PlayerControl.LocalPlayer) p.MyRend.material.SetColor("_OutlineColor", p.MyRend.material.GetColor("_BodyColor"));
                 }
             }
             if (main.RainbowVent.Value)
@@ -51,7 +51,7 @@ namespace TownOfPlus
             {
                 foreach (Vent vent in ShipStatus.Instance.AllVents)
                 {
-                    vent.myRend.material.SetColor("_OutlineColor", PlayerControl.LocalPlayer.myRend.material.GetColor("_BodyColor"));
+                    vent.myRend.material.SetColor("_OutlineColor", PlayerControl.LocalPlayer.MyRend.material.GetColor("_BodyColor"));
                 }
             }
         }
