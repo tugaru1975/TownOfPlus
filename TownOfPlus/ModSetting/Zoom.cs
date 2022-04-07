@@ -24,45 +24,42 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class Zoom
     {
-        public static bool flag = false;
+        public static bool flag = true;
         public static void Postfix(HudManager __instance)
         {
             if (main.Zoom.Value)
             {
                 if ((AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started
                     || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
-                    && (PlayerControl.LocalPlayer.Data.IsDead
-                    || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
                     && (PlayerControl.LocalPlayer.CanMove)
                     && !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen)
-                    && !(MeetingHud.Instance)
-                    && !(ExileController.Instance))
+                    && !(MeetingHud.Instance))
                 {
                     if (Input.GetAxis("Mouse ScrollWheel") > 0)
                     {
-                        if (AmongUsClient.Instance.GameMode == GameModes.FreePlay)
-                        {
                             if (Camera.main.orthographicSize > 1.0f)
                             {
                                 Camera.main.orthographicSize /= 1.5f;
                                 __instance.transform.localScale /= 1.5f;
                             }
-                        }
-                        else
-                        {
-                            if (Camera.main.orthographicSize > 3.0f)
-                            {
-                                Camera.main.orthographicSize /= 1.5f;
-                                __instance.transform.localScale /= 1.5f;
-                            }
-                        }
                     }
                     if (Input.GetAxis("Mouse ScrollWheel") < 0)
                     {
-                        if (Camera.main.orthographicSize < 18.0f)
+                        if (PlayerControl.LocalPlayer.Data.IsDead || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
                         {
-                            Camera.main.orthographicSize *= 1.5f;
-                            __instance.transform.localScale *= 1.5f;
+                            if (Camera.main.orthographicSize < 18.0f)
+                            {
+                                Camera.main.orthographicSize *= 1.5f;
+                                __instance.transform.localScale *= 1.5f;
+                            }
+                        }
+                        else
+                        {
+                            if (Camera.main.orthographicSize < 3.0f)
+                            {
+                                Camera.main.orthographicSize *= 1.5f;
+                                __instance.transform.localScale *= 1.5f;
+                            }
                         }
                     }
                     if (Camera.main.orthographicSize != 3.0f)
@@ -102,6 +99,8 @@ namespace TownOfPlus
             Camera.main.orthographicSize = 3.0f;
             HudManager.Instance.UICamera.orthographicSize = 3.0f;
             HudManager.Instance.transform.localScale = Vector3.one;
+            MeetingHud.Instance.transform.localScale = Vector3.one;
+            HudManager.Instance.Chat.transform.localScale = Vector3.one;
         }
     }
 }

@@ -24,8 +24,8 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class ChangeGameName
     {
-        public static bool resetflag = false;
-        public static bool flag = false;
+        private static StartAction Action = new StartAction();
+        private static StartAction StartAction = new StartAction();
         public static string name = "";
         public static void Prefix(GameStartManager __instance)
         {
@@ -35,17 +35,19 @@ namespace TownOfPlus
                 {
                     if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
                     {
-                        flag = true;
+                        StartAction.Reset();
                         ResetName();
                     }
-                    if (flag == false) return;
+
                     if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
                     {
-                        name = SaveManager.PlayerName;
-                        SaveManager.PlayerName = main.SetGameName.Value;
-                        PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
-                        flag = false;
-                        resetflag = true;
+                        StartAction.Run(() =>
+                        {
+                            name = SaveManager.PlayerName;
+                            SaveManager.PlayerName = main.SetGameName.Value;
+                            PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
+                            Action.Reset();
+                        });
                     }
                 }
                 else ResetName();
@@ -53,11 +55,13 @@ namespace TownOfPlus
         }
         private static void ResetName()
         {
-            if (resetflag == true && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
+            if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
             {
-                SaveManager.PlayerName = name;
-                PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
-                resetflag = false;
+                Action.Run(() =>
+                {
+                    SaveManager.PlayerName = name;
+                    PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);   
+                });
             }
         }
     }

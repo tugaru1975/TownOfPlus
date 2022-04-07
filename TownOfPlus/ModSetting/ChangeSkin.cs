@@ -25,7 +25,7 @@ namespace TownOfPlus
     //ニット帽
     public class ChangeSkin
     {
-        private static int timer = 1;
+        private static bool Hat_Rainbow = true;
         private static int BeanieColorCount = 1;
         private static int HoodColorCount = 1;
         private static int BaseballColorCount = 1;
@@ -36,208 +36,201 @@ namespace TownOfPlus
         private static int DoragColorCount = 1;
         private static int HeadphoneColorCount = 1;
         private static int HardhatColorCount = 1;
+        private static bool Hat_Blink = true;
         private static int LightColorCount = 1;
         private static int SnowmanColorCount = 1;
+        private static bool Visor = true;
         private static int StickynoteColorCount = 1;
         private static int LolliColorCount = 1;
         private static int MasqueColorCount = 1;
         public static void Postfix(HudManager __instance)
         {
-            timer += 1;
             if (main.RainbowHat.Value)
             {
-                System.Collections.Generic.List<string> Beanie = new System.Collections.Generic.List<string>();
-                Beanie.Add("hat_Beanie_Black");
-                Beanie.Add("hat_Beanie_Blue");
-                Beanie.Add("hat_Beanie_Green");
-                Beanie.Add("hat_Beanie_Lightblue");
-                Beanie.Add("hat_Beanie_LightGreen");
-                Beanie.Add("hat_Beanie_LightPurple");
-                Beanie.Add("hat_Beanie_Pink");
-                Beanie.Add("hat_Beanie_Purple");
-                Beanie.Add("hat_Beanie_White");
-                Beanie.Add("hat_Beanie_Yellow");
-                Beanie.Add("hat_pk04_Beanie");
-                if (CheckTime(true))
+                if (Hat_Rainbow)
                 {
-                    BeanieColorCount = SkinCount(Beanie, BeanieColorCount, true);
-                    RawSetSkin(Beanie, BeanieColorCount, false);
+                    Hat_Rainbow = false;
+                    new Timer(() =>
+                    {
+                        Hat_Rainbow = true;
+                        System.Collections.Generic.List<string> Beanie = new System.Collections.Generic.List<string>();
+                        Beanie.Add("hat_Beanie_Black");
+                        Beanie.Add("hat_Beanie_Blue");
+                        Beanie.Add("hat_Beanie_Green");
+                        Beanie.Add("hat_Beanie_Lightblue");
+                        Beanie.Add("hat_Beanie_LightGreen");
+                        Beanie.Add("hat_Beanie_LightPurple");
+                        Beanie.Add("hat_Beanie_Pink");
+                        Beanie.Add("hat_Beanie_Purple");
+                        Beanie.Add("hat_Beanie_White");
+                        Beanie.Add("hat_Beanie_Yellow");
+                        Beanie.Add("hat_pk04_Beanie");
+                        BeanieColorCount = SkinCount(Beanie, BeanieColorCount, true);
+                        RawSetSkin(Beanie, BeanieColorCount, false);
+
+                        System.Collections.Generic.List<string> Hood = new System.Collections.Generic.List<string>();
+                        Hood.Add("hat_pk02_HeroCap");
+                        Hood.Add("hat_Herohood_Black");
+                        Hood.Add("hat_Herohood_Blue");
+                        Hood.Add("hat_Herohood_Pink");
+                        Hood.Add("hat_Herohood_Purple");
+                        Hood.Add("hat_Herohood_Red");
+                        Hood.Add("hat_Herohood_White");
+                        Hood.Add("hat_Herohood_Yellow");
+                        HoodColorCount = SkinCount(Hood, HoodColorCount, false);
+                        RawSetSkin(Hood, HoodColorCount, false);
+
+                        System.Collections.Generic.List<string> Baseball = new System.Collections.Generic.List<string>();
+                        Baseball.Add("hat_pk01_BaseballCap");
+                        Baseball.Add("hat_baseball_Black");
+                        Baseball.Add("hat_baseball_Green");
+                        Baseball.Add("hat_baseball_Lightblue");
+                        Baseball.Add("hat_baseball_LightGreen");
+                        Baseball.Add("hat_baseball_Lilac");
+                        Baseball.Add("hat_baseball_Orange");
+                        Baseball.Add("hat_baseball_Pink");
+                        Baseball.Add("hat_baseball_Purple");
+                        Baseball.Add("hat_baseball_Red");
+                        Baseball.Add("hat_baseball_White");
+                        Baseball.Add("hat_baseball_Yellow");
+                        BaseballColorCount = SkinCount(Baseball, BaseballColorCount, false);
+                        RawSetSkin(Baseball, BaseballColorCount, false);
+
+                        System.Collections.Generic.List<string> Paperhat = new System.Collections.Generic.List<string>();
+                        Paperhat.Add("hat_paperhat");
+                        Paperhat.Add("hat_Paperhat_Black");
+                        Paperhat.Add("hat_Paperhat_Blue");
+                        Paperhat.Add("hat_Paperhat_Cyan");
+                        Paperhat.Add("hat_Paperhat_Lightblue");
+                        Paperhat.Add("hat_Paperhat_Pink");
+                        Paperhat.Add("hat_Paperhat_Yellow");
+                        PaperhatColorCount = SkinCount(Paperhat, PaperhatColorCount, false);
+                        RawSetSkin(Paperhat, PaperhatColorCount, false);
+
+                        System.Collections.Generic.List<string> Slung = new System.Collections.Generic.List<string>();
+                        Slung.Add("hat_brainslug");
+                        Slung.Add("hat_headslug_Purple");
+                        Slung.Add("hat_headslug_Red");
+                        Slung.Add("hat_headslug_White");
+                        Slung.Add("hat_headslug_Yellow");
+                        SlungColorCount = SkinCount(Slung, SlungColorCount, false);
+                        RawSetSkin(Slung, SlungColorCount, false);
+
+                        System.Collections.Generic.List<string> Bandana = new System.Collections.Generic.List<string>();
+                        Bandana.Add("hat_pk04_Bandana");
+                        Bandana.Add("hat_Bandana_Blue");
+                        Bandana.Add("hat_Bandana_Green");
+                        Bandana.Add("hat_Bandana_Pink");
+                        Bandana.Add("hat_Bandana_Red");
+                        Bandana.Add("hat_Bandana_White");
+                        Bandana.Add("hat_Bandana_Yellow");
+                        BandanaColorCount = SkinCount(Bandana, BandanaColorCount, false);
+                        RawSetSkin(Bandana, BandanaColorCount, false);
+
+                        System.Collections.Generic.List<string> Doctor = new System.Collections.Generic.List<string>();
+                        Doctor.Add("hat_stethescope");
+                        Doctor.Add("hat_Doc_black");
+                        Doctor.Add("hat_Doc_Orange");
+                        Doctor.Add("hat_Doc_Purple");
+                        Doctor.Add("hat_Doc_Red");
+                        Doctor.Add("hat_Doc_White");
+                        DoctorColorCount = SkinCount(Doctor, DoctorColorCount, false);
+                        RawSetSkin(Doctor, DoctorColorCount, false);
+
+                        System.Collections.Generic.List<string> Dorag = new System.Collections.Generic.List<string>();
+                        Dorag.Add("hat_pk04_Dorag");
+                        Dorag.Add("hat_Dorag_Black");
+                        Dorag.Add("hat_Dorag_Desert");
+                        Dorag.Add("hat_Dorag_Jungle");
+                        Dorag.Add("hat_Dorag_Purple");
+                        Dorag.Add("hat_Dorag_Sky");
+                        Dorag.Add("hat_Dorag_Snow");
+                        Dorag.Add("hat_Dorag_Yellow");
+                        DoragColorCount = SkinCount(Dorag, DoragColorCount, false);
+                        RawSetSkin(Dorag, DoragColorCount, false);
+
+                        System.Collections.Generic.List<string> Headphone = new System.Collections.Generic.List<string>();
+                        Headphone.Add("hat_pk03_Headphones");
+                        Headphone.Add("hat_GovtHeadset");
+                        Headphone.Add("hat_mira_headset_blue");
+                        Headphone.Add("hat_mira_headset_pink");
+                        Headphone.Add("hat_mira_headset_yellow");
+                        HeadphoneColorCount = SkinCount(Headphone, HeadphoneColorCount, false);
+                        RawSetSkin(Headphone, HeadphoneColorCount, false);
+
+                        System.Collections.Generic.List<string> Hardhat = new System.Collections.Generic.List<string>();
+                        Hardhat.Add("hat_hardhat");
+                        Hardhat.Add("hat_Hardhat_black");
+                        Hardhat.Add("hat_Hardhat_Blue");
+                        Hardhat.Add("hat_Hardhat_Green");
+                        Hardhat.Add("hat_Hardhat_Orange");
+                        Hardhat.Add("hat_Hardhat_Pink");
+                        Hardhat.Add("hat_Hardhat_Purple");
+                        Hardhat.Add("hat_Hardhat_Red");
+                        Hardhat.Add("hat_Hardhat_White");
+                        HardhatColorCount = SkinCount(Hardhat, HardhatColorCount, false);
+                        RawSetSkin(Hardhat, HardhatColorCount, false);
+                    }, 0.25f);
                 }
-                System.Collections.Generic.List<string> Hood = new System.Collections.Generic.List<string>();
-                Hood.Add("hat_pk02_HeroCap");
-                Hood.Add("hat_Herohood_Black");
-                Hood.Add("hat_Herohood_Blue");
-                Hood.Add("hat_Herohood_Pink");
-                Hood.Add("hat_Herohood_Purple");
-                Hood.Add("hat_Herohood_Red");
-                Hood.Add("hat_Herohood_White");
-                Hood.Add("hat_Herohood_Yellow");
-                if (CheckTime(true))
+                if (Hat_Blink)
                 {
-                    HoodColorCount = SkinCount(Hood, HoodColorCount, false);
-                    RawSetSkin(Hood, HoodColorCount, false);
+                    Hat_Blink = false;
+                    new Timer(() =>
+                    {
+                        Hat_Blink = true;
+                        System.Collections.Generic.List<string> Light = new System.Collections.Generic.List<string>();
+                        Light.Add("hat_pk06_Lights");
+                        Light.Add("hat_w21_lights_white");
+                        LightColorCount = SkinCount(Light, LightColorCount, false);
+                        RawSetSkin(Light, LightColorCount, false);
+                    
+                        System.Collections.Generic.List<string> Snowman = new System.Collections.Generic.List<string>();
+                        Snowman.Add("hat_w21_snowman_greenred");
+                        Snowman.Add("hat_w21_snowman_redgreen");
+                        Snowman.Add("hat_pk06_Snowman");
+
+                            SnowmanColorCount = SkinCount(Snowman, SnowmanColorCount, true);
+                            RawSetSkin(Snowman, SnowmanColorCount, false);
+                    }, 0.5f);
                 }
-                System.Collections.Generic.List<string> Baseball = new System.Collections.Generic.List<string>();
-                Baseball.Add("hat_pk01_BaseballCap");
-                Baseball.Add("hat_baseball_Black");
-                Baseball.Add("hat_baseball_Green");
-                Baseball.Add("hat_baseball_Lightblue");
-                Baseball.Add("hat_baseball_LightGreen");
-                Baseball.Add("hat_baseball_Lilac");
-                Baseball.Add("hat_baseball_Orange");
-                Baseball.Add("hat_baseball_Pink");
-                Baseball.Add("hat_baseball_Purple");
-                Baseball.Add("hat_baseball_Red");
-                Baseball.Add("hat_baseball_White");
-                Baseball.Add("hat_baseball_Yellow");
-                if (CheckTime(true))
-                {
-                    BaseballColorCount = SkinCount(Baseball, BaseballColorCount, false);
-                    RawSetSkin(Baseball, BaseballColorCount, false);
-                }
-                System.Collections.Generic.List<string> Paperhat = new System.Collections.Generic.List<string>();
-                Paperhat.Add("hat_paperhat");
-                Paperhat.Add("hat_Paperhat_Black");
-                Paperhat.Add("hat_Paperhat_Blue");
-                Paperhat.Add("hat_Paperhat_Cyan");
-                Paperhat.Add("hat_Paperhat_Lightblue");
-                Paperhat.Add("hat_Paperhat_Pink");
-                Paperhat.Add("hat_Paperhat_Yellow");
-                if (CheckTime(true))
-                {
-                    PaperhatColorCount = SkinCount(Paperhat, PaperhatColorCount, false);
-                    RawSetSkin(Paperhat, PaperhatColorCount, false);
-                }
-                System.Collections.Generic.List<string> Slung = new System.Collections.Generic.List<string>();
-                Slung.Add("hat_brainslug");
-                Slung.Add("hat_headslug_Purple");
-                Slung.Add("hat_headslug_Red");
-                Slung.Add("hat_headslug_White");
-                Slung.Add("hat_headslug_Yellow");
-                if (CheckTime(true))
-                {
-                    SlungColorCount = SkinCount(Slung, SlungColorCount, false);
-                    RawSetSkin(Slung, SlungColorCount, false);
-                }
-                System.Collections.Generic.List<string> Bandana = new System.Collections.Generic.List<string>();
-                Bandana.Add("hat_pk04_Bandana");
-                Bandana.Add("hat_Bandana_Blue");
-                Bandana.Add("hat_Bandana_Green");
-                Bandana.Add("hat_Bandana_Pink");
-                Bandana.Add("hat_Bandana_Red");
-                Bandana.Add("hat_Bandana_White");
-                Bandana.Add("hat_Bandana_Yellow");
-                if (CheckTime(true))
-                {
-                    BandanaColorCount = SkinCount(Bandana, BandanaColorCount, false);
-                    RawSetSkin(Bandana, BandanaColorCount, false);
-                }
-                System.Collections.Generic.List<string> Doctor = new System.Collections.Generic.List<string>();
-                Doctor.Add("hat_stethescope");
-                Doctor.Add("hat_Doc_black");
-                Doctor.Add("hat_Doc_Orange");
-                Doctor.Add("hat_Doc_Purple");
-                Doctor.Add("hat_Doc_Red");
-                Doctor.Add("hat_Doc_White");
-                if (CheckTime(true))
-                {
-                    DoctorColorCount = SkinCount(Doctor, DoctorColorCount, false);
-                    RawSetSkin(Doctor, DoctorColorCount, false);
-                }
-                System.Collections.Generic.List<string> Dorag = new System.Collections.Generic.List<string>();
-                Dorag.Add("hat_pk04_Dorag");
-                Dorag.Add("hat_Dorag_Black");
-                Dorag.Add("hat_Dorag_Desert");
-                Dorag.Add("hat_Dorag_Jungle");
-                Dorag.Add("hat_Dorag_Purple");
-                Dorag.Add("hat_Dorag_Sky");
-                Dorag.Add("hat_Dorag_Snow");
-                Dorag.Add("hat_Dorag_Yellow");
-                if (CheckTime(true))
-                {
-                    DoragColorCount = SkinCount(Dorag, DoragColorCount, false);
-                    RawSetSkin(Dorag, DoragColorCount, false);
-                }
-                System.Collections.Generic.List<string> Headphone = new System.Collections.Generic.List<string>();
-                Headphone.Add("hat_pk03_Headphones");
-                Headphone.Add("hat_GovtHeadset");
-                Headphone.Add("hat_mira_headset_blue");
-                Headphone.Add("hat_mira_headset_pink");
-                Headphone.Add("hat_mira_headset_yellow");
-                if (CheckTime(true))
-                {
-                    HeadphoneColorCount = SkinCount(Headphone, HeadphoneColorCount, false);
-                    RawSetSkin(Headphone, HeadphoneColorCount, false);
-                }
-                System.Collections.Generic.List<string> Hardhat = new System.Collections.Generic.List<string>();
-                Hardhat.Add("hat_hardhat");
-                Hardhat.Add("hat_Hardhat_black");
-                Hardhat.Add("hat_Hardhat_Blue");
-                Hardhat.Add("hat_Hardhat_Green");
-                Hardhat.Add("hat_Hardhat_Orange");
-                Hardhat.Add("hat_Hardhat_Pink");
-                Hardhat.Add("hat_Hardhat_Purple");
-                Hardhat.Add("hat_Hardhat_Red");
-                Hardhat.Add("hat_Hardhat_White");
-                if (CheckTime(true))
-                {
-                    HardhatColorCount = SkinCount(Hardhat, HardhatColorCount, false);
-                    RawSetSkin(Hardhat, HardhatColorCount, false);
-                }
-                System.Collections.Generic.List<string> Light = new System.Collections.Generic.List<string>();
-                Light.Add("hat_pk06_Lights");
-                Light.Add("hat_w21_lights_white");
-                if (CheckTime(false))
-                {
-                    LightColorCount = SkinCount(Light, LightColorCount, false);
-                    RawSetSkin(Light, LightColorCount, false);
-                }
-                System.Collections.Generic.List<string> Snowman = new System.Collections.Generic.List<string>();
-                Snowman.Add("hat_w21_snowman_greenred");
-                Snowman.Add("hat_w21_snowman_redgreen");
-                Snowman.Add("hat_pk06_Snowman");
-                if (CheckTime(false))
-                {
-                    SnowmanColorCount = SkinCount(Snowman, SnowmanColorCount, true);
-                    RawSetSkin(Snowman, SnowmanColorCount, false);
-                }
+
             }
             if (main.RainbowVisor.Value)
             {
-                System.Collections.Generic.List<string> Stickynote = new System.Collections.Generic.List<string>();
-                Stickynote.Add("visor_pk01_DumStickerVisor");
-                Stickynote.Add("visor_Stickynote_Cyan");
-                Stickynote.Add("visor_Stickynote_Green");
-                Stickynote.Add("visor_Stickynote_Orange");
-                Stickynote.Add("visor_Stickynote_Pink");
-                Stickynote.Add("visor_Stickynote_Purple");
-                if (CheckTime(true))
+                if (Visor)
                 {
-                    StickynoteColorCount = SkinCount(Stickynote, StickynoteColorCount, false);
-                    RawSetSkin(Stickynote, StickynoteColorCount, true);
-                }
-                System.Collections.Generic.List<string> Lolli = new System.Collections.Generic.List<string>();
-                Lolli.Add("visor_LolliBlue");
-                Lolli.Add("visor_LolliBrown");
-                Lolli.Add("visor_LolliOrange");
-                Lolli.Add("visor_LolliRed");
-                if (CheckTime(true))
-                {
-                    LolliColorCount = SkinCount(Lolli, LolliColorCount, false);
-                    RawSetSkin(Lolli, LolliColorCount, true);
-                }
-                System.Collections.Generic.List<string> Masque = new System.Collections.Generic.List<string>();
-                Masque.Add("visor_masque_blue");
-                Masque.Add("visor_masque_green");
-                Masque.Add("visor_masque_red");
-                Masque.Add("visor_masque_white");
-                if (CheckTime(true))
-                {
-                    MasqueColorCount = SkinCount(Masque, MasqueColorCount, false);
-                    RawSetSkin(Masque, MasqueColorCount, true);
+                    Visor = false;
+                    new Timer(() =>
+                    {
+                        Visor = true;
+                        System.Collections.Generic.List<string> Stickynote = new System.Collections.Generic.List<string>();
+                        Stickynote.Add("visor_pk01_DumStickerVisor");
+                        Stickynote.Add("visor_Stickynote_Cyan");
+                        Stickynote.Add("visor_Stickynote_Green");
+                        Stickynote.Add("visor_Stickynote_Orange");
+                        Stickynote.Add("visor_Stickynote_Pink");
+                        Stickynote.Add("visor_Stickynote_Purple");
+                        StickynoteColorCount = SkinCount(Stickynote, StickynoteColorCount, false);
+                        RawSetSkin(Stickynote, StickynoteColorCount, true);
+
+                        System.Collections.Generic.List<string> Lolli = new System.Collections.Generic.List<string>();
+                        Lolli.Add("visor_LolliBlue");
+                        Lolli.Add("visor_LolliBrown");
+                        Lolli.Add("visor_LolliOrange");
+                        Lolli.Add("visor_LolliRed");
+                        LolliColorCount = SkinCount(Lolli, LolliColorCount, false);
+                        RawSetSkin(Lolli, LolliColorCount, true);
+
+                        System.Collections.Generic.List<string> Masque = new System.Collections.Generic.List<string>();
+                        Masque.Add("visor_masque_blue");
+                        Masque.Add("visor_masque_green");
+                        Masque.Add("visor_masque_red");
+                        Masque.Add("visor_masque_white");
+                        MasqueColorCount = SkinCount(Masque, MasqueColorCount, false);
+                        RawSetSkin(Masque, MasqueColorCount, true);
+                    }, 0.25f);
                 }
             }
-            if (timer == 50) timer = 0;
         }
         public static int SkinCount(System.Collections.Generic.List<string> List, int ColorCount, bool flag)
         {
@@ -265,24 +258,6 @@ namespace TownOfPlus
                     p.RawSetHat(SkinList[ColorCount], p.CurrentOutfit.ColorId);
                 }
             }
-        }
-        public static bool CheckTime(bool Rainbow)
-        {
-            if (Rainbow)
-            {
-                if (timer == 25 || timer == 50)
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                if (timer == 50)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
     //[HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
@@ -312,5 +287,5 @@ namespace TownOfPlus
     //        }
     //    }
     //}
-    
+
 }

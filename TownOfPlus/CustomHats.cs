@@ -22,75 +22,83 @@
 //using Newtonsoft.Json;
 
 
-//namespace TownOfPlus {
+//namespace TownOfPlus
+//{
 
 //    [HarmonyPatch]
-//    public class CustomHats { 
+//    public class CustomHats
+//    {
 //        public static Material hatShader;
 
 //        public static Dictionary<string, HatExtension> CustomHatRegistry = new Dictionary<string, HatExtension>();
 //        public static HatExtension TestExt = null;
 
-//        public class HatExtension {
-//            public string author { get; set;}
-//            public string package { get; set;}
-//            public string condition { get; set;}
-//            public Sprite FlipImage { get; set;}
-//            public Sprite BackFlipImage { get; set;}
+//        public class HatExtension
+//        {
+//            public string author { get; set; }
+//            public string package { get; set; }
+//            public string condition { get; set; }
+//            public Sprite FlipImage { get; set; }
+//            public Sprite BackFlipImage { get; set; }
 //        }
 
-//        public class CustomHat { 
-//            public string author { get; set;}
-//            public string package { get; set;}
-//            public string condition { get; set;}
-//            public string name { get; set;}
-//            public string resource { get; set;}
-//            public string flipresource { get; set;}
-//            public string backflipresource { get; set;}
-//            public string backresource { get; set;}
-//            public string climbresource { get; set;}
-//            public bool bounce { get; set;}
-//            public bool adaptive { get; set;}
-//            public bool behind { get; set;}
+//        public class CustomHat
+//        {
+//            public string author { get; set; }
+//            public string package { get; set; }
+//            public string condition { get; set; }
+//            public string name { get; set; }
+//            public string resource { get; set; }
+//            public string flipresource { get; set; }
+//            public string backflipresource { get; set; }
+//            public string backresource { get; set; }
+//            public string climbresource { get; set; }
+//            public bool bounce { get; set; }
+//            public bool adaptive { get; set; }
+//            public bool behind { get; set; }
 //        }
 
-//        private static List<CustomHat> createCustomHatDetails(string[] hats, bool fromDisk = false) {
+//        private static List<CustomHat> createCustomHatDetails(string[] hats, bool fromDisk = false)
+//        {
 //            Dictionary<string, CustomHat> fronts = new Dictionary<string, CustomHat>();
 //            Dictionary<string, string> backs = new Dictionary<string, string>();
 //            Dictionary<string, string> flips = new Dictionary<string, string>();
 //            Dictionary<string, string> backflips = new Dictionary<string, string>();
 //            Dictionary<string, string> climbs = new Dictionary<string, string>();
 
-//            for (int i = 0; i < hats.Length; i++) {
+//            for (int i = 0; i < hats.Length; i++)
+//            {
 //                string s = fromDisk ? hats[i].Substring(hats[i].LastIndexOf("\\") + 1).Split('.')[0] : hats[i].Split('.')[3];
 //                string[] p = s.Split('_');
 
 //                HashSet<string> options = new HashSet<string>();
-//                for (int j = 1; j < p.Length; j++) 
+//                for (int j = 1; j < p.Length; j++)
 //                    options.Add(p[j]);
 
 //                if (options.Contains("back") && options.Contains("flip"))
 //                    backflips.Add(p[0], hats[i]);
-//                else if (options.Contains("climb")) 
+//                else if (options.Contains("climb"))
 //                    climbs.Add(p[0], hats[i]);
 //                else if (options.Contains("back"))
 //                    backs.Add(p[0], hats[i]);
 //                else if (options.Contains("flip"))
 //                    flips.Add(p[0], hats[i]);
-//                else {
+//                else
+//                {
 //                    CustomHat custom = new CustomHat { resource = hats[i] };
 //                    custom.name = p[0].Replace('-', ' ');
 //                    custom.bounce = options.Contains("bounce");
 //                    custom.adaptive = options.Contains("adaptive");
 //                    custom.behind = options.Contains("behind");
-                    
+
 //                    fronts.Add(p[0], custom);
 //                }
 //            }
 
 //            List<CustomHat> customhats = new List<CustomHat>();
 
-//            foreach (string k in fronts.Keys) {
+//            foreach (string k in fronts.Keys)
+//            {
 //                CustomHat hat = fronts[k];
 //                string br, cr, fr, bfr;
 //                backs.TryGetValue(k, out br);
@@ -114,7 +122,8 @@
 //            return customhats;
 //        }
 
-//        private static Sprite CreateHatSprite(string path, bool fromDisk = false) {
+//        private static Sprite CreateHatSprite(string path, bool fromDisk = false)
+//        {
 //            Texture2D texture = fromDisk ? Helpers.loadTextureFromDisk(path) : Helpers.loadTextureFromResources(path);
 //            if (texture == null)
 //                return null;
@@ -126,36 +135,42 @@
 //            return sprite;
 //        }
 
-//        private static HatViewData CreateHatBehaviour(CustomHat ch, bool fromDisk = false, bool testOnly = false) {
-//            if (hatShader == null && DestroyableSingleton<HatManager>.InstanceExists) {
-//                foreach (HatViewData h in DestroyableSingleton<HatManager>.Instance.AllHats) {
-//                    if (h.AltShader != null) {
-//                        hatShader = h.AltShader;
+//        private static HatData CreateHatBehaviour(CustomHat ch, bool fromDisk = false, bool testOnly = false)
+//        {
+//            if (hatShader == null && DestroyableSingleton<HatManager>.InstanceExists)
+//            {
+//                foreach (HatData h in DestroyableSingleton<HatManager>.Instance.allHats)
+//                {
+//                    if (h.hatViewData.viewData.AltShader != null)
+//                    {
+//                        hatShader = h.hatViewData.viewData.AltShader;
 //                        break;
 //                    }
 //                }
 //            }
 
-//            HatBehaviour hat = new HatBehaviour();
-//            hat.MainImage = CreateHatSprite(ch.resource, fromDisk);
-//            if (ch.backresource != null) {
-//                hat.BackImage = CreateHatSprite(ch.backresource, fromDisk);
+//            HatData hat = new HatData();
+//            HatViewData viewData = hat.hatViewData.viewData;
+
+//            viewData.MainImage = CreateHatSprite(ch.resource, fromDisk);
+//            if (ch.backresource != null)
+//            {
+//                viewData.BackImage = CreateHatSprite(ch.backresource, fromDisk);
 //                ch.behind = true; // Required to view backresource
 //            }
 //            if (ch.climbresource != null)
-//                hat.ClimbImage = CreateHatSprite(ch.climbresource, fromDisk);
-//            hat.name = ch.name + "\nby " + ch.author;
-//            hat.Order = 99;
+//                viewData.ClimbImage = CreateHatSprite(ch.climbresource, fromDisk);
+//            hat.StoreName = ch.name + "\nby " + ch.author;
 //            hat.ProductId = "hat_TOP_" + ch.name.Replace(' ', '_');
 //            hat.InFront = !ch.behind;
 //            hat.NoBounce = !ch.bounce;
 //            hat.ChipOffset = new Vector2(0f, 0.2f);
 //            hat.Free = true;
 //            hat.NotInStore = true;
-            
+
 
 //            if (ch.adaptive && hatShader != null)
-//                hat.AltShader = hatShader;
+//                viewData.AltShader = hatShader;
 
 //            HatExtension extend = new HatExtension();
 //            extend.author = ch.author != null ? ch.author : "Unknown";
@@ -163,21 +178,25 @@
 //            extend.condition = ch.condition != null ? ch.condition : "none";
 
 //            if (ch.flipresource != null)
-//                 extend.FlipImage = CreateHatSprite(ch.flipresource, fromDisk);
+//                extend.FlipImage = CreateHatSprite(ch.flipresource, fromDisk);
 //            if (ch.backflipresource != null)
-//                 extend.BackFlipImage = CreateHatSprite(ch.backflipresource, fromDisk);
+//                extend.BackFlipImage = CreateHatSprite(ch.backflipresource, fromDisk);
 
-//            if (testOnly) {
+//            if (testOnly)
+//            {
 //                TestExt = extend;
 //                TestExt.condition = hat.name;
-//            } else {
+//            }
+//            else
+//            {
 //                CustomHatRegistry.Add(hat.name, extend);
 //            }
 
 //            return hat;
 //        }
 
-//        private static HatBehaviour CreateHatBehaviour(CustomHatLoader.CustomHatOnline chd) {
+//        private static HatData CreateHatBehaviour(CustomHatLoader.CustomHatOnline chd)
+//        {
 //            string filePath = Path.GetDirectoryName(Application.dataPath) + @"\TOPHats\";
 //            chd.resource = filePath + chd.resource;
 //            if (chd.backresource != null)
@@ -192,60 +211,78 @@
 //        }
 
 //        [HarmonyPatch(typeof(HatManager), nameof(HatManager.GetHatById))]
-//        private static class HatManagerPatch {
+//        private static class HatManagerPatch
+//        {
 //            private static bool LOADED;
 //            private static bool RUNNING;
 
-//            static void Prefix(HatManager __instance) {
+//            static void Prefix(HatManager __instance)
+//            {
 //                if (RUNNING) return;
 //                RUNNING = true; // prevent simultanious execution
 
-//                try {
-//                    if (!LOADED) {
+//                try
+//                {
+//                    if (!LOADED)
+//                    {
 //                        Assembly assembly = Assembly.GetExecutingAssembly();
 //                        string hatres = $"{assembly.GetName().Name}.Resources.CustomHats";
 //                        string[] hats = (from r in assembly.GetManifestResourceNames()
-//                                            where r.StartsWith(hatres) && r.EndsWith(".png")
-//                                            select r).ToArray<string>();
+//                                         where r.StartsWith(hatres) && r.EndsWith(".png")
+//                                         select r).ToArray<string>();
 
 //                        List<CustomHat> customhats = createCustomHatDetails(hats);
 //                        foreach (CustomHat ch in customhats)
-//                            __instance.AllHats.Add(CreateHatBehaviour(ch));
+//                            __instance.allHats.Add(CreateHatBehaviour(ch));
 //                    }
-//                    while (CustomHatLoader.hatdetails.Count > 0) {
-//                        __instance.AllHats.Add(CreateHatBehaviour(CustomHatLoader.hatdetails[0]));
+//                    while (CustomHatLoader.hatdetails.Count > 0)
+//                    {
+//                        __instance.allHats.Add(CreateHatBehaviour(CustomHatLoader.hatdetails[0]));
 //                        CustomHatLoader.hatdetails.RemoveAt(0);
 //                    }
-//                } catch (System.Exception) {
+//                }
+//                catch (System.Exception)
+//                {
 //                }
 //                LOADED = true;
 //            }
-//            static void Postfix(HatManager __instance) {
+//            static void Postfix(HatManager __instance)
+//            {
 //                RUNNING = false;
 //            }
 //        }
 
 //        [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation))]
-//        private static class PlayerPhysicsHandleAnimationPatch {
-//            private static void Postfix(PlayerPhysics __instance) {
+//        private static class PlayerPhysicsHandleAnimationPatch
+//        {
+//            private static void Postfix(PlayerPhysics __instance)
+//            {
 //                AnimationClip currentAnimation = __instance.Animator.GetCurrentAnimation();
-//                if (currentAnimation == __instance.ClimbAnim || currentAnimation == __instance.ClimbDownAnim) return;
+//                if (currentAnimation == __instance.CurrentAnimationGroup.ClimbAnim || currentAnimation == __instance.CurrentAnimationGroup.ClimbDownAnim) return;
 //                HatParent hp = __instance.myPlayer.HatRenderer;
 //                if (hp.Hat == null) return;
 //                HatExtension extend = hp.Hat.getHatExtension();
 //                if (extend == null) return;
-//                if (extend.FlipImage != null) {
-//                    if (__instance.rend.flipX) {
+//                if (extend.FlipImage != null)
+//                {
+//                    if (__instance.rend.flipX)
+//                    {
 //                        hp.FrontLayer.sprite = extend.FlipImage;
-//                    } else {
-//                        hp.FrontLayer.sprite = hp.Hat.MainImage;
+//                    }
+//                    else
+//                    {
+//                        hp.FrontLayer.sprite = hp.Hat.hatViewData.viewData.MainImage;
 //                    }
 //                }
-//                if (extend.BackFlipImage != null) {
-//                    if (__instance.rend.flipX) {
+//                if (extend.BackFlipImage != null)
+//                {
+//                    if (__instance.rend.flipX)
+//                    {
 //                        hp.BackLayer.sprite = extend.BackFlipImage;
-//                    } else {
-//                        hp.BackLayer.sprite = hp.Hat.BackImage;
+//                    }
+//                    else
+//                    {
+//                        hp.BackLayer.sprite = hp.Hat.hatViewData.viewData.BackImage;
 //                    }
 //                }
 //            }
@@ -277,7 +314,8 @@
 //        }
 //    }
 
-//    public class CustomHatLoader {
+//    public class CustomHatLoader
+//    {
 //        public static bool running = false;
 //        public static string[] hatRepos = main.NewHatURL.Split(',');
 
@@ -440,7 +478,7 @@
 //    }
 //    public static class CustomHatExtensions
 //    {
-//        public static CustomHats.HatExtension getHatExtension(this HatBehaviour hat)
+//        public static CustomHats.HatExtension getHatExtension(this HatData hat)
 //        {
 //            CustomHats.HatExtension ret = null;
 //            if (CustomHats.TestExt != null && CustomHats.TestExt.condition.Equals(hat.name))

@@ -25,70 +25,45 @@ namespace TownOfPlus
     //名前変更
     public class ChangeName
     {
-        private static int R = 99;
-        private static int G = 00;
-        private static int B = 00;
-        private static bool flag = false;
+        private static string Outline = "false";
+        private static StartAction Action = new StartAction();
         public static void Postfix(HudManager __instance)
         {
-            string TranslucentName = "";
-            if (main.TranslucentName.Value)
+            var p = PlayerControl.LocalPlayer;
+            Color color = Helpers.GetPlayerColor(p);
+            if (main.NameOutline.Value) color = Palette.Black;
+            if (main.RainbowName.Value || main.TranslucentName.Value)
             {
-                var Translucent = main.SetTranslucentName.Value;
-                TranslucentName = (100 - Translucent).ToString("00");
-            }
-            var name = SaveManager.PlayerName;
-            if (main.RainbowName.Value)
-            {
-                if (R != 99 && G == 00 && B == 99) R += 3;
-                if (R != 00 && G == 99 && B == 00) R -= 3;
-                if (R == 99 && G != 99 && B == 00) G += 3;
-                if (R == 00 && G != 00 && B == 99) G -= 3;
-                if (R == 00 && G == 99 && B != 99) B += 3;
-                if (R == 99 && G == 00 && B != 00) B -= 3;
-                var Rcount = R.ToString("00");
-                var Gcount = G.ToString("00");
-                var Bcount = B.ToString("00");
-                name = $"<color=#{Rcount}{Gcount}{Bcount}{TranslucentName}>" + name + "</color>";
+                Action.Reset();
+                if (Outline != main.NameOutline.Value.ToString())
+                {
+                    Outline = main.NameOutline.Value.ToString();
+                    Reset(p);
+                }
+                if (main.RainbowName.Value)
+                {
+                    color = Color.HSVToRGB(Time.time % 1, 1, 1);
+                }
+                if (main.TranslucentName.Value)
+                {
+                    color.a = (100f - main.SetTranslucentName.Value) / 100f;
+                }
+                if (main.NameOutline.Value) p.nameText.outlineColor = color;
+                else p.nameText.color = color;
             }
             else
             {
-                if (main.TranslucentName.Value)
-                {
-                    var RoleType = PlayerControl.LocalPlayer.Data.Role.Role;
-                    string ColorCode;
-                    if (RoleType == RoleTypes.Impostor || RoleType == RoleTypes.Shapeshifter)
-                    {
-                        ColorCode = "#FF0000";
-                    }
-                    else
-                    {
-                        if (RoleType == RoleTypes.Engineer || RoleType == RoleTypes.Scientist || RoleType == RoleTypes.GuardianAngel)
-                        {
-                            ColorCode = "#00FFFF";
-                        }
-                        else
-                        {
-                            ColorCode = "#FFFFFF";
-                        }
-                    }
-                    name = $"<color={ColorCode}{TranslucentName}>" + name + "</color>";
+                Reset(p);
+            }
 
-                }
-            }
-            if (main.RainbowName.Value || main.TranslucentName.Value)
+        }
+        public static void Reset(PlayerControl p)
+        {
+            Action.Run(() =>
             {
-                if (name != PlayerControl.LocalPlayer.name && PlayerControl.LocalPlayer.CurrentOutfitType == PlayerOutfitType.Default) PlayerControl.LocalPlayer.RawSetName(name);
-                flag = true;
-            }
-            else 
-            {
-                if (flag) 
-                {
-                    PlayerControl.LocalPlayer.RawSetName(SaveManager.PlayerName);
-                    flag = false;
-                }
-            } 
+                p.nameText.color = Helpers.GetPlayerColor(p);
+                p.nameText.outlineColor = Palette.Black;
+            });
         }
     }
 }

@@ -26,7 +26,7 @@ namespace TownOfPlus
         //Modの詳細
         public const string Id = "com.tugaru.TownOfPlus";
         public const string Name = "TownOfPlus";
-        public const string Version = "1.3.1";
+        public const string Version = "1.4.0";
         public static System.Version VersionId = System.Version.Parse(Version);
 
         public Harmony Harmony { get; } = new Harmony(Id);
@@ -60,6 +60,8 @@ namespace TownOfPlus
         public static ConfigEntry<bool> CrewColorOutline { get; private set; }
         public static ConfigEntry<bool> RainbowVent { get; private set; }
         public static ConfigEntry<bool> CrewColorVent { get; private set; }
+        public static ConfigEntry<bool> ChatCommand { get; private set; }
+        public static ConfigEntry<bool> NameOutline { get; private set; }
 
         //Mod詳細設定
         //ランダムマップ
@@ -112,7 +114,7 @@ namespace TownOfPlus
             TranslucentName = Config.Bind("Client Options", "TranslucentName", false);
             FakeLevel = Config.Bind("Client Options", "FakeLevel", false);
             HideNameplates = Config.Bind("Client Options", "HideNameplates", false);
-            Zoom = Config.Bind("Client Options", "Zoom", false);
+            Zoom = Config.Bind("Client Options", "Zoom", true);
             OPkick = Config.Bind("Client Options", "OPkick", false);
             SendJoinPlayer = Config.Bind("Client Options", "SendJoinPlayer", false);
             DoubleName = Config.Bind("Client Options", "DoubleName", false);
@@ -122,6 +124,8 @@ namespace TownOfPlus
             CrewColorOutline = Config.Bind("Client Options", "CrewColorOutline", false);
             RainbowVent = Config.Bind("Client Options", "RainbowVent", false);
             CrewColorVent = Config.Bind("Client Options", "CrewColorVent", false);
+            ChatCommand = Config.Bind("Client Options", "ChatCommand", true);
+            NameOutline = Config.Bind("Client Options", "OutlineName", true);
 
             //ランダムマップ
             AddTheSkeld = Config.Bind("RandomMaps Options", "AddTheSkeld", true);

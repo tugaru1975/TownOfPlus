@@ -21,18 +21,20 @@ namespace TownOfPlus
             new SelectionBehaviour("<color=#FF0000>虹色のバイザー</color>", () => main.RainbowVisor.Value = !main.RainbowVisor.Value, main.RainbowVisor.Value),
             new SelectionBehaviour("虹色の名前", () => main.RainbowName.Value = !main.RainbowName.Value, main.RainbowName.Value),
             new SelectionBehaviour("半透明の名前", () => main.TranslucentName.Value = !main.TranslucentName.Value, main.TranslucentName.Value),
+            new SelectionBehaviour("名前のアウトライン", () => main.NameOutline.Value = !main.NameOutline.Value, main.NameOutline.Value),
             new SelectionBehaviour("虹色のアウトライン", () => main.RainbowOutline.Value = !main.RainbowOutline.Value, main.RainbowOutline.Value),
             new SelectionBehaviour("クルー色のアウトライン", () => main.CrewColorOutline.Value = !main.CrewColorOutline.Value, main.CrewColorOutline.Value),
             new SelectionBehaviour("虹色のベント", () => main.RainbowVent.Value = !main.RainbowVent.Value, main.RainbowVent.Value),
             new SelectionBehaviour("クルー色のベント", () => main.CrewColorVent.Value = !main.CrewColorVent.Value, main.CrewColorVent.Value),
             new SelectionBehaviour("<color=#FF0000>偽のレベル</color>", () => main.FakeLevel.Value = !main.FakeLevel.Value, main.FakeLevel.Value),
-            //new SelectionBehaviour("ネームプレート非表示", () => main.HideNameplates.Value = !main.HideNameplates.Value, main.HideNameplates.Value),
+            new SelectionBehaviour("ネームプレート非表示", () => main.HideNameplates.Value = !main.HideNameplates.Value, main.HideNameplates.Value),
             new SelectionBehaviour("拡大縮小機能", () => main.Zoom.Value = !main.Zoom.Value, main.Zoom.Value),
             new SelectionBehaviour("<color=#00bfff>PC以外を追い出す</color>", () => main.OPkick.Value = !main.OPkick.Value, main.OPkick.Value),
             new SelectionBehaviour("<color=#00bfff>参加者にチャットを送る</color>", () => main.SendJoinPlayer.Value = !main.SendJoinPlayer.Value, main.SendJoinPlayer.Value),
             new SelectionBehaviour("<color=#00bfff>二段の名前</color>", () => main.DoubleName.Value = !main.DoubleName.Value, main.DoubleName.Value),
             new SelectionBehaviour("<color=#00bfff>ゲーム中の名前</color>", () => main.ChangeGameName.Value = !main.ChangeGameName.Value, main.ChangeGameName.Value),
             new SelectionBehaviour("自動コードコピー", () => main.AutoCopyCode.Value = !main.AutoCopyCode.Value, main.AutoCopyCode.Value),
+            new SelectionBehaviour("チャットコマンド", () => main.ChatCommand.Value = !main.ChatCommand.Value, main.ChatCommand.Value),
         };
 
         private static GameObject popUp;

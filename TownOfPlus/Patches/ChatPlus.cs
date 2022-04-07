@@ -1,5 +1,6 @@
 using HarmonyLib;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,7 +10,6 @@ namespace TownOfPlus
     class Chat
     {
         public static PlayerControl PlayerSpectatePlayer = null;
-
         //Shift + Backspace で全消し
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
         public static class Delete
@@ -17,6 +17,7 @@ namespace TownOfPlus
             public static void Prefix(ChatController __instance)
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
+                if (!main.ChatCommand.Value) return;
                 if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Backspace))
                 {
                     __instance.TextArea.SetText("");
@@ -28,12 +29,13 @@ namespace TownOfPlus
         public static class UndoAndRedo
         {
             public static List<string> List = new List<string>();
-            public static string Text = "text";
             public static int count = 1;
             public static bool UndoRedo = false;
+            public static string Text = "text";
             public static void Prefix(ChatController __instance)
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
+                if (!main.ChatCommand.Value) return;
                 if (__instance.TextArea.text != Text)
                 {
                     Text = __instance.TextArea.text;
@@ -74,6 +76,7 @@ namespace TownOfPlus
             public static void Prefix(ChatController __instance)
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
+                if (!main.ChatCommand.Value) return;
                 if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.X))
                 {
                     GUIUtility.systemCopyBuffer = __instance.TextArea.text;
@@ -94,6 +97,7 @@ namespace TownOfPlus
             public static void Prefix(ChatController __instance)
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
+                if (!main.ChatCommand.Value) return;
                 if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl))
                 {
                     bool Shift = false;
@@ -109,10 +113,9 @@ namespace TownOfPlus
                     //クールダウン確認
                     float num = 3f - __instance.TimeSinceLastMessage;
 
-                    if (num <= 0.0f)
+                    if (Shift)
                     {
-
-                        if (Shift)
+                        if (num <= 0.0f)
                         {
                             //文字数判定
                             if (CopyWordCount <= 120)
@@ -128,17 +131,14 @@ namespace TownOfPlus
                                 __instance.AddChat(PlayerControl.LocalPlayer, "ERROR:文字数は120文字までです");
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (CopyWordCount + __instance.TextArea.text.Length >= 100)
                         {
-                            if (CopyWordCount + __instance.TextArea.text.Length >= 100)
-                            {
-                                CopyWord = CopyWord.Substring(0, 100 - __instance.TextArea.text.Length);
-                            }
-                            __instance.TextArea.SetText(__instance.TextArea.text + CopyWord);
+                            CopyWord = CopyWord.Substring(0, 100 - __instance.TextArea.text.Length);
                         }
-
-
-
+                        __instance.TextArea.SetText(__instance.TextArea.text + CopyWord);
                     }
                 }
             }
@@ -147,12 +147,121 @@ namespace TownOfPlus
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.SendChat))]
         class ChatCommand
         {
-            public static bool Prefix(ChatController __instance)
+            public static void Prefix(ChatController __instance)
             {
-                bool chat = false;
+                if (!main.ChatCommand.Value) return;
                 text = __instance.TextArea.text;
                 SendChat.Addchat(__instance);
-                return !chat;
+            }
+        }
+        ///Tabでコマンド補完
+        [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
+        class TabChatCommand
+        {
+            public static int Count = -1;
+            public static List<string> ChatArea = new List<string>();
+            public static void Prefix(ChatController __instance)
+            {
+                if (!HudManager.Instance.Chat.IsOpen) return;
+                if (!main.ChatCommand.Value) return;
+                var CommandList = new List<(string Command0, string Command1)>();
+                CommandList.Add(("/Help", ""));
+                if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                {
+                    CommandList.Add(("/LobbyMaxPlayer", ""));
+                    CommandList.Add(("/Kick", "Name"));
+                    CommandList.Add(("/Ban", "Name"));
+                }
+                if (PlayerControl.LocalPlayer.Data.IsDead || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
+                {
+                    CommandList.Add(("/Tp", "Name"));
+                    CommandList.Add(("/SpectatePlayer", "Name"));
+                }
+                if (AmongUsClient.Instance.GameMode == GameModes.FreePlay)
+                {
+                    CommandList.Add(("/Tpme", "Name"));
+                    CommandList.Add(("/Kill", "Name"));
+                    CommandList.Add(("/Exiled", "Name"));
+                    CommandList.Add(("/Revive", "Name"));
+                }
+                if (main.ChangeGameName.Value &&
+                    AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started
+                    && (AmongUsClient.Instance.AmHost || AmongUsClient.Instance.GameMode == GameModes.FreePlay))
+                {
+                    CommandList.Add(("/ChangeGameName", ""));
+                }
+                if (main.RandomMaps.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost)
+                {
+                    CommandList.Add(("/RandomMap", "MapName"));
+                }
+                if (main.HideLobbyCodes.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                {
+                    CommandList.Add(("/ChangeLobbyCode", ""));
+                }
+                if (main.FakeLevel.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                {
+                    CommandList.Add(("/FakeLevel", ""));
+                }
+                if (main.SendJoinPlayer.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                {
+                    CommandList.Add(("/SendChat", ""));
+                }
+                if (main.DoubleName.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                {
+                    CommandList.Add(("/DoubleName", ""));
+                }
+                if (main.TranslucentName.Value)
+                {
+                    CommandList.Add(("/TranslucentName", ""));
+                }
+                if (CommandList == null) return;
+                var ChatText = __instance.TextArea.text;
+                if (Input.GetKeyDown(KeyCode.Tab) && ChatText.Substring(0, 1) == "/")
+                {
+                    var ChatCommand = new List<string>();
+                    var Command0 = false;
+                    var Command1 = false;
+                    var areg = (ChatText + " ").Split(' ');
+                    foreach (var List in CommandList)
+                    {
+                        if (List.Command0.ToLower() == ChatText.ToLower()) Command0 = true;
+                        if (List.Command0.ToLower() + " " == ChatText.Substring(0, List.Command0.Length + 1 > ChatText.Length ? 1 : List.Command0.Length + 1).ToLower()) Command1 = true;
+                    }
+                    foreach (var List in CommandList)
+                    {
+                        if ((ChatText.ToLower() == List.Command0.Substring(0, ChatText.Length > List.Command0.Length ? 1 : ChatText.Length).ToLower() || Command0) && !Command1)
+                            ChatCommand.Add(List.Command0);
+                        if (areg[0].ToLower() == List.Command0.ToLower() && Command1)
+                        {
+                            if (List.Command1 != "")
+                            {
+                                if (List.Command1 == "Name")
+                                {
+                                    foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                                    {
+                                        ChatCommand.Add(List.Command0 + " " + p.name);
+                                    }
+                                }
+                                if (List.Command1 == "MapName")
+                                {
+                                    ChatCommand.Add(List.Command0 + " " + "Skeld");
+                                    ChatCommand.Add(List.Command0 + " " + "MIRA");
+                                    ChatCommand.Add(List.Command0 + " " + "Polus");
+                                    ChatCommand.Add(List.Command0 + " " + "AirShip");
+                                }
+                            }
+                        }
+                    }
+                    if (!(ChatArea.All(y => ChatCommand.Any(l => l == y)) && ChatCommand.All(y => ChatArea.Any(l => l == y))))
+                    {
+                        Count = -1;
+                        ChatArea = new List<string>(ChatCommand);
+                    }
+                    if (Count >= ChatCommand.Count - 1) Count = -1;
+                    Count += 1;
+                    __instance.TextArea.SetText(ChatCommand[Count]);
+
+                }
             }
         }
         //コマンドが含まれているかの判断
@@ -164,8 +273,7 @@ namespace TownOfPlus
             public static bool Addchat(ChatController __instance)
             {
                 var canceled = false;
-                var argsText = "";
-                argsText = text;
+                var argsText = text;
                 argsText += " ";
                 //コマンドかどうか
                 if (text.Substring(0, 1) == "/")
@@ -186,6 +294,8 @@ namespace TownOfPlus
                 {
                     case "/help":
                         AddChat = "===コマンド一覧===";
+                        AddChat += ("\n/TownOfPlus(TOP) : TOPのGithubを開く");
+                        AddChat += ("\n/Bag : マシュマロを開く");
                         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                         {
                             AddChat += ("\n/LobbyMaxPlayer(LMP) [人数(4~15)] : 部屋の最大人数の変更");
@@ -403,7 +513,7 @@ namespace TownOfPlus
                         }
                         string psplayerName = text.Substring(args[0].Length + 1);
                         PlayerControl pstarget = Helpers.GetNamePlayer(psplayerName);
-                        if (pstarget != null)
+                        if (pstarget != null && pstarget != PlayerControl.LocalPlayer)
                         {
                             PlayerSpectatePlayer = pstarget;
                             AddChat = psplayerName + "を観戦します";
@@ -479,7 +589,7 @@ namespace TownOfPlus
                             AddChat = $"送るチャットは\n{main.SetSendJoinChat.Value}\nです";
                             break;
                         }
-                        main.SetSendJoinChat.Value = args[1];
+                        main.SetSendJoinChat.Value = args[1].Length > 100 ? args[1].Remove(100) : args[1];
                         AddChat = $"送るチャットが\n{main.SetSendJoinChat.Value}\nになりました";
                         break;
 
@@ -509,6 +619,16 @@ namespace TownOfPlus
                         AddChat = ("\n/TranslucentName(TN) [数値%] : 名前の透明度を変更します");
                         SetText = args[0];
                         break;
+
+                    case "/top":
+                    case "/townofplus":
+                        System.Diagnostics.Process.Start("https://github.com/tugaru1975/TownOfPlus");
+                        break;
+
+                    case "/bag":
+                        System.Diagnostics.Process.Start("https://marshmallow-qa.com/tugaruyukkuri");
+                        break;
+
                     default:
                         break;
                 }
@@ -557,15 +677,20 @@ namespace TownOfPlus
         public static class PlayerSpectate
         {
             public static bool flag = false;
+            public static PlayerControl player;
             public static void Postfix(HudManager __instance)
             {
-                if (PlayerSpectatePlayer != null)
+                if (PlayerSpectatePlayer != null && PlayerSpectatePlayer != player)
                 {
+                    player = PlayerSpectatePlayer;
                     PlayerControl.LocalPlayer.transform.position = PlayerSpectatePlayer.transform.position;
                     if (!flag)
                     {
-                        flag = true;
-                        PlayerControl.LocalPlayer.gameObject.SetActive(false);
+                        PlayerSpectatePlayer.gameObject.SetActive(true);
+                        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                        {
+                            if(p.Data.IsDead && p != PlayerSpectatePlayer) p.gameObject.SetActive(false);
+                        }
                     }
                     if (MeetingHud.Instance != null) PlayerSpectatePlayer = null;
                 }
@@ -574,7 +699,10 @@ namespace TownOfPlus
                     if (flag)
                     {
                         flag = false;
-                        PlayerControl.LocalPlayer.gameObject.SetActive(true);
+                        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                        {
+                            if (p.Data.IsDead) p.gameObject.SetActive(true);
+                        }
                     }
                 }
             }
@@ -587,17 +715,8 @@ namespace TownOfPlus
     {
         public static void Postfix(HudManager __instance)
         {
-            if (__instance?.Chat?.isActiveAndEnabled == false && (AmongUsClient.Instance?.GameMode == GameModes.FreePlay))
-                __instance?.Chat?.SetVisible(true);
-        }
-    }
-    //フリーチャットの有効化
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-    public static class FreeChat
-    {
-        public static void Postfix(HudManager __instance)
-        {
-            SaveManager.chatModeType = 1;
+            if (__instance.Chat.isActiveAndEnabled == false && (AmongUsClient.Instance?.GameMode == GameModes.FreePlay))
+                __instance.Chat.SetVisible(true);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace TownOfPlus
     {
         public static void Prefix()
         {
+            //キル対象
             if (main.RainbowOutline.Value)
             {
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
@@ -40,8 +41,11 @@ namespace TownOfPlus
                     if (p != PlayerControl.LocalPlayer) p.MyRend.material.SetColor("_OutlineColor", p.MyRend.material.GetColor("_BodyColor"));
                 }
             }
+
+            //ベント
             if (main.RainbowVent.Value)
             {
+                if (ShipStatus.Instance == null) return;
                 foreach (Vent vent in ShipStatus.Instance.AllVents)
                 {
                     vent.myRend.material.SetColor("_OutlineColor", Color.HSVToRGB(Time.time % 1, 1, 1));
@@ -49,6 +53,7 @@ namespace TownOfPlus
             }
             if (main.CrewColorVent.Value)
             {
+                if (ShipStatus.Instance == null) return;
                 foreach (Vent vent in ShipStatus.Instance.AllVents)
                 {
                     vent.myRend.material.SetColor("_OutlineColor", PlayerControl.LocalPlayer.MyRend.material.GetColor("_BodyColor"));

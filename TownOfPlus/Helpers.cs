@@ -10,7 +10,7 @@ using HarmonyLib;
 using Hazel;
 
 namespace TownOfPlus {
-	
+
     public static class Helpers
     {
         public static void destroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
@@ -90,9 +90,82 @@ namespace TownOfPlus {
             return player;
         }
 
-        public static string GetString(this TranslationController t, StringNames key, params Il2CppSystem.Object[] parts)
+        public static Color GetPlayerColor(PlayerControl p)
         {
-            return t.GetString(key, parts);
+            var RoleType = p.Data.Role.Role;
+            if (RoleType == RoleTypes.Impostor || RoleType == RoleTypes.Shapeshifter)
+            {
+                return Palette.ImpostorRed;
+            }
+            else
+            {
+                if (RoleType == RoleTypes.Engineer || RoleType == RoleTypes.Scientist || RoleType == RoleTypes.GuardianAngel)
+                {
+                    return Palette.CrewmateBlue;
+                }
+                else
+                {
+                    return Palette.White;
+                }
+            }
+        }
+    }
+    class Timer
+    {
+        public float timer;
+        public Action action;
+        public static List<Timer> Timers = new List<Timer>();
+        public bool run(float deltaTime)
+        {
+            timer -= deltaTime;
+            if (timer <= 0)
+            {
+                action();
+                return true;
+            }
+            return false;
+        }
+        public Timer(Action action, float time)
+        {
+            this.action = action;
+            this.timer = time;
+            Timers.Add(this);
+        }
+        public static void Update(float deltaTime)
+        {
+            var TimersToRemove = new List<Timer>();
+            Timers.ForEach((Timer) => {
+                if (Timer.run(deltaTime))
+                {
+                    TimersToRemove.Add(Timer);
+                }
+            });
+            TimersToRemove.ForEach(Timer => Timers.Remove(Timer));
+        }
+    }
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+    class TimerUpdate
+    {
+        public static void Postfix(HudManager __instance)
+        {
+            Timer.Update(Time.deltaTime);
+        }
+    }
+    public class StartAction
+    {
+        bool flag;
+        public void Reset()
+        {
+            flag = false;
+        }
+
+        public void Run(Action action)
+        {
+            if (!flag)
+            {
+                action();
+                flag = true;
+            }
         }
     }
 }

@@ -139,7 +139,7 @@ namespace TownOfPlus {
             if (overlayShown) return;
 
             HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
-            if (PlayerControl.LocalPlayer == null || hudManager == null || HudManager.Instance.IsIntroDisplayed)
+            if (PlayerControl.LocalPlayer == null || hudManager == null)
                 return;
 
             if (!initializeOverlays()) return;
@@ -166,10 +166,10 @@ namespace TownOfPlus {
             List<string> gameOptions = o.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 17);
             infoOverlayRules.text = string.Join("\n", gameOptions);
             infoOverlayRules.enabled = true;
-
             string PlayerText = "<size=1.5>===プレイヤー一覧===</size>";
             foreach (InnerNet.ClientData Client in AmongUsClient.Instance.allClients.ToArray())
             {
+                if (Client == null) continue;
                 var Platform = $"{Client.PlatformData.Platform}";
                 var TOP = "";
                 if (playerVersions.ContainsKey(Client.Id))
@@ -177,8 +177,7 @@ namespace TownOfPlus {
                     PlayerVersion PV = playerVersions[Client.Id];
                     TOP = $"<size=0.75>(TOP v{PV.version})</size>";
                 }
-
-                PlayerText += $"\n{TOP}{Client.PlayerName} : {Platform.Replace("Standalone", "")}";
+                PlayerText += $"\n{TOP}{Client.PlayerName.Replace("\n","")} : {Platform.Replace("Standalone", "")}";
             }
 
             infoOverlayPlayer.text = PlayerText;
