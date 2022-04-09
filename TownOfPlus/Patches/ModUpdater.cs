@@ -29,7 +29,7 @@ namespace TownOfPlus {
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
     public class ModUpdaterButton {
         private static void Prefix(MainMenuManager __instance) {
-            //CustomHatLoader.LaunchHatFetcher();
+            CustomHatLoader.LaunchHatFetcher();
             ModUpdater.LaunchUpdater();
             if (!ModUpdater.hasUpdate) return;
             var template = GameObject.Find("ExitGameButton");
@@ -108,8 +108,7 @@ namespace TownOfPlus {
                 string[] files = d.GetFiles("*.old").Select(x => x.FullName).ToArray(); // Getting old versions
                 foreach (string f in files)
                     File.Delete(f);
-            } catch (System.Exception e) {
-                System.Console.WriteLine("Exception occured when clearing old versions:\n" + e);
+            } catch (System.Exception) {
             }
         }
 
@@ -119,7 +118,6 @@ namespace TownOfPlus {
                 http.DefaultRequestHeaders.Add("User-Agent", "TownOfPlus Updater");
                 var response = await http.GetAsync(new System.Uri("https://api.github.com/repos/tugaru1975/TownOfPlus/releases/latest"), HttpCompletionOption.ResponseContentRead);
                 if (response.StatusCode != HttpStatusCode.OK || response.Content == null) {
-                    System.Console.WriteLine("Server returned no data: " + response.StatusCode.ToString());
                     return false;
                 }
                 string json = await response.Content.ReadAsStringAsync();
@@ -158,8 +156,7 @@ namespace TownOfPlus {
                 }  else {
                     //announcement = string.Format("announcementChangelog", ver, announcement);
                 }
-            } catch (System.Exception ex) {
-                System.Console.WriteLine(ex);
+            } catch (System.Exception) {
             }
             return false;
         }
@@ -170,7 +167,6 @@ namespace TownOfPlus {
                 http.DefaultRequestHeaders.Add("User-Agent", "TownOfPlus Updater");
                 var response = await http.GetAsync(new System.Uri(updateURI), HttpCompletionOption.ResponseContentRead);
                 if (response.StatusCode != HttpStatusCode.OK || response.Content == null) {
-                    System.Console.WriteLine("Server returned no data: " + response.StatusCode.ToString());
                     return false;
                 }
                 string codeBase = Assembly.GetExecutingAssembly().CodeBase;
@@ -188,8 +184,7 @@ namespace TownOfPlus {
                 }
                 showPopup("アップデートが完了しました\nAmongUsを再起動してください");
                 return true;
-            } catch (System.Exception ex) {
-                System.Console.WriteLine(ex);
+            } catch (System.Exception) {
             }
             showPopup("最新に失敗しました");
             return false;

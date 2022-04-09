@@ -28,7 +28,6 @@ namespace TownOfPlus
                         if (p.PlatformData.Platform == (Platforms)Enum.ToObject(typeof(Platforms), int.Parse(args[i])))
                         {
                             AmongUsClient.Instance.KickPlayer(p.Id, false);
-                            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{(Platforms)Enum.ToObject(typeof(Platforms), int.Parse(args[i]))}");
                             break;
                         }
                     }
