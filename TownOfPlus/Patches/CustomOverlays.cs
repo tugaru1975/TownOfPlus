@@ -109,8 +109,8 @@ namespace TownOfPlus {
                 infoOverlayRules.enableWordWrapping = false;
                 infoOverlayRules.alignment = TMPro.TextAlignmentOptions.TopLeft;
                 infoOverlayRules.transform.position = Vector3.zero;
-                infoOverlayRules.transform.localPosition = new Vector3(-1.25f, 0.45f, -910f);
-                infoOverlayRules.transform.localScale = Vector3.one * 1.5f;
+                infoOverlayRules.transform.localPosition = new Vector3(-1.5f, 0.8f, -910f);
+                infoOverlayRules.transform.localScale = Vector3.one * 1.25f;
                 infoOverlayRules.color = Palette.White;
                 infoOverlayRules.enabled = false;
             }
@@ -125,7 +125,7 @@ namespace TownOfPlus {
                 infoOverlayPlayer.enableWordWrapping = false;
                 infoOverlayPlayer.alignment = TMPro.TextAlignmentOptions.TopLeft;
                 infoOverlayPlayer.transform.position = Vector3.zero;
-                infoOverlayPlayer.transform.localPosition = infoOverlayRules.transform.localPosition + new Vector3(2.5f, 0.5f, 0.0f);
+                infoOverlayPlayer.transform.localPosition = infoOverlayRules.transform.localPosition + new Vector3(2.5f, 0f, 0.0f);
                 infoOverlayPlayer.transform.localScale = Vector3.one * 1.25f;
                 infoOverlayPlayer.color = Palette.White;
                 infoOverlayPlayer.enabled = false;
@@ -163,7 +163,7 @@ namespace TownOfPlus {
             infoUnderlay.enabled = true;
 
             GameOptionsData o = PlayerControl.GameOptions;
-            List<string> gameOptions = o.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 17);
+            List<string> gameOptions = o.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 21);
             infoOverlayRules.text = string.Join("\n", gameOptions);
             infoOverlayRules.enabled = true;
             string PlayerText = "<size=1.5>===プレイヤー一覧===</size>";
@@ -172,12 +172,20 @@ namespace TownOfPlus {
                 if (Client == null) continue;
                 var Platform = $"{Client.PlatformData.Platform}";
                 var TOP = "";
-                if (playerVersions.ContainsKey(Client.Id))
+                if (playerVersions.ContainsKey(Client.Id) || Client.Id == AmongUsClient.Instance.ClientId)
                 {
-                    PlayerVersion PV = playerVersions[Client.Id];
-                    TOP = $"<size=0.75>(TOP v{PV.version})</size>";
+                    if (Client.Id == AmongUsClient.Instance.ClientId)
+                    {
+                        TOP = $"<size=0.75>(TOP v{main.Version})</size>";
+                    }
+                    else
+                    {
+                        PlayerVersion PV = playerVersions[Client.Id];
+                        TOP = $"<size=0.75>(TOP v{PV.version})</size>";
+                    }
+
                 }
-                PlayerText += $"\n{TOP}{Client.PlayerName.Replace("\n","")} : {Platform.Replace("Standalone", "")}";
+                PlayerText += $"\n<color=#{Helpers.GetColorHEX(Client)}>■</color>{TOP}{(Client.Id == AmongUsClient.Instance.ClientId ? SaveManager.PlayerName : Client.PlayerName.Replace("\n",""))} : {Platform.Replace("Standalone", "")}";
             }
 
             infoOverlayPlayer.text = PlayerText;

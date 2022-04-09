@@ -86,7 +86,9 @@ namespace TownOfPlus {
 
         public static PlayerControl GetNamePlayer(string name)
         {
-            PlayerControl player = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(name));
+            PlayerControl player;
+            if (name == SaveManager.PlayerName) player = PlayerControl.LocalPlayer;
+            else player = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(name));
             return player;
         }
 
@@ -108,6 +110,15 @@ namespace TownOfPlus {
                     return Palette.White;
                 }
             }
+        }
+        public static string GetColorHEX(InnerNet.ClientData Client)
+        {
+            return ColorToHex(Palette.PlayerColors[Client.ColorId]);
+        }
+        public static string ColorToHex(Color32 color)
+        {
+            string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2") + color.a.ToString("X2");
+            return hex;
         }
     }
     class Timer

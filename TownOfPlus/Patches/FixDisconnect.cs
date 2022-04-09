@@ -29,10 +29,10 @@ namespace TownOfPlus
             foreach (PlayerVoteArea pva in __instance.playerStates)
             {
                 if (pva == null) continue;
-                PlayerControl player = Helpers.playerById((byte)pva.TargetPlayerId);
+                PlayerControl player = Helpers.playerById(pva.TargetPlayerId);
                 if(player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected)
                 {
-                    pva?.Overlay?.gameObject?.SetActive(true);
+                    pva.Overlay.gameObject?.SetActive(true);
                 }
             }
         }

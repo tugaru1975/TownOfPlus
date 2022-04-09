@@ -32,8 +32,9 @@ namespace TownOfPlus
                 new Timer(() =>
                 {
                     __instance.SetVisible(true);
-                }, 0.001f);
+                }, 0f);
             }
+
         }
         //[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CheckEndCriteria))]
         //class CheckGameEndPatch

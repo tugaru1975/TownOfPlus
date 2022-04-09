@@ -19,11 +19,18 @@ namespace TownOfPlus
         {
             if (AmongUsClient.Instance.AmHost && main.OPkick.Value)
             {
+                var args = main.SetOPkick.Value.Split(',');
                 foreach (InnerNet.ClientData p in AmongUsClient.Instance.allClients)
                 {
-                    if (p.PlatformData.Platform != Platforms.StandaloneEpicPC && p.PlatformData.Platform != Platforms.StandaloneSteamPC)
+                    if (p.Id == AmongUsClient.Instance.ClientId) continue;
+                    for (int i = 0; i < args.Length - 1; i++)
                     {
-                        AmongUsClient.Instance.KickPlayer(p.Id, false);
+                        if (p.PlatformData.Platform == (Platforms)Enum.ToObject(typeof(Platforms), int.Parse(args[i])))
+                        {
+                            AmongUsClient.Instance.KickPlayer(p.Id, false);
+                            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{(Platforms)Enum.ToObject(typeof(Platforms), int.Parse(args[i]))}");
+                            break;
+                        }
                     }
                 }
             }

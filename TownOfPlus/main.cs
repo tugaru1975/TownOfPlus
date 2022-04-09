@@ -26,7 +26,7 @@ namespace TownOfPlus
         //Modの詳細
         public const string Id = "com.tugaru.TownOfPlus";
         public const string Name = "TownOfPlus";
-        public const string Version = "1.4.0";
+        public const string Version = "1.5.0";
         public static System.Version VersionId = System.Version.Parse(Version);
 
         public Harmony Harmony { get; } = new Harmony(Id);
@@ -87,6 +87,9 @@ namespace TownOfPlus
 
         //半透明の名前
         public static ConfigEntry<int> SetTranslucentName { get; private set; }
+
+        //プラットフォームKick
+        public static ConfigEntry<string> SetOPkick { get; private set; }
 
         public static string NewHatURL = "";
 
@@ -150,6 +153,9 @@ namespace TownOfPlus
 
             //半透明の名前
             SetTranslucentName = Config.Bind("SetTranslucentName Options", "SetTranslucentName", 75);
+
+            //プラットフォームKick
+            SetOPkick = Config.Bind("SetOPkick Options", "SetOPkick","3,4,5,6,7,8,9,10,");
 
             Harmony.PatchAll();
         }

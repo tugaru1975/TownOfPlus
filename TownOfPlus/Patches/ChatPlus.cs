@@ -17,6 +17,7 @@ namespace TownOfPlus
             public static void Prefix(ChatController __instance)
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
+                if (SaveManager.chatModeType != 1) return;
                 if (!main.ChatCommand.Value) return;
                 if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Backspace))
                 {
@@ -35,6 +36,7 @@ namespace TownOfPlus
             public static void Prefix(ChatController __instance)
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
+                if (SaveManager.chatModeType != 1) return;
                 if (!main.ChatCommand.Value) return;
                 if (__instance.TextArea.text != Text)
                 {
@@ -76,6 +78,7 @@ namespace TownOfPlus
             public static void Prefix(ChatController __instance)
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
+                if (SaveManager.chatModeType != 1) return;
                 if (!main.ChatCommand.Value) return;
                 if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.X))
                 {
@@ -97,6 +100,7 @@ namespace TownOfPlus
             public static void Prefix(ChatController __instance)
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
+                if (SaveManager.chatModeType != 1) return;
                 if (!main.ChatCommand.Value) return;
                 if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl))
                 {
@@ -150,6 +154,7 @@ namespace TownOfPlus
             public static void Prefix(ChatController __instance)
             {
                 if (!main.ChatCommand.Value) return;
+                if (SaveManager.chatModeType != 1) return;
                 text = __instance.TextArea.text;
                 SendChat.Addchat(__instance);
             }
@@ -214,6 +219,10 @@ namespace TownOfPlus
                 {
                     CommandList.Add(("/TranslucentName", ""));
                 }
+                if (main.OPkick.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                {
+                    CommandList.Add(("/OPkick", ""));
+                }
                 if (CommandList == null) return;
                 var ChatText = __instance.TextArea.text;
                 if (Input.GetKeyDown(KeyCode.Tab) && ChatText.Substring(0, 1) == "/")
@@ -239,7 +248,8 @@ namespace TownOfPlus
                                 {
                                     foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                                     {
-                                        ChatCommand.Add(List.Command0 + " " + p.name);
+                                        if (p == PlayerControl.LocalPlayer) ChatCommand.Add(List.Command0 + " " + SaveManager.PlayerName);
+                                        else ChatCommand.Add(List.Command0 + " " + p.Data.PlayerName);
                                     }
                                 }
                                 if (List.Command1 == "MapName")
@@ -270,6 +280,7 @@ namespace TownOfPlus
             public static int LobbyLimit = 15;
             public static int LevelLimit = 100;
             public static int TranslucentName = 100;
+            public static int OPkick = 10;
             public static bool Addchat(ChatController __instance)
             {
                 var canceled = false;
@@ -349,6 +360,10 @@ namespace TownOfPlus
                         if (main.TranslucentName.Value)
                         {
                             AddChat += ("\n/TranslucentName(TN) [数値] : 名前の透明度を変更します");
+                        }
+                        if (main.OPkick.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                        {
+                            AddChat += ("\n/OPkick [数(1~10)] : 追い出すプレイヤーの機種を変更します。");
                         }
                         if (AddChat == "===コマンド一覧===") AddChat += ("\n実行可能なコマンドはありません");
                         break;
@@ -620,6 +635,43 @@ namespace TownOfPlus
                         SetText = args[0];
                         break;
 
+                    case "/opkick":
+                        if (!(main.OPkick.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)) break;
+                        if (args.Length < 3)
+                        {
+                            SendOPkick(__instance);
+                            break;
+                        }
+                        if (Int32.TryParse(args[1], out OPkick))
+                        {
+                            OPkick = Math.Clamp(OPkick, 1, 10);
+                            if (main.SetOPkick.Value.Contains($"{OPkick},"))
+                            {
+                                main.SetOPkick.Value = main.SetOPkick.Value.Replace($"{OPkick},","");
+                            }
+                            else
+                            {
+                                main.SetOPkick.Value += $"{OPkick},";
+                            }
+                            SendOPkick(__instance);
+                            break;
+                        }
+                        AddChat = ("/OPkick [数(1~10)] : 追い出すプレイヤーの機種を変更します。\n" +
+                                    "===機種コマンド一覧===\n" +
+                                    "機種名 [数値]\n" +
+                                    "EpicPC [1]\n" +
+                                    "SteamPC [2]\n" +
+                                    "Mac [3]\n" +
+                                    "Win10 [4]\n" +
+                                    "Itch [5]\n" +
+                                    "IPhone [6]\n" +
+                                    "Android [7]\n" +
+                                    "Switch [8]\n" +
+                                    "Xbox [9]\n" +
+                                    "Playstation [10]\n");
+                        SetText = args[0];
+                        break;
+
                     case "/top":
                     case "/townofplus":
                         System.Diagnostics.Process.Start("https://github.com/tugaru1975/TownOfPlus");
@@ -666,11 +718,21 @@ namespace TownOfPlus
             public static void RandomMap(ChatController __instance)
             {
                 __instance.AddChat(PlayerControl.LocalPlayer,
-                ($"マップ名 : 設定\n" +
+                ($"===有効マップ一覧===" +
+                 $"マップ名 : 設定\n" +
                  $"TheSkeld : {(main.AddTheSkeld.Value ? "ON" : "OFF")}\n" +
                  $"MIRAHQ : {(main.AddMIRAHQ.Value ? "ON" : "OFF")}\n" +
                  $"Polus : {(main.AddPolus.Value ? "ON" : "OFF")}\n" +
                  $"AirShip : {(main.AddAirShip.Value ? "ON" : "OFF")}"));
+            }
+            public static void SendOPkick(ChatController __instance)
+            {
+                var text = ($"===Kickする機種一覧===\n");
+                for (int i = 1; i <= Enum.GetNames(typeof(Platforms)).Length - 1; i++)
+                {
+                    text += $"{Enum.ToObject(typeof(Platforms), i)}".Replace("Standalone", "") + $" : {(main.SetOPkick.Value.Contains($"{i},") ? "ON" : "OFF")}\n";
+                }
+                __instance.AddChat(PlayerControl.LocalPlayer, text);
             }
         }
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
@@ -680,30 +742,39 @@ namespace TownOfPlus
             public static PlayerControl player;
             public static void Postfix(HudManager __instance)
             {
-                if (PlayerSpectatePlayer != null && PlayerSpectatePlayer != player)
+                if (MeetingHud.Instance != null) PlayerSpectatePlayer = null;
+                if (PlayerSpectatePlayer != null)
                 {
-                    player = PlayerSpectatePlayer;
+                    if (PlayerSpectatePlayer != player)
+                    {
+                        player = PlayerSpectatePlayer;
+                        flag = false;
+                    }
                     PlayerControl.LocalPlayer.transform.position = PlayerSpectatePlayer.transform.position;
                     if (!flag)
                     {
-                        PlayerSpectatePlayer.gameObject.SetActive(true);
+                        Reset();
                         foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                         {
-                            if(p.Data.IsDead && p != PlayerSpectatePlayer) p.gameObject.SetActive(false);
+                            if (p.Data.IsDead && p != PlayerSpectatePlayer) p.gameObject.SetActive(false);
                         }
                     }
-                    if (MeetingHud.Instance != null) PlayerSpectatePlayer = null;
+                    flag = true;
                 }
                 else
                 {
                     if (flag)
                     {
                         flag = false;
-                        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
-                        {
-                            if (p.Data.IsDead) p.gameObject.SetActive(true);
-                        }
+                        Reset();
                     }
+                }
+            }
+            public static void Reset()
+            {
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                {
+                    p.gameObject.SetActive(true);
                 }
             }
         }

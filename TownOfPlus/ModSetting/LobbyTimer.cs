@@ -44,7 +44,7 @@ namespace TownOfPlus
             public static void Postfix(GameStartManager __instance)
             {
                 // Lobby timer
-                if (!AmongUsClient.Instance.AmHost || !GameData.Instance) return;
+                if (!AmongUsClient.Instance.AmHost || !GameData.Instance || AmongUsClient.Instance.GameMode == GameModes.LocalGame) return;
                 if (update) currentText = __instance.PlayerCounter.text;
                 if (main.LobbyTimer.Value) __instance.PlayerCounter.text = currentText;
                 timer = Mathf.Max(0f, timer -= Time.deltaTime);

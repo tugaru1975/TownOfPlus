@@ -17,9 +17,17 @@ namespace TownOfPlus
     {
         public static void Prefix(JoinGameButton __instance)
         {
+            var text = __instance.GameIdText.text;
             if (Regex.IsMatch(GUIUtility.systemCopyBuffer, @"[A-Z]{6}"))
             {
-                if (__instance.GameIdText.text == "") __instance.GameIdText.SetText(GUIUtility.systemCopyBuffer);
+                if (text == "") __instance.GameIdText.SetText(GUIUtility.systemCopyBuffer);
+            }
+            if (__instance.GameIdText.text.Length == 5)
+            {
+                StringNames n = DestroyableSingleton<ServerManager>.Instance.CurrentRegion.TranslateName;
+                if (n == StringNames.ServerNA) __instance.GameIdText.SetText(text + "G");
+                if (n == StringNames.ServerEU) __instance.GameIdText.SetText(text + "F");
+                if (n == StringNames.ServerAS) __instance.GameIdText.SetText(text + "F");
             }
         }
     }
