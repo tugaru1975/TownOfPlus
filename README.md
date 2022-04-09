@@ -189,5 +189,7 @@ Epic : `C:\Program Files (x86)\Epic Games\AmongUs`
 [BepInEx](https://github.com/BepInEx/BepInEx)-[BepInEx](https://github.com/BepInEx)様  
 [TheOtherRoles](https://github.com/Eisbison/TheOtherRoles),[TheOtherHats](https://github.com/Eisbison/TheOtherHats)-[Eisbison](https://github.com/Eisbison)様  
 [TheOtherRoles-GM](https://github.com/yukinogatari/TheOtherRoles-GM),[TheOtherHats-GM](https://github.com/yukinogatari/TheOtherHats-GM)-[Virtual_Dusk](https://twitter.com/Virtual_Dusk)様  
+[TheOtherRoles-GM-Haoming](https://github.com/haoming37/TheOtherRoles-GM-Haoming),[ TheOtherHats-GM-Haoming
+](https://github.com/haoming37/TheOtherHats-GM-Haoming)-[haoming](https://twitter.com/haoming_dev)様  
 [TownOfHost](https://github.com/tukasa0001/TownOfHost)-[EmptyBottle](https://twitter.com/XenonBottle)様  
 [SuperNewRoles](https://github.com/ykundesu/SuperNewRoles)-[ykundesu](https://twitter.com/SuperNewRoles)様
