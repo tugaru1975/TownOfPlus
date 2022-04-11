@@ -157,8 +157,7 @@ https://github.com/tugaru1975/TOPHats/tree/main#readme
 # 導入方法
 ## TownOfPlus単体で入れる
 ### 1.TownOfPlusのインストール
-[Releases](https://github.com/tugaru1975/TownOfPlus/releases)から  
-`TownOfPlus.zip`をダウンロード  
+[TownOfPlus.zip](https://github.com/tugaru1975/TownOfPlus/releases/latest/download/TownOfPlus.zip)をダウンロード  
 展開/解凍すると画像のようなファイルが展開/解凍されます。  
 <img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/TownOfPluszip.png">
 ### 2.TownOfPlusをAmongUsに入れる
@@ -172,8 +171,7 @@ Epic : `C:\Program Files (x86)\Epic Games\AmongUs`
 <img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/AmongUsTOP.png">
 ## 他のmodとTownOfPlusを入れる
 ### 1.TownOfPlusのインストール
-[Releases](https://github.com/tugaru1975/TownOfPlus/releases)から  
-`TownOfPlus.dll`をダウンロード  
+[TownOfPlus.dll](https://github.com/tugaru1975/TownOfPlus/releases/latest/download/TownOfPlus.dll)をダウンロード  
 画像のようなファイルが保存されます。  
 <img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlusfile/TownOfPlusdll.png">
 ### 2.TownOfPlusをAmongUsに入れる
