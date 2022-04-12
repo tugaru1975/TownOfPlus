@@ -84,6 +84,12 @@ namespace TownOfPlus {
             return null;
         }
 
+        public static InnerNet.ClientData playerByClient(PlayerControl player)
+        {
+            var client = AmongUsClient.Instance.allClients.ToArray().Where(cd => cd.Character.PlayerId == player.PlayerId).FirstOrDefault();
+            return client;
+        }
+
         public static PlayerControl GetNamePlayer(string name)
         {
             PlayerControl player;

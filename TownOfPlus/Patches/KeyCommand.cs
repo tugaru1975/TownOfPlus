@@ -34,7 +34,6 @@ namespace TownOfPlus
                     __instance.SetVisible(true);
                 }, 0f);
             }
-
         }
         //[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CheckEndCriteria))]
         //class CheckGameEndPatch

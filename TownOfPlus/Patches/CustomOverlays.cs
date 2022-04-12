@@ -109,7 +109,7 @@ namespace TownOfPlus {
                 infoOverlayRules.enableWordWrapping = false;
                 infoOverlayRules.alignment = TMPro.TextAlignmentOptions.TopLeft;
                 infoOverlayRules.transform.position = Vector3.zero;
-                infoOverlayRules.transform.localPosition = new Vector3(-1.5f, 0.8f, -910f);
+                infoOverlayRules.transform.localPosition = new Vector3(-1.5f, 0.9f, -910f);
                 infoOverlayRules.transform.localScale = Vector3.one * 1.25f;
                 infoOverlayRules.color = Palette.White;
                 infoOverlayRules.enabled = false;
@@ -163,7 +163,7 @@ namespace TownOfPlus {
             infoUnderlay.enabled = true;
 
             GameOptionsData o = PlayerControl.GameOptions;
-            List<string> gameOptions = o.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 21);
+            List<string> gameOptions = o.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList();
             infoOverlayRules.text = string.Join("\n", gameOptions);
             infoOverlayRules.enabled = true;
             string PlayerText = "<size=1.5>===プレイヤー一覧===</size>";

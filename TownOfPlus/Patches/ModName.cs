@@ -15,7 +15,7 @@ namespace TownOfPlus
         {
             __instance.text.alignment = TMPro.TextAlignmentOptions.TopRight;
             __instance.text.text += main.ModNameText;
-            __instance.text.text += "\n<size=2>https://bit.do/TownOfPlus</size>";
+            __instance.text.text += "\n<size=2>https://is.gd/TownOfPlus</size>";
             if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
             {
                 if (PlayerControl.LocalPlayer.Data.IsDead)

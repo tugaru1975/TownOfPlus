@@ -42,7 +42,7 @@ namespace TownOfPlus
                                 new Timer(() =>
                                 {
                                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)RpcCalls.SendChat, SendOption.Reliable, clientId);
-                                    writer.Write("*TownOfPlusによる自動送信\n" + main.SetSendJoinChat.Value);
+                                    writer.Write("※TownOfPlusによる自動送信\n" + main.SetSendJoinChat.Value);
                                     HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"「{player.name}」にチャットを送りました");
                                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                                     SendPlayerList.Add(clientId);
@@ -61,5 +61,4 @@ namespace TownOfPlus
             }
         }
     }
-    
 }

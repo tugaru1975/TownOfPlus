@@ -12,26 +12,21 @@ using System.Reflection;
 namespace TownOfPlus
 {
     [HarmonyPatch]
-    class HideNameplates
+    class MeetingHudPatch
     {
         private static Sprite blankNameplate = null;
         public static bool nameplatesChanged = true;
-        public static PlayerControl playerById(byte id)
-        {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                if (player.PlayerId == id)
-                    return player;
-            return null;
-        }
+
         public static void updateNameplate(PlayerVoteArea pva, byte playerId = Byte.MaxValue)
         {
-            blankNameplate = blankNameplate ?? HatManager.Instance.AllNamePlates[0].viewData.viewData.Image;
+            blankNameplate = blankNameplate ?? HatManager.Instance.GetNamePlateById("nameplate_NoPlate")?.viewData?.viewData?.Image;
+
             var nameplate = blankNameplate;
             if (!main.HideNameplates.Value)
             {
-                var p = playerById(playerId != Byte.MaxValue ? playerId : pva.TargetPlayerId);
+                var p = Helpers.playerById(playerId != Byte.MaxValue ? playerId : pva.TargetPlayerId);
                 var nameplateId = p?.CurrentOutfit?.NamePlateId;
-                nameplate = HatManager.Instance.GetNamePlateById(nameplateId)?.viewData.viewData.Image;
+                nameplate = HatManager.Instance.GetNamePlateById(nameplateId).viewData.viewData.Image;
             }
             pva.Background.sprite = nameplate;
         }
