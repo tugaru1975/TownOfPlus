@@ -35,7 +35,7 @@ namespace TownOfPlus
                 {
                     //設定したレベルの数 + 1 される
                     var count = main.SetLevel.Value - 1;
-                    if (count <= 100)
+                    if (count >= 100)
                     {
                         Level = (uint)rand.Next(0, 99);
                     }
@@ -44,7 +44,7 @@ namespace TownOfPlus
                         Level = (uint)count;
                     }
                 }
-                if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
                 {
                     PlayerControl.LocalPlayer.RpcSetLevel(Level);
                 }

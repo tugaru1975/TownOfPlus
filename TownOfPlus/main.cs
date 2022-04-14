@@ -26,7 +26,7 @@ namespace TownOfPlus
         //Modの詳細
         public const string Id = "com.tugaru.TownOfPlus";
         public const string Name = "TownOfPlus";
-        public const string Version = "1.5.3";
+        public const string Version = "1.6.0";
         public static System.Version VersionId = System.Version.Parse(Version);
 
         public Harmony Harmony { get; } = new Harmony(Id);
@@ -61,7 +61,12 @@ namespace TownOfPlus
         public static ConfigEntry<bool> RainbowVent { get; private set; }
         public static ConfigEntry<bool> CrewColorVent { get; private set; }
         public static ConfigEntry<bool> ChatCommand { get; private set; }
+        public static ConfigEntry<bool> KeyCommand { get; private set; }
         public static ConfigEntry<bool> NameOutline { get; private set; }
+        public static ConfigEntry<bool> CPS { get; private set; }
+        public static ConfigEntry<bool> RoomOption { get; private set; }
+        public static ConfigEntry<bool> NokillCool { get; private set; }
+
 
         //Mod詳細設定
         //ランダムマップ
@@ -72,6 +77,7 @@ namespace TownOfPlus
 
         //ロビーコード
         public static ConfigEntry<string> SetLobbyCode { get; private set; }
+        public static ConfigEntry<string> SetCodeColor { get; private set; }
 
         //偽のレベル
         public static ConfigEntry<int> SetLevel { get; private set; }
@@ -90,6 +96,12 @@ namespace TownOfPlus
 
         //プラットフォームKick
         public static ConfigEntry<string> SetOPkick { get; private set; }
+
+        //CPS
+        public static ConfigEntry<float> CPSpositionX { get; private set; }
+        public static ConfigEntry<float> CPSpositionY { get; private set; }
+        public static bool SettingCPS = false;
+
 
         public static string NewHatURL = "";
 
@@ -128,7 +140,12 @@ namespace TownOfPlus
             RainbowVent = Config.Bind("Client Options", "RainbowVent", false);
             CrewColorVent = Config.Bind("Client Options", "CrewColorVent", false);
             ChatCommand = Config.Bind("Client Options", "ChatCommand", true);
-            NameOutline = Config.Bind("Client Options", "OutlineName", true);
+            KeyCommand = Config.Bind("Client Options", "KeyCommand", true);
+            NameOutline = Config.Bind("Client Options", "OutlineName", false);
+            CPS = Config.Bind("Client Options", "CPS", false);
+            RoomOption = Config.Bind("Client Options", "RoomOption", true);
+            NokillCool = Config.Bind("Client Options", "NokillCool", false);
+
 
             //ランダムマップ
             AddTheSkeld = Config.Bind("RandomMaps Options", "AddTheSkeld", true);
@@ -138,6 +155,7 @@ namespace TownOfPlus
 
             //ロビーコード
             SetLobbyCode = Config.Bind("LobbyCode Options", "SetLobbyCode", Name);
+            SetCodeColor = Config.Bind("LobbyCode Options", "SetCodeColor", "FFFFFF");
 
             //偽のレベル
             SetLevel = Config.Bind("FakeLevel Options", "SetLevel", 101);
@@ -156,6 +174,10 @@ namespace TownOfPlus
 
             //プラットフォームKick
             SetOPkick = Config.Bind("SetOPkick Options", "SetOPkick","3,4,5,6,7,8,9,10,");
+
+            //CPS
+            CPSpositionX = Config.Bind("CPS Options", "CPSpositionX", 0f);
+            CPSpositionY = Config.Bind("CPS Options", "CPSpositionY", 2.75f);
 
             Harmony.PatchAll();
         }

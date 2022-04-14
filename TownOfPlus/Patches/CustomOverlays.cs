@@ -119,13 +119,13 @@ namespace TownOfPlus {
             {
                 infoOverlayPlayer = UnityEngine.Object.Instantiate(infoOverlayRules, hudManager.transform);
                 infoOverlayPlayer.maxVisibleLines = 28;
-                infoOverlayPlayer.fontSize = infoOverlayPlayer.fontSizeMin = infoOverlayPlayer.fontSizeMax = 1.15f;
+                infoOverlayPlayer.fontSize = infoOverlayPlayer.fontSizeMin = infoOverlayPlayer.fontSizeMax = 1.10f;
                 infoOverlayPlayer.outlineWidth += 0.02f;
                 infoOverlayPlayer.autoSizeTextContainer = false;
                 infoOverlayPlayer.enableWordWrapping = false;
                 infoOverlayPlayer.alignment = TMPro.TextAlignmentOptions.TopLeft;
                 infoOverlayPlayer.transform.position = Vector3.zero;
-                infoOverlayPlayer.transform.localPosition = infoOverlayRules.transform.localPosition + new Vector3(2.5f, 0f, 0.0f);
+                infoOverlayPlayer.transform.localPosition = infoOverlayRules.transform.localPosition + new Vector3(2.75f, 0.1f, 0.0f);
                 infoOverlayPlayer.transform.localScale = Vector3.one * 1.25f;
                 infoOverlayPlayer.color = Palette.White;
                 infoOverlayPlayer.enabled = false;
@@ -161,34 +161,7 @@ namespace TownOfPlus {
             infoUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
             infoUnderlay.transform.localScale = new Vector3(6f, 5f, 1f);
             infoUnderlay.enabled = true;
-
-            GameOptionsData o = PlayerControl.GameOptions;
-            List<string> gameOptions = o.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList();
-            infoOverlayRules.text = string.Join("\n", gameOptions);
             infoOverlayRules.enabled = true;
-            string PlayerText = "<size=1.5>===プレイヤー一覧===</size>";
-            foreach (InnerNet.ClientData Client in AmongUsClient.Instance.allClients.ToArray())
-            {
-                if (Client == null) continue;
-                var Platform = $"{Client.PlatformData.Platform}";
-                var TOP = "";
-                if (playerVersions.ContainsKey(Client.Id) || Client.Id == AmongUsClient.Instance.ClientId)
-                {
-                    if (Client.Id == AmongUsClient.Instance.ClientId)
-                    {
-                        TOP = $"<size=0.75>(TOP v{main.Version})</size>";
-                    }
-                    else
-                    {
-                        PlayerVersion PV = playerVersions[Client.Id];
-                        TOP = $"<size=0.75>(TOP v{PV.version})</size>";
-                    }
-
-                }
-                PlayerText += $"\n<color=#{Helpers.GetColorHEX(Client)}>■</color>{TOP}{(Client.Id == AmongUsClient.Instance.ClientId ? SaveManager.PlayerName : Client.PlayerName.Replace("\n",""))} : {Platform.Replace("Standalone", "")}";
-            }
-
-            infoOverlayPlayer.text = PlayerText;
             infoOverlayPlayer.enabled = true;
 
             var underlayTransparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
@@ -250,6 +223,58 @@ namespace TownOfPlus {
                 {
                     toggleInfoOverlay();
                 }
+            }
+        }
+        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+        public static class CustomOverlayUpdate
+        {
+            public static void Postfix(HudManager __instance)
+            {
+                if (!initializeOverlays()) return;
+                HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
+                if (PlayerControl.LocalPlayer == null || hudManager == null)
+                    return;
+
+                GameOptionsData o = PlayerControl.GameOptions;
+                List<string> gameOptions = o.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList();
+                infoOverlayRules.text = string.Join("\n", gameOptions);
+                string PlayerText = "<size=1.25>===プレイヤー一覧===</size>";
+                foreach (InnerNet.ClientData Client in AmongUsClient.Instance.allClients.ToArray())
+                {
+                    if (Client == null) continue;
+                    if (Client.Character == null) continue;
+                    var player = Helpers.playerById(Client.Character.PlayerId);
+                    var Platform = $"{Client.PlatformData.Platform}";
+                    var TOP = "";
+                    var FriendCodeText = "";
+                    if (playerVersions.ContainsKey(Client.Id) || Client.Id == AmongUsClient.Instance.ClientId)
+                    {
+                        if (Client.Id == AmongUsClient.Instance.ClientId)
+                        {
+                            TOP = $"<size=0.75>(TOP v{main.Version})</size>";
+                        }
+                        else
+                        {
+                            PlayerVersion PV = playerVersions[Client.Id];
+                            if (!PV.GuidMatches())
+                            {
+                                TOP = $"<size=0.75><color=#FF0000>(TOP v{PV.version})</color></size>";
+                            }
+                            else
+                            {
+                                TOP = $"<size=0.75>(TOP v{PV.version})</size>";
+                            }
+                        }
+                    }
+                    if (player != null)
+                    {
+                        var FriendCode = player.Data.FriendCode;
+                        if (FriendCode != "") FriendCodeText = $"\n<size=0.75>FriendCode : {FriendCode}</size>";
+                    }
+                    PlayerText += $"\n<color=#{Helpers.GetColorHEX(Client)}>■</color>{TOP}{(Client.Id == AmongUsClient.Instance.ClientId ? SaveManager.PlayerName : Client.PlayerName.Replace("\n", ""))} : {Platform.Replace("Standalone", "")}{FriendCodeText}";
+                }
+
+                infoOverlayPlayer.text = PlayerText;
             }
         }
         public class PlayerVersion

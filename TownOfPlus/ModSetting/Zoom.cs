@@ -37,11 +37,26 @@ namespace TownOfPlus
                 {
                     if (Input.GetAxis("Mouse ScrollWheel") > 0)
                     {
+                        if (AmongUsClient.Instance.GameMode == GameModes.FreePlay)
+                        {
                             if (Camera.main.orthographicSize > 1.0f)
                             {
                                 Camera.main.orthographicSize /= 1.5f;
                                 __instance.transform.localScale /= 1.5f;
+                                __instance.UICamera.orthographicSize /= 1.5f;
+                                HudManager.Instance.TaskStuff.SetActive(false);
                             }
+                        }
+                        else
+                        {
+                            if (Camera.main.orthographicSize > 3.0f)
+                            {
+                                Camera.main.orthographicSize /= 1.5f;
+                                __instance.transform.localScale /= 1.5f;
+                                __instance.UICamera.orthographicSize /= 1.5f;
+                            }
+                        }
+
                     }
                     if (Input.GetAxis("Mouse ScrollWheel") < 0)
                     {
@@ -51,26 +66,24 @@ namespace TownOfPlus
                             {
                                 Camera.main.orthographicSize *= 1.5f;
                                 __instance.transform.localScale *= 1.5f;
+                                __instance.UICamera.orthographicSize *= 1.5f;
                             }
+                        }
+                    }
+                    if (AmongUsClient.Instance.GameMode == GameModes.FreePlay)
+                    {
+                        if (Camera.main.orthographicSize != 3.0f)
+                        {
+                            HudManager.Instance.TaskStuff.SetActive(false);
+                            ModManager.Instance.ModStamp.gameObject.SetActive(false);
+                            if (!PlayerControl.LocalPlayer.Data.IsDead) __instance.ShadowQuad.gameObject.SetActive(false);
                         }
                         else
                         {
-                            if (Camera.main.orthographicSize < 3.0f)
-                            {
-                                Camera.main.orthographicSize *= 1.5f;
-                                __instance.transform.localScale *= 1.5f;
-                            }
+                            HudManager.Instance.TaskStuff.SetActive(true);
+                            ModManager.Instance.ModStamp.gameObject.SetActive(true);
+                            if (!PlayerControl.LocalPlayer.Data.IsDead) __instance.ShadowQuad.gameObject.SetActive(true);
                         }
-                    }
-                    if (Camera.main.orthographicSize != 3.0f)
-                    {
-                        __instance.UICamera.orthographicSize = 0f;
-                        if (AmongUsClient.Instance.GameMode == GameModes.FreePlay && !PlayerControl.LocalPlayer.Data.IsDead) __instance.ShadowQuad.gameObject.SetActive(false);
-                    }
-                    else
-                    {
-                        __instance.UICamera.orthographicSize = 3.0f;
-                        if (AmongUsClient.Instance.GameMode == GameModes.FreePlay && !PlayerControl.LocalPlayer.Data.IsDead) __instance.ShadowQuad.gameObject.SetActive(true);
                     }
                 }
                 else
@@ -78,6 +91,7 @@ namespace TownOfPlus
                     if (Camera.main.orthographicSize != 3.0f)
                     {
                         Reset.Zoom();
+                        if (AmongUsClient.Instance.GameMode == GameModes.FreePlay && !PlayerControl.LocalPlayer.Data.IsDead) __instance.ShadowQuad.gameObject.SetActive(true);
                     }
                 }
                 flag = false;

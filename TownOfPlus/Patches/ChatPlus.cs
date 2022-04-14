@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Text.RegularExpressions;
+
 
 namespace TownOfPlus
 {
@@ -18,7 +20,7 @@ namespace TownOfPlus
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
                 if (SaveManager.chatModeType != 1) return;
-                if (!main.ChatCommand.Value) return;
+                if (!main.KeyCommand.Value) return;
                 if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Backspace))
                 {
                     __instance.TextArea.SetText("");
@@ -37,7 +39,7 @@ namespace TownOfPlus
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
                 if (SaveManager.chatModeType != 1) return;
-                if (!main.ChatCommand.Value) return;
+                if (!main.KeyCommand.Value) return;
                 if (__instance.TextArea.text != Text)
                 {
                     Text = __instance.TextArea.text;
@@ -79,7 +81,7 @@ namespace TownOfPlus
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
                 if (SaveManager.chatModeType != 1) return;
-                if (!main.ChatCommand.Value) return;
+                if (!main.KeyCommand.Value) return;
                 if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.X))
                 {
                     GUIUtility.systemCopyBuffer = __instance.TextArea.text;
@@ -101,7 +103,7 @@ namespace TownOfPlus
             {
                 if (!HudManager.Instance.Chat.IsOpen) return;
                 if (SaveManager.chatModeType != 1) return;
-                if (!main.ChatCommand.Value) return;
+                if (!main.KeyCommand.Value) return;
                 if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl))
                 {
                     bool Shift = false;
@@ -202,6 +204,7 @@ namespace TownOfPlus
                 if (main.HideLobbyCodes.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                 {
                     CommandList.Add(("/ChangeLobbyCode", ""));
+                    CommandList.Add(("/ChangeCodeColor", ""));
                 }
                 if (main.FakeLevel.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                 {
@@ -222,6 +225,10 @@ namespace TownOfPlus
                 if (main.OPkick.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                 {
                     CommandList.Add(("/OPkick", ""));
+                }
+                if (main.CPS.Value)
+                {
+                    CommandList.Add(("/CPS", ""));
                 }
                 if (CommandList == null) return;
                 var ChatText = __instance.TextArea.text;
@@ -344,6 +351,7 @@ namespace TownOfPlus
                         if (main.HideLobbyCodes.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                         {
                             AddChat += ("\n/ChangeLobbyCode(CLC) : ロビーコードの名前を変更できます");
+                            AddChat += ("\n/ChangeCodeColor(CCC) [HEXコード] : ロビーコードの色を変更できます");
                         }
                         if (main.FakeLevel.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                         {
@@ -364,6 +372,10 @@ namespace TownOfPlus
                         if (main.OPkick.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                         {
                             AddChat += ("\n/OPkick [数(1~10)] : 追い出すプレイヤーの機種を変更します。");
+                        }
+                        if (main.CPS.Value)
+                        {
+                            AddChat += ("\n/CPS : CPSの位置を変更できます。");
                         }
                         if (AddChat == "===コマンド一覧===") AddChat += ("\n実行可能なコマンドはありません");
                         break;
@@ -454,6 +466,22 @@ namespace TownOfPlus
                             main.SetLobbyCode.Value = main.Name;
                         }
                         AddChat = ($"コードが[{main.SetLobbyCode.Value}]になりました");
+                        break;
+
+                    case "/ccc":
+                    case "/changecodecolor":
+                        if (!(main.HideLobbyCodes.Value && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)) break;
+                        if (args.Length > 2)
+                        {
+                            if (!(args[1].Length == 6 | args[1].Length == 8)) break;
+                            if (!Regex.IsMatch(args[1], @"[0-Z]")) break;
+                            main.SetCodeColor.Value = args[1];
+                        }
+                        else
+                        {
+                            main.SetCodeColor.Value = "FFFFFF";
+                        }
+                        AddChat = ($"コードカラーが[#{main.SetCodeColor.Value}]になりました");
                         break;
 
                     case "/fl":
@@ -679,6 +707,27 @@ namespace TownOfPlus
 
                     case "/bag":
                         System.Diagnostics.Process.Start("https://marshmallow-qa.com/tugaruyukkuri");
+                        break;
+
+                    case "/cps":
+                        if (!main.CPS.Value) break;
+                        if (Command1 == "reset")
+                        {
+                            main.CPSpositionX.Value = 0f;
+                            main.CPSpositionY.Value = 2.75f;
+                            AddChat = "CPSの位置をリセットしました";
+                            break;
+                        }
+                        if (main.SettingCPS)
+                        {
+                            main.SettingCPS = false;
+                            AddChat = "CPSの位置設定を無効化しました";
+                        }
+                        else
+                        {
+                            main.SettingCPS = true;
+                            AddChat = "CPSの位置設定を有効化しました\n十字キーで動かしてください\n位置リセットは[/CPS Reset]です。";
+                        }
                         break;
 
                     default:

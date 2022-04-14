@@ -21,6 +21,7 @@ namespace TownOfPlus
     {
         public static void Prefix(GameSettingMenu __instance)
         {
+            if (!main.RoomOption.Value) return;
             // オンラインモードで部屋を立て直さなくてもマップを変更できるように変更
             __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
         }
@@ -32,9 +33,10 @@ namespace TownOfPlus
     {
         public static void Postfix(GameOptionsMenu __instance)
         {
+            if (!main.RoomOption.Value) return;
             foreach (var ob in __instance.Children)
             {
-                switch(ob.Title)
+                switch (ob.Title)
                 {
                     case StringNames.GameShortTasks:
                     case StringNames.GameLongTasks:
@@ -54,22 +56,28 @@ namespace TownOfPlus
             }
         }
     }
-    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Update))]
+    [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
     public static class KillCoolDown
     {
-        public static void Prefix(GameOptionsMenu __instance)
+        public static bool flag = false;
+        public static void Prefix(GameStartManager __instance)
         {
             if (AmongUsClient.Instance.AmHost)
             {
-                if (PlayerControl.GameOptions.KillCooldown == 0 || PlayerControl.GameOptions.KillCooldown == 0.00001f)
+                if (main.NokillCool.Value)
                 {
                     PlayerControl.GameOptions.KillCooldown = 0.00001f;
+                    flag = true;
                     Helpers.SyncSettings();
                 }
                 else
                 {
-                    PlayerControl.GameOptions.KillCooldown = (float)(System.Math.Truncate(PlayerControl.GameOptions.KillCooldown * System.Math.Pow(10, 1)) / System.Math.Pow(10, 1));
-                    Helpers.SyncSettings();
+                    if (flag)
+                    {
+                        PlayerControl.GameOptions.KillCooldown = 0f;
+                        Helpers.SyncSettings();
+                        flag = false;
+                    }
                 }
             }
         }

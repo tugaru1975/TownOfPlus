@@ -35,6 +35,11 @@ namespace TownOfPlus
             new SelectionBehaviour("<color=#00bfff>ゲーム中の名前</color>", () => main.ChangeGameName.Value = !main.ChangeGameName.Value, main.ChangeGameName.Value),
             new SelectionBehaviour("自動コードコピー", () => main.AutoCopyCode.Value = !main.AutoCopyCode.Value, main.AutoCopyCode.Value),
             new SelectionBehaviour("チャットコマンド", () => main.ChatCommand.Value = !main.ChatCommand.Value, main.ChatCommand.Value),
+            new SelectionBehaviour("キーコマンド", () => main.KeyCommand.Value = !main.KeyCommand.Value, main.KeyCommand.Value),
+            new SelectionBehaviour("部屋設定の拡張", () => main.RoomOption.Value = !main.RoomOption.Value, main.RoomOption.Value),
+            new SelectionBehaviour("0.00001秒のキルクール", () => main.NokillCool.Value = !main.NokillCool.Value, main.NokillCool.Value),
+            new SelectionBehaviour("CPS", () => main.CPS.Value = !main.CPS.Value, main.CPS.Value),
+
         };
 
         private static GameObject popUp;

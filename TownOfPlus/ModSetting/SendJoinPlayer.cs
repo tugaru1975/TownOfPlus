@@ -28,7 +28,7 @@ namespace TownOfPlus
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
                     if (player == PlayerControl.LocalPlayer) continue;
-                    var clientId = AmongUsClient.Instance.allClients.ToArray().Where(cd => cd.Character.PlayerId == player.PlayerId).FirstOrDefault().Id;
+                    var clientId = Helpers.playerByClient(player).Id;
                     if (!SendPlayerList.Contains(clientId))
                     {
                         Action.Run(() =>
