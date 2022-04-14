@@ -1,5 +1,7 @@
 # TownOfPlus
 [![TownOfPlusImage](https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/TownOfPlus.png)](#導入方法)  
+[![](https://img.shields.io/github/downloads/tugaru1975/TownOfPlus/total)](../../releases)
+[![](https://img.shields.io/github/v/release/tugaru1975/TownOfPlus)](../../releases)
 #### 製作者のTwitter : [Twitter](https://twitter.com/tugaruyukkuri)
 #### 製作者のYoutube : [Youtube](https://youtube.com/channel/UCWRBQawRK2uw_kvqFAPrcZQ)  
 #### 製作者のマシュマロ(バグ報告等に) : [マシュマロ](https://marshmallow-qa.com/tugaruyukkuri)
