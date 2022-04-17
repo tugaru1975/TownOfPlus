@@ -271,7 +271,9 @@ namespace TownOfPlus {
                         var FriendCode = player.Data.FriendCode;
                         if (FriendCode != "") FriendCodeText = $"\n<size=0.75>FriendCode : {FriendCode}</size>";
                     }
-                    PlayerText += $"\n<color=#{Helpers.GetColorHEX(Client)}>■</color>{TOP}{(Client.Id == AmongUsClient.Instance.ClientId ? SaveManager.PlayerName : Client.PlayerName.Replace("\n", ""))} : {Platform.Replace("Standalone", "")}{FriendCodeText}";
+                    var HEXcolor = Helpers.GetColorHEX(Client);
+                    if (HEXcolor == "") HEXcolor = "FF000000";
+                    PlayerText += $"\n<color=#{HEXcolor}>■</color>{TOP}{(Client.Id == AmongUsClient.Instance.ClientId ? SaveManager.PlayerName : Client.PlayerName.Replace("\n", ""))} : {Platform.Replace("Standalone", "")}{FriendCodeText}";
                 }
 
                 infoOverlayPlayer.text = PlayerText;
@@ -285,6 +287,7 @@ namespace TownOfPlus {
             public PlayerVersion(Version version, Guid guid)
             {
                 this.version = version;
+                this.guid = guid;
             }
 
             public bool GuidMatches()

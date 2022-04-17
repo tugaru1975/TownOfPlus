@@ -113,7 +113,7 @@ namespace TownOfPlus
             Camera.main.orthographicSize = 3.0f;
             HudManager.Instance.UICamera.orthographicSize = 3.0f;
             HudManager.Instance.transform.localScale = Vector3.one;
-            MeetingHud.Instance.transform.localScale = Vector3.one;
+            if (MeetingHud.Instance != null) MeetingHud.Instance.transform.localScale = Vector3.one;
             HudManager.Instance.Chat.transform.localScale = Vector3.one;
         }
     }

@@ -29,6 +29,7 @@ namespace TownOfPlus
             //キル対象
             if (main.RainbowOutline.Value)
             {
+                if (PlayerControl.LocalPlayer == null) return;
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p != PlayerControl.LocalPlayer) p.MyRend.material.SetColor("_OutlineColor", Color.HSVToRGB(Time.time % 1, 1, 1));
@@ -36,6 +37,7 @@ namespace TownOfPlus
             }
             if (main.CrewColorOutline.Value)
             {
+                if (PlayerControl.LocalPlayer == null) return;
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p != PlayerControl.LocalPlayer) p.MyRend.material.SetColor("_OutlineColor", p.MyRend.material.GetColor("_BodyColor"));

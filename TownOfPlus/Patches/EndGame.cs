@@ -26,6 +26,7 @@ namespace TownOfPlus
     {
         public static void Postfix(KeyboardJoystick __instance)
         {
+            if (ShipStatus.Instance == null) return;
             if (Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftShift) && AmongUsClient.Instance.AmHost)
             {
                  ShipStatus.Instance.enabled = false;

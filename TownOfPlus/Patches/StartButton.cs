@@ -29,10 +29,10 @@ namespace TownOfPlus
             __instance.MinPlayers = 1;
         }
     }
-    [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
+    [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
     public static class LobbyCountDownTimer
     {
-        public static void Postfix(KeyboardJoystick __instance)
+        public static void Postfix(GameStartManager __instance)
         {
             if (Input.GetKeyDown(KeyCode.LeftShift) && GameStartManager._instance && AmongUsClient.Instance.AmHost)
             {

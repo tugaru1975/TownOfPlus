@@ -26,6 +26,7 @@ namespace TownOfPlus
     {
         public static void Postfix(KeyboardJoystick __instance)
         {
+            if (PlayerControl.LocalPlayer == null) return;
             //壁抜け
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {

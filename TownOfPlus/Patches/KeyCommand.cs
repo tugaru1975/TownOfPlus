@@ -21,7 +21,7 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
     public static class KeyCommand
     {
-        private static readonly System.Random random = new System.Random((int)DateTime.Now.Ticks);
+        private static readonly System.Random random = new System.Random((int)System.DateTime.Now.Ticks);
         private static List<PlayerControl> bots = new List<PlayerControl>();
         public static void Postfix(ChatController __instance)
         {
@@ -33,6 +33,18 @@ namespace TownOfPlus
                 {
                     __instance.SetVisible(true);
                 }, 0f);
+            }
+            //チャットバグ
+            if (__instance.IsOpen)
+            {
+                if (__instance.animating)
+                {
+                    __instance.BanButton.SetVisible(false);
+                }
+                else
+                {
+                    __instance.BanButton.SetVisible(true);
+                }
             }
         }
         //[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CheckEndCriteria))]

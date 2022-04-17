@@ -119,7 +119,14 @@ namespace TownOfPlus {
         }
         public static string GetColorHEX(InnerNet.ClientData Client)
         {
-            return ColorToHex(Palette.PlayerColors[Client.ColorId]);
+            try
+            {
+                return ColorToHex(Palette.PlayerColors[Client.ColorId]);
+            }
+            catch
+            {
+                return "";
+            }
         }
         public static string ColorToHex(Color32 color)
         {

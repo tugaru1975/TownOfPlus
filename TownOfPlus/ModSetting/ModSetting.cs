@@ -39,6 +39,7 @@ namespace TownOfPlus
             new SelectionBehaviour("部屋設定の拡張", () => main.RoomOption.Value = !main.RoomOption.Value, main.RoomOption.Value),
             new SelectionBehaviour("0.00001秒のキルクール", () => main.NokillCool.Value = !main.NokillCool.Value, main.NokillCool.Value),
             new SelectionBehaviour("CPS", () => main.CPS.Value = !main.CPS.Value, main.CPS.Value),
+            new SelectionBehaviour("DateTime", () => main.DateTimeSetting.Value = !main.DateTimeSetting.Value, main.DateTimeSetting.Value),
 
         };
 

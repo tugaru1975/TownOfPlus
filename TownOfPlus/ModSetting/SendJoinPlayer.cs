@@ -23,6 +23,7 @@ namespace TownOfPlus
         public static float count = 3.5f;
         public static void Prefix()
         {
+            if (PlayerControl.LocalPlayer == null) return;
             if (main.SendJoinPlayer.Value && AmongUsClient.Instance.AmHost)
             {
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)

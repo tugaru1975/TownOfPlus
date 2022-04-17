@@ -230,6 +230,10 @@ namespace TownOfPlus
                 {
                     CommandList.Add(("/CPS", ""));
                 }
+                if (main.DateTimeSetting.Value)
+                {
+                    CommandList.Add(("/DataTime", ""));
+                }
                 if (CommandList == null) return;
                 var ChatText = __instance.TextArea.text;
                 if (Input.GetKeyDown(KeyCode.Tab) && ChatText.Substring(0, 1) == "/")
@@ -376,6 +380,10 @@ namespace TownOfPlus
                         if (main.CPS.Value)
                         {
                             AddChat += ("\n/CPS : CPSの位置を変更できます。");
+                        }
+                        if (main.DateTimeSetting.Value)
+                        {
+                            AddChat += ("\n/DataTime : DataTimeの位置を変更できます。");
                         }
                         if (AddChat == "===コマンド一覧===") AddChat += ("\n実行可能なコマンドはありません");
                         break;
@@ -675,7 +683,7 @@ namespace TownOfPlus
                             OPkick = Math.Clamp(OPkick, 1, 10);
                             if (main.SetOPkick.Value.Contains($"{OPkick},"))
                             {
-                                main.SetOPkick.Value = main.SetOPkick.Value.Replace($"{OPkick},","");
+                                main.SetOPkick.Value = main.SetOPkick.Value.Replace($"{OPkick},", "");
                             }
                             else
                             {
@@ -727,6 +735,28 @@ namespace TownOfPlus
                         {
                             main.SettingCPS = true;
                             AddChat = "CPSの位置設定を有効化しました\n十字キーで動かしてください\n位置リセットは[/CPS Reset]です。";
+                        }
+                        break;
+
+                    case "/dt":
+                    case "/datatime":
+                        if (!main.DateTimeSetting.Value) break;
+                        if (Command1 == "reset")
+                        {
+                            main.DateTimepositionX.Value = 0f;
+                            main.DateTimepositionY.Value = 2.75f;
+                            AddChat = "DateTimeの位置をリセットしました";
+                            break;
+                        }
+                        if (main.SettingDateTime)
+                        {
+                            main.SettingDateTime = false;
+                            AddChat = "DateTimeの位置設定を無効化しました";
+                        }
+                        else
+                        {
+                            main.SettingDateTime = true;
+                            AddChat = "DateTimeの位置設定を有効化しました\n十字キーで動かしてください\n位置リセットは[/DateTime Reset]です。";
                         }
                         break;
 

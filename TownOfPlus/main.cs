@@ -26,7 +26,7 @@ namespace TownOfPlus
         //Modの詳細
         public const string Id = "com.tugaru.TownOfPlus";
         public const string Name = "TownOfPlus";
-        public const string Version = "1.6.0";
+        public const string Version = "1.6.1";
         public static System.Version VersionId = System.Version.Parse(Version);
 
         public Harmony Harmony { get; } = new Harmony(Id);
@@ -66,7 +66,7 @@ namespace TownOfPlus
         public static ConfigEntry<bool> CPS { get; private set; }
         public static ConfigEntry<bool> RoomOption { get; private set; }
         public static ConfigEntry<bool> NokillCool { get; private set; }
-
+        public static ConfigEntry<bool> DateTimeSetting { get; private set; }
 
         //Mod詳細設定
         //ランダムマップ
@@ -100,7 +100,14 @@ namespace TownOfPlus
         //CPS
         public static ConfigEntry<float> CPSpositionX { get; private set; }
         public static ConfigEntry<float> CPSpositionY { get; private set; }
+
         public static bool SettingCPS = false;
+
+        //DateTime
+        public static ConfigEntry<float> DateTimepositionX { get; private set; }
+        public static ConfigEntry<float> DateTimepositionY { get; private set; }
+
+        public static bool SettingDateTime = false;
 
 
         public static string NewHatURL = "";
@@ -145,6 +152,7 @@ namespace TownOfPlus
             CPS = Config.Bind("Client Options", "CPS", false);
             RoomOption = Config.Bind("Client Options", "RoomOption", true);
             NokillCool = Config.Bind("Client Options", "NokillCool", false);
+            DateTimeSetting = Config.Bind("Client Options", "DateTimeSetting", false);
 
 
             //ランダムマップ
@@ -178,6 +186,10 @@ namespace TownOfPlus
             //CPS
             CPSpositionX = Config.Bind("CPS Options", "CPSpositionX", 0f);
             CPSpositionY = Config.Bind("CPS Options", "CPSpositionY", 2.75f);
+
+            //DateTime
+            DateTimepositionX = Config.Bind("DateTime Options", "DateTimepositionX", 0f);
+            DateTimepositionY = Config.Bind("DateTime Options", "DateTimepositionY", 2.75f);
 
             Harmony.PatchAll();
         }

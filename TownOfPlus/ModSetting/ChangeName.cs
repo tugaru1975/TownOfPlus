@@ -30,6 +30,7 @@ namespace TownOfPlus
         public static void Postfix(HudManager __instance)
         {
             var p = PlayerControl.LocalPlayer;
+            if (p == null) return;
             Color color = Helpers.GetPlayerColor(p);
             if (main.NameOutline.Value) color = Palette.Black;
             if (main.RainbowName.Value || main.TranslucentName.Value)
