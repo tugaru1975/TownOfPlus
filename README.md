@@ -38,8 +38,8 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 | [二段の名前](#二段の名前) | [ゲーム中の名前](#ゲーム中の名前) |
 | [自動コードコピー](#自動コードコピー) | [名前のアウトライン](#名前のアウトライン) |
 | [キーコマンド](#キーコマンド) | [部屋設定の拡張](#部屋設定の拡張) |
-| [0.00001秒のキルクール](#0.00001秒のキルクール) | [CPS](#CPS) |
-| [チャットコマンド](#チャッ卜コマンド ) |
+| [0.00001秒のキルクール](#000001秒のキルクール) | [CPS](#cps) |
+| [チャットコマンド](#チャッ卜コマンド ) | [DateTime](#datetime) |
 ## コード隠し
 ロビーコードを隠すことができます。  
 [チャットコマンド](#チャットコマンド)あり
@@ -49,17 +49,9 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 試合ごとにマップをランダムに変更します。  
 [チャットコマンド](#チャットコマンド)あり
 ## 虹色の帽子
-特定のスキンを虹色にします。  
-|||||
-|---|---|---|---|
-<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Beanie.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Folded.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Frosted.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Greatest_Headset_MIRA.png" width="50px">
-<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Greh.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Headslug_hat.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Hooded_Figure.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Lit_Up.png" width="50px">
-<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/OSHA_Compliant.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/Swarshburgalor.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/The_Ol'_Ball_Game.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/hat/What_is_up%2C_Doc%20.png" width="50px">
+帽子を虹色にします。
 ## 虹色のバイザー
-特定のバイザーを虹色にします。
-||||
-|---|---|---|
-<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/visor/Lollipop.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/visor/Masque'd_Up_blue.png" width="50px">|<img src="https://github.com/tugaru1975/TownOfPlus/blob/main/TOPImage/visor/Note_2_Self.png" width="50px">
+バイザーを虹色にします。
 ## 虹色の名前
 名前を虹色にします。
 ## 半透明の名前
@@ -106,6 +98,9 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 ## CPS
 一秒間のクリック回数を測れます。  
 [チャットコマンド](#チャットコマンド)あり
+## DateTime
+現在時刻を表示します。  
+[チャットコマンド](#チャットコマンド)あり
 ## チャッ卜コマンド
 チャットコマンドをオンオフできます。
 # チャットコマンド
@@ -142,8 +137,10 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 |`/ChangeGameName(CGN) [変更したい名前(10文字)]`|ゲーム中の名前を変えられます|
 | **[特定の機種を追い出す](#特定の機種を追い出す)有効時のみ** |
 |`/OPkick [数(1~10)]`<br>===機種コマンド一覧===<br>機種名 [`数値`]<br>EpicPC [`1`]<br>SteamPC [`2`]<br>Mac [`3`]<br>Win10 [`4`]<br>Itch [`5`]<br>IPhone [`6`]<br>Android [`7`]<br>Switch [`8`]<br>Xbox [`9`]<br>Playstation [`10`]|追い出すプレイヤーの機種を変更します|
-| **[CPS](#CPS)有効時のみ** |
+| **[CPS](#cps)有効時のみ** |
 |`/CPS [※Reset)]`|CPSの位置を変更できます。|
+| **[DateTime](#datetime)有効時のみ** |
+|`/DateTime [※Reset)]`|DateTimeの位置を変更できます。|
 
 # その他機能
 |**機能**|**操作**|
@@ -168,6 +165,7 @@ C#の知識ほぼ0から始めたmodなので不具合や無駄なコードが�
 |ホスト以外でも拔けた人が黒くなるように|
 |壁抜け|`Control`|
 |コマンド補完|`Tab`|
+|チャットバグ修正|`F1`|
 # 自作カスタムハットの導入
 https://github.com/tugaru1975/TOPHats/tree/main#readme  
 を参考してください
