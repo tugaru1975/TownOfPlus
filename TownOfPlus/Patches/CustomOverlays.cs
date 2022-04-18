@@ -231,6 +231,7 @@ namespace TownOfPlus {
             public static void Postfix(HudManager __instance)
             {
                 if (!initializeOverlays()) return;
+                if (!overlayShown) return;
                 HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
                 if (PlayerControl.LocalPlayer == null || hudManager == null)
                     return;
@@ -247,25 +248,29 @@ namespace TownOfPlus {
                     var Platform = $"{Client.PlatformData.Platform}";
                     var TOP = "";
                     var FriendCodeText = "";
-                    if (playerVersions.ContainsKey(Client.Id) || Client.Id == AmongUsClient.Instance.ClientId)
+                    try
                     {
-                        if (Client.Id == AmongUsClient.Instance.ClientId)
+                        if (playerVersions.ContainsKey(Client.Id) || Client.Id == AmongUsClient.Instance.ClientId)
                         {
-                            TOP = $"<size=0.75>(TOP v{main.Version})</size>";
-                        }
-                        else
-                        {
-                            PlayerVersion PV = playerVersions[Client.Id];
-                            if (!PV.GuidMatches())
+                            if (Client.Id == AmongUsClient.Instance.ClientId)
                             {
-                                TOP = $"<size=0.75><color=#FF0000>(TOP v{PV.version})</color></size>";
+                                TOP = $"<size=0.75>(TOP v{main.Version})</size>";
                             }
                             else
                             {
-                                TOP = $"<size=0.75>(TOP v{PV.version})</size>";
+                                PlayerVersion PV = playerVersions[Client.Id];
+                                if (!PV.GuidMatches())
+                                {
+                                    TOP = $"<size=0.75><color=#FF0000>(TOP v{PV.version})</color></size>";
+                                }
+                                else
+                                {
+                                    TOP = $"<size=0.75>(TOP v{PV.version})</size>";
+                                }
                             }
                         }
                     }
+                    catch { }
                     if (player != null)
                     {
                         var FriendCode = player.Data.FriendCode;

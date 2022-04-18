@@ -404,7 +404,7 @@ namespace TownOfPlus
                             {
                                 PlayerControl.GameOptions.MaxPlayers = LobbyLimit;
                                 DestroyableSingleton<GameStartManager>.Instance.LastPlayerCount = LobbyLimit;
-                                PlayerControl.LocalPlayer.RpcSyncSettings(PlayerControl.GameOptions);
+                                Helpers.SyncSettings();
                                 AddChat = ($"最大人数が[{LobbyLimit}]人になりました");
                             }
                             else

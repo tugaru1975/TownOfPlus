@@ -49,7 +49,7 @@ namespace TownOfPlus
         }
         private static void ResetName()
         {
-            if (flag == true)
+            if (flag)
             {
                 PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
                 flag = false;

@@ -39,11 +39,11 @@ namespace TownOfPlus
             {
                 if (__instance.animating)
                 {
-                    __instance.BanButton.SetVisible(false);
+                    __instance.BanButton.MenuButton.enabled = false;
                 }
                 else
                 {
-                    __instance.BanButton.SetVisible(true);
+                    __instance.BanButton.MenuButton.enabled = true;
                 }
             }
         }

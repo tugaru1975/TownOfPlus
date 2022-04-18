@@ -21,18 +21,32 @@ using UnityEngine.UI;
 
 namespace TownOfPlus
 {
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     //フェイクレベル
     public class FakeLevel
     {
         public static uint Level = SaveManager.PlayerLevel;
-        public static void Postfix(HudManager __instance)
+        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+        public class SetLevel
         {
-            if (main.FakeLevel.Value)
+            public static void Postfix(HudManager __instance)
             {
-                var rand = new System.Random();
-                if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Joined)
+                if (main.FakeLevel.Value)
                 {
+                    if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
+                    {
+                        PlayerControl.LocalPlayer.RpcSetLevel(Level);
+                    }
+                }
+            }
+        }
+        [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.BeginGame))]
+        public class RandomLevel
+        {
+            public static void Postfix(GameStartManager __instance)
+            {
+                if (main.FakeLevel.Value)
+                {
+                    var rand = new System.Random();
                     //設定したレベルの数 + 1 される
                     var count = main.SetLevel.Value - 1;
                     if (count >= 100)
@@ -44,14 +58,10 @@ namespace TownOfPlus
                         Level = (uint)count;
                     }
                 }
-                if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
+                else
                 {
-                    PlayerControl.LocalPlayer.RpcSetLevel(Level);
+                    Level = SaveManager.PlayerLevel;
                 }
-            }
-            else
-            {
-                Level = SaveManager.PlayerLevel;
             }
         }
     }

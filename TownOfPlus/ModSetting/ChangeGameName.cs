@@ -24,7 +24,7 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class ChangeGameName
     {
-        private static StartAction Action = new StartAction();
+        public static bool flag = false;
         private static StartAction StartAction = new StartAction();
         public static string name = "";
         public static void Prefix(GameStartManager __instance)
@@ -46,7 +46,7 @@ namespace TownOfPlus
                             name = SaveManager.PlayerName;
                             SaveManager.PlayerName = main.SetGameName.Value;
                             PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
-                            Action.Reset();
+                            flag = true;
                         });
                     }
                 }
@@ -57,11 +57,11 @@ namespace TownOfPlus
         {
             if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
             {
-                Action.Run(() =>
+                if (flag)
                 {
                     SaveManager.PlayerName = name;
-                    PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);   
-                });
+                    PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
+                }
             }
         }
     }
