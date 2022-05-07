@@ -34,13 +34,13 @@ namespace TownOfPlus
     {
         public static void Postfix(GameStartManager __instance)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && GameStartManager._instance && AmongUsClient.Instance.AmHost)
+            if (Input.GetKeyDown(KeyCode.LeftShift) && AmongUsClient.Instance.AmHost)
             {
-                GameStartManager.Instance.countDownTimer = 0;
+                __instance.countDownTimer = 0;
             }
-            if (Input.GetKeyDown(KeyCode.C) && GameStartManager._instance && AmongUsClient.Instance.AmHost)
+            if (Input.GetKeyDown(KeyCode.C) && AmongUsClient.Instance.AmHost)
             {
-                GameStartManager.Instance.ResetStartState();
+                __instance.ResetStartState();
             }
         }
     }

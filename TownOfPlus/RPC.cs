@@ -8,15 +8,15 @@ using System;
 namespace TownOfPlus
 {
 
-    enum CustomRPC
+    enum TOPRPC
     {
-        VersionHandshake = 60,
+        TOPVersionShare,
     }
 
-    public static class RPCProcedure
+    public static class TOPRPCProcedure
     {
 
-        public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
+        public static void TOPversionshare(int major, int minor, int build, int revision, Guid guid, int clientId)
         {
             System.Version ver;
             if (revision < 0)
@@ -34,7 +34,7 @@ namespace TownOfPlus
                 byte packetId = callId;
                 switch (packetId)
                 {
-                    case (byte)CustomRPC.VersionHandshake:
+                    case (byte)TOPRPC.TOPVersionShare:
                         int major = reader.ReadPackedInt32();
                         int minor = reader.ReadPackedInt32();
                         int patch = reader.ReadPackedInt32();
@@ -52,7 +52,7 @@ namespace TownOfPlus
                         {
                             guid = new Guid(new byte[16]);
                         }
-                        RPCProcedure.versionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, guid, versionOwnerId);
+                        TOPRPCProcedure.TOPversionshare(major, minor, patch, revision == 0xFF ? -1 : revision, guid, versionOwnerId);
                         break;
                 }
             }

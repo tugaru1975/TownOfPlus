@@ -21,7 +21,6 @@ namespace TownOfPlus
     //コード隠し
     public class HideCode
     {
-        private static bool flag = false;
         [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
         public class GameStartManagerUpdatePatch
         {
@@ -31,16 +30,15 @@ namespace TownOfPlus
                 // Lobby code
                 if (main.HideLobbyCodes.Value)
                 {
-                    flag = false;
                     __instance.GameRoomName.text = $"<color=#{main.SetCodeColor.Value}>" + main.SetLobbyCode.Value + "</color>";
+                    CreateFlag.NewFlag("HideLobbyCodes");
                 }
                 else
                 {
-                    if (flag == false)
+                    CreateFlag.Run(() =>
                     {
-                        flag = true;
                         __instance.GameRoomName.text = $"{DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode, new Il2CppReferenceArray<Il2CppSystem.Object>(0)) + "\r\n" + InnerNet.GameCode.IntToGameName(AmongUsClient.Instance.GameId)}";
-                    }
+                    }, "HideLobbyCodes");
                 }
             }
         }

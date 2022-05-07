@@ -58,7 +58,7 @@ namespace TownOfPlus {
 
         private static void shareGameVersion()
         {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake, Hazel.SendOption.Reliable, -1);
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)TOPRPC.TOPVersionShare, Hazel.SendOption.Reliable, -1);
             writer.WritePacked(main.VersionId.Major);
             writer.WritePacked(main.VersionId.Minor);
             writer.WritePacked(main.VersionId.Build);
@@ -66,7 +66,7 @@ namespace TownOfPlus {
             writer.Write((byte)(main.VersionId.Revision < 0 ? 0xFF : main.VersionId.Revision));
             writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.versionHandshake(main.VersionId.Major, main.VersionId.Minor, main.VersionId.Build, main.VersionId.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
+            TOPRPCProcedure.TOPversionshare(main.VersionId.Major, main.VersionId.Minor, main.VersionId.Build, main.VersionId.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
         }
         public static void resetOverlays()
         {
@@ -271,14 +271,15 @@ namespace TownOfPlus {
                         }
                     }
                     catch { }
-                    if (player != null)
+                    var PlayerName = Client.PlayerName.DeleteHTML();
+                    if (player != null && !main.HideFriendCode.Value)
                     {
                         var FriendCode = player.Data.FriendCode;
                         if (FriendCode != "") FriendCodeText = $"\n<size=0.75>FriendCode : {FriendCode}</size>";
                     }
                     var HEXcolor = Helpers.GetColorHEX(Client);
                     if (HEXcolor == "") HEXcolor = "FF000000";
-                    PlayerText += $"\n<color=#{HEXcolor}>■</color>{TOP}{(Client.Id == AmongUsClient.Instance.ClientId ? SaveManager.PlayerName : Client.PlayerName.Replace("\n", ""))} : {Platform.Replace("Standalone", "")}{FriendCodeText}";
+                    PlayerText += $"\n<color=#{HEXcolor}>■</color>{TOP}{PlayerName} : {Platform.Replace("Standalone", "")}{FriendCodeText}";
                 }
 
                 infoOverlayPlayer.text = PlayerText;

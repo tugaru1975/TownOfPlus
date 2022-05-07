@@ -24,22 +24,15 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class ResetDoubleName
     {
-        public static bool flag = false;
         public static void Prefix(GameStartManager __instance)
         {
+            if (PlayerControl.LocalPlayer == null) return;
             if (AmongUsClient.Instance.AmHost)
             {
-                if (main.DoubleName.Value)
+                if (main.DoubleName.Value && (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay))
                 {
-                    if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
-                    {
-                        PlayerControl.LocalPlayer.RpcSetName($"{main.SetDoubleName.Value}\n<color=#FFFFFF50>{SaveManager.PlayerName}</color>\n");
-                        flag = true;
-                    }
-                    else
-                    {
-                        ResetName();
-                    }
+                    PlayerControl.LocalPlayer.RpcSetName($"{main.SetDoubleName.Value}\n<color=#FFFFFF50>{SaveManager.PlayerName}</color>\n");
+                    CreateFlag.NewFlag("DoubleName");
                 }
                 else
                 {
@@ -49,11 +42,10 @@ namespace TownOfPlus
         }
         private static void ResetName()
         {
-            if (flag)
+            CreateFlag.Run(() =>
             {
                 PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
-                flag = false;
-            }
+            }, "DoubleName");
         }
     }
 }

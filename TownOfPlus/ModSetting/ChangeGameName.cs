@@ -24,30 +24,29 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static class ChangeGameName
     {
-        public static bool flag = false;
-        private static StartAction StartAction = new StartAction();
         public static string name = "";
         public static void Prefix(GameStartManager __instance)
         {
+            if (PlayerControl.LocalPlayer == null) return;
             if (AmongUsClient.Instance.AmHost)
             {
                 if (main.ChangeGameName.Value)
                 {
                     if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
                     {
-                        StartAction.Reset();
+                        CreateFlag.NewFlag("CanChangeGameName");
                         ResetName();
                     }
 
                     if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
                     {
-                        StartAction.Run(() =>
+                        CreateFlag.Run(() =>
                         {
                             name = SaveManager.PlayerName;
                             SaveManager.PlayerName = main.SetGameName.Value;
                             PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
-                            flag = true;
-                        });
+                            CreateFlag.NewFlag("ChangedGameName");
+                        }, "CanChangeGameName");
                     }
                 }
                 else ResetName();
@@ -57,11 +56,11 @@ namespace TownOfPlus
         {
             if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
             {
-                if (flag)
+                CreateFlag.Run(() =>
                 {
                     SaveManager.PlayerName = name;
                     PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
-                }
+                }, "ChangedGameName");
             }
         }
     }

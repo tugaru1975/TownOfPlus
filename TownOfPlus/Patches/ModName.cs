@@ -16,20 +16,24 @@ namespace TownOfPlus
             __instance.text.alignment = TMPro.TextAlignmentOptions.TopRight;
             __instance.text.text += main.ModNameText;
             __instance.text.text += "\n<size=2>https://is.gd/TownOfPlus</size>";
-            if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
+            if (main.OldPingPositon.Value)
             {
-                if (PlayerControl.LocalPlayer.Data.IsDead)
+                if (HudManager.Instance.Chat.isActiveAndEnabled && MeetingHud.Instance == null)
                 {
-                    __instance.transform.localPosition = new Vector3(3.45f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
+                    __instance.gameObject.GetComponent<AspectPosition>().DistanceFromEdge = new Vector3(1.75f, __instance.gameObject.GetComponent<AspectPosition>().DistanceFromEdge.y, __instance.gameObject.GetComponent<AspectPosition>().DistanceFromEdge.z);
                 }
                 else
                 {
-                    __instance.transform.localPosition = new Vector3(4.2f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
+                    __instance.gameObject.GetComponent<AspectPosition>().DistanceFromEdge = new Vector3(1.25f, __instance.gameObject.GetComponent<AspectPosition>().DistanceFromEdge.y, __instance.gameObject.GetComponent<AspectPosition>().DistanceFromEdge.z);
                 }
+                CreateFlag.NewFlag("PingPosition");
             }
             else
             {
-                __instance.transform.localPosition = new Vector3(3.5f, __instance.transform.localPosition.y, __instance.transform.localPosition.z);
+                CreateFlag.Run(() =>
+                {
+                    __instance.gameObject.GetComponent<AspectPosition>().DistanceFromEdge = new Vector3(3.69f, __instance.gameObject.GetComponent<AspectPosition>().DistanceFromEdge.y, __instance.gameObject.GetComponent<AspectPosition>().DistanceFromEdge.z);
+                }, "PingPosition");
             }
         }
     }

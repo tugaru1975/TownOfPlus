@@ -17,48 +17,33 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
     public static class SendChat
     {
-        private static StartAction Action = new StartAction();
-        private static StartAction StertAction = new StartAction();
-        public static List<int> SendPlayerList = new List<int>();
-        public static float count = 3.5f;
+        public static List<byte> SendPlayerList = new List<byte>();
         public static void Prefix()
         {
-            if (PlayerControl.LocalPlayer == null) return;
-            if (main.SendJoinPlayer.Value && AmongUsClient.Instance.AmHost)
+            if (main.SendJoinPlayer.Value && AmongUsClient.Instance.AmHost && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started)
             {
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
+                    if (player == null || player.Data == null) return;
                     if (player == PlayerControl.LocalPlayer) continue;
-                    var clientId = Helpers.playerByClient(player).Id;
-                    if (!SendPlayerList.Contains(clientId))
+                    if (!SendPlayerList.Contains(player.PlayerId))
                     {
-                        Action.Run(() =>
+                        if (player.name == player.Data.PlayerName && HudManager.Instance.Chat.TimeSinceLastMessage >= 3.0f)
                         {
-                            count = HudManager.Instance.Chat.TimeSinceLastMessage < 3.0f ? 3.0f - HudManager.Instance.Chat.TimeSinceLastMessage : 0f;
-                        });
-                        if (player.name == player.Data.PlayerName)
-                        {
-                            StertAction.Run(() =>
+                            HudManager.Instance.Chat.TimeSinceLastMessage = 0f;
+                            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                             {
-                                new Timer(() =>
-                                {
-                                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)RpcCalls.SendChat, SendOption.Reliable, clientId);
-                                    writer.Write("※TownOfPlusによる自動送信\n" + main.SetSendJoinChat.Value);
-                                    HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"「{player.name}」にチャットを送りました");
-                                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                    SendPlayerList.Add(clientId);
-                                    Action.Reset();
-                                    StertAction.Reset();
-                                }, count + 0.5f);
-                            });
+                                SendPlayerList.Add(p.PlayerId);
+                            }
+                            
+                            PlayerControl.LocalPlayer.RpcSendChat("※TownOfPlusによる自動送信\n" + main.SetSendJoinChat.Value);
                         }
-                        HudManager.Instance.Chat.TimeSinceLastMessage = 0;
-                    }
-                    else
-                    {
-                        Action.Reset();
                     }
                 }
+            }
+            else
+            {
+                SendPlayerList = new List<byte>();
             }
         }
     }

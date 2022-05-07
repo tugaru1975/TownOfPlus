@@ -26,7 +26,6 @@ namespace TownOfPlus
     public class ChangeName
     {
         private static string Outline = "false";
-        private static bool flag = false;
         public static void Postfix(HudManager __instance)
         {
             var p = PlayerControl.LocalPlayer;
@@ -35,7 +34,6 @@ namespace TownOfPlus
             if (main.NameOutline.Value) color = Palette.Black;
             if (main.RainbowName.Value || main.TranslucentName.Value)
             {
-                flag = true;
                 if (Outline != main.NameOutline.Value.ToString())
                 {
                     Outline = main.NameOutline.Value.ToString();
@@ -51,6 +49,7 @@ namespace TownOfPlus
                 }
                 if (main.NameOutline.Value) p.nameText.outlineColor = color;
                 else p.nameText.color = color;
+                CreateFlag.NewFlag("NamePlus");
             }
             else
             {
@@ -60,11 +59,11 @@ namespace TownOfPlus
         }
         public static void Reset(PlayerControl p)
         {
-            if (flag)
+            CreateFlag.Run(() =>
             {
                 p.nameText.color = Helpers.GetPlayerColor(p);
                 p.nameText.outlineColor = Palette.Black;
-            }
+            }, "NamePlus");
         }
     }
 }

@@ -22,46 +22,16 @@ using UnityEngine.UI;
 namespace TownOfPlus
 {
     //フェイクレベル
+    [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.BeginGame))]
     public class FakeLevel
     {
-        public static uint Level = SaveManager.PlayerLevel;
-        [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-        public class SetLevel
+        public static void Postfix(GameStartManager __instance)
         {
-            public static void Postfix(HudManager __instance)
+            if (PlayerControl.LocalPlayer == null) return;
+            
+            if (main.FakeLevel.Value)
             {
-                if (main.FakeLevel.Value)
-                {
-                    if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started || AmongUsClient.Instance.GameMode == GameModes.FreePlay)
-                    {
-                        PlayerControl.LocalPlayer.RpcSetLevel(Level);
-                    }
-                }
-            }
-        }
-        [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.BeginGame))]
-        public class RandomLevel
-        {
-            public static void Postfix(GameStartManager __instance)
-            {
-                if (main.FakeLevel.Value)
-                {
-                    var rand = new System.Random();
-                    //設定したレベルの数 + 1 される
-                    var count = main.SetLevel.Value - 1;
-                    if (count >= 100)
-                    {
-                        Level = (uint)rand.Next(0, 99);
-                    }
-                    else
-                    {
-                        Level = (uint)count;
-                    }
-                }
-                else
-                {
-                    Level = SaveManager.PlayerLevel;
-                }
+                PlayerControl.LocalPlayer.RpcSetLevel((uint)new System.Random().Next(0,99));
             }
         }
     }

@@ -59,25 +59,24 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
     public static class KillCoolDown
     {
-        public static bool flag = false;
         public static void Prefix(GameStartManager __instance)
         {
+            if (PlayerControl.LocalPlayer == null) return;
             if (AmongUsClient.Instance.AmHost)
             {
                 if (main.NokillCool.Value)
                 {
                     PlayerControl.GameOptions.KillCooldown = 0.00001f;
-                    flag = true;
                     Helpers.SyncSettings();
+                    CreateFlag.NewFlag("KillCool0");
                 }
                 else
                 {
-                    if (flag)
+                    CreateFlag.Run(() =>
                     {
                         PlayerControl.GameOptions.KillCooldown = 0f;
                         Helpers.SyncSettings();
-                        flag = false;
-                    }
+                    }, "KillCool0");
                 }
             }
         }

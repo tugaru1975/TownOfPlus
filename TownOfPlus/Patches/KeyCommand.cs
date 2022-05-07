@@ -29,7 +29,7 @@ namespace TownOfPlus
             {
                 if (!__instance.isActiveAndEnabled) return;
                 __instance.SetVisible(false);
-                new Timer(() =>
+                new LateTask(() =>
                 {
                     __instance.SetVisible(true);
                 }, 0f);

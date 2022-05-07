@@ -10,7 +10,6 @@ using HarmonyLib;
 using Hazel;
 
 namespace TownOfPlus {
-
     public static class Helpers
     {
         public static void destroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
@@ -65,6 +64,20 @@ namespace TownOfPlus {
             var il2cppArray = (Il2CppStructArray<byte>) data;
             return iCall_LoadImage.Invoke(tex.Pointer, il2cppArray.Pointer, markNonReadable);
         }
+
+        public static Sprite CreateSprite(string path, bool fromDisk = false)
+        {
+            Texture2D texture = fromDisk ? Helpers.loadTextureFromDisk(path) : Helpers.loadTextureFromResources(path);
+            if (texture == null)
+                return null;
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.53f, 0.575f), texture.width * 0.375f);
+            if (sprite == null)
+                return null;
+            texture.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
+            sprite.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
+            return sprite;
+        }
+
         public static void SyncSettings()
         {
             var optByte = PlayerControl.GameOptions.DeepCopy();
@@ -92,10 +105,11 @@ namespace TownOfPlus {
 
         public static PlayerControl GetNamePlayer(string name)
         {
-            PlayerControl player;
-            if (name == SaveManager.PlayerName) player = PlayerControl.LocalPlayer;
-            else player = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(name));
-            return player;
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            {
+                if (p.Data.PlayerName.DeleteHTML() == name) return p;
+            }
+            return null;
         }
 
         public static Color GetPlayerColor(PlayerControl p)
@@ -133,12 +147,72 @@ namespace TownOfPlus {
             string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2") + color.a.ToString("X2");
             return hex;
         }
+        public static string CutString(this string text, int length)
+        {
+            if (text == null)
+            {
+                return string.Empty;
+            }
+            if (length > text.Length)
+            {
+                return text;
+            }
+            return text.Substring(0, length);
+        }
+        public static int AllCommandNum(string text)
+        {
+            var List = CommandList.AllCommand();
+            int Contains = -1;
+            for (var i = 0; i < List.Length; i++)
+            {
+                foreach (var args in List[i].Command)
+                {
+                    if (args.ToLower() == text.ToLower())
+                    {
+                        Contains = i;
+                        break;
+                    }
+                }
+            }
+            return Contains;
+        }
+
+        public static bool StringListContains(this string text, string[] stringlist)
+        {
+            bool Contains = false;
+            foreach (var List in stringlist)
+            {
+                if (text.ToLower() == List.ToLower())
+                {
+                    Contains = true;
+                    break;
+                }
+            }
+            return Contains;
+        }
+        public static void DMChat(int clientId, string text)
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)RpcCalls.SendChat, SendOption.Reliable, clientId);
+            writer.Write(text);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            HudManager.Instance.Chat.TimeSinceLastMessage = 0;
+        }
+
+        public static string DeleteHTML(this string name)
+        {
+            var PlayerName = name.Replace("\n", "").Replace("\r", "");
+            while (PlayerName.Contains("<") || PlayerName.Contains(">"))
+            {
+                PlayerName = PlayerName.Remove(PlayerName.IndexOf("<"), PlayerName.IndexOf(">") - PlayerName.IndexOf("<") + 1);
+            }
+            return PlayerName;
+        }
     }
-    class Timer
+    class LateTask
     {
         public float timer;
         public Action action;
-        public static List<Timer> Timers = new List<Timer>();
+        public static List<LateTask> Timers = new List<LateTask>();
         public bool run(float deltaTime)
         {
             timer -= deltaTime;
@@ -149,7 +223,7 @@ namespace TownOfPlus {
             }
             return false;
         }
-        public Timer(Action action, float time)
+        public LateTask(Action action, float time)
         {
             this.action = action;
             this.timer = time;
@@ -157,7 +231,7 @@ namespace TownOfPlus {
         }
         public static void Update(float deltaTime)
         {
-            var TimersToRemove = new List<Timer>();
+            var TimersToRemove = new List<LateTask>();
             Timers.ForEach((Timer) => {
                 if (Timer.run(deltaTime))
                 {
@@ -168,28 +242,31 @@ namespace TownOfPlus {
         }
     }
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-    class TimerUpdate
+    class LateTaskUpdate
     {
         public static void Postfix(HudManager __instance)
         {
-            Timer.Update(Time.deltaTime);
+            LateTask.Update(Time.deltaTime);
         }
     }
-    public class StartAction
-    {
-        bool flag;
-        public void Reset()
-        {
-            flag = false;
-        }
 
-        public void Run(Action action)
+    public static class CreateFlag
+    {
+        public static List<string> OneTimeList = new List<string>();
+        public static List<string> FirstRunList = new List<string>();
+        public static void Run (Action action, string type, bool firstrun = false)
         {
-            if (!flag)
+            if ((OneTimeList.Contains(type)) || (firstrun && !FirstRunList.Contains(type)))
             {
+                if (!FirstRunList.Contains(type)) FirstRunList.Add(type);
+                OneTimeList.Remove(type);
                 action();
-                flag = true;
             }
+            
+        }
+        public static void NewFlag(string type)
+        {
+            if (!OneTimeList.Contains(type)) OneTimeList.Add(type);
         }
     }
 }

@@ -111,31 +111,19 @@ namespace TownOfPlus {
             return customhats;
         }
 
-        private static Sprite CreateHatSprite(string path, bool fromDisk = false) {
-            Texture2D texture = fromDisk ? Helpers.loadTextureFromDisk(path) : Helpers.loadTextureFromResources(path);
-            if (texture == null)
-                return null;
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.53f, 0.575f), texture.width * 0.375f);
-            if (sprite == null)
-                return null;
-            texture.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
-            sprite.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
-            return sprite;
-        }
-
         private static HatData CreateHatData(CustomHat ch, bool fromDisk = false, bool testOnly = false) {
             if (hatShader == null && DestroyableSingleton<HatManager>.InstanceExists)
                 hatShader = new Material(Shader.Find("Unlit/PlayerShader"));
 
             HatData hat = new HatData();
             hat.hatViewData.viewData = new HatViewData();
-            hat.hatViewData.viewData.MainImage = CreateHatSprite(ch.resource, fromDisk);
+            hat.hatViewData.viewData.MainImage = Helpers.CreateSprite(ch.resource, fromDisk);
             if (ch.backresource != null) {
-                hat.hatViewData.viewData.BackImage = CreateHatSprite(ch.backresource, fromDisk);
+                hat.hatViewData.viewData.BackImage = Helpers.CreateSprite(ch.backresource, fromDisk);
                 ch.behind = true; // Required to view backresource
             }
             if (ch.climbresource != null)
-                hat.hatViewData.viewData.ClimbImage = CreateHatSprite(ch.climbresource, fromDisk);
+                hat.hatViewData.viewData.ClimbImage = Helpers.CreateSprite(ch.climbresource, fromDisk);
             hat.name = ch.name + "\nby " + ch.author;
             hat.displayOrder = 99;
             hat.ProductId = "hat_TOP_" + ch.name.Replace(' ', '_');
@@ -154,9 +142,9 @@ namespace TownOfPlus {
             extend.condition = ch.condition != null ? ch.condition : "none";
 
             if (ch.flipresource != null)
-                 extend.FlipImage = CreateHatSprite(ch.flipresource, fromDisk);
+                 extend.FlipImage = Helpers.CreateSprite(ch.flipresource, fromDisk);
             if (ch.backflipresource != null)
-                 extend.BackFlipImage = CreateHatSprite(ch.backflipresource, fromDisk);
+                 extend.BackFlipImage = Helpers.CreateSprite(ch.backflipresource, fromDisk);
 
             if (testOnly) {
                 TestExt = extend;
@@ -169,7 +157,7 @@ namespace TownOfPlus {
         }
 
         private static HatData CreateHatData(CustomHatLoader.CustomHatOnline chd) {
-            string filePath = Path.GetDirectoryName(Application.dataPath) + @"\TOPHats\";
+            string filePath = Path.GetDirectoryName(Application.dataPath) + @"\TownOfPlus\TOPHats\";
             chd.resource = filePath + chd.resource;
             if (chd.backresource != null)
                 chd.backresource = filePath + chd.backresource;
@@ -249,7 +237,7 @@ namespace TownOfPlus {
             {
                 if (DestroyableSingleton<TutorialManager>.InstanceExists)
                 {
-                    string filePath = Path.GetDirectoryName(Application.dataPath) + @"\TOPHats\Test";
+                    string filePath = Path.GetDirectoryName(Application.dataPath) + @"\TownOfPlus\SkinTest";
                     DirectoryInfo d = new DirectoryInfo(filePath);
                     string[] filePaths = d.GetFiles("*.png").Select(x => x.FullName).ToArray(); // Getting Text files
                     List<CustomHat> hats = createCustomHatDetails(filePaths, true);
@@ -334,15 +322,15 @@ namespace TownOfPlus {
                         info.resource = sanitizeResourcePath(current["resource"]?.ToString());
                         if (info.resource == null || info.name == null) // required
                             continue;
-                        info.reshasha = current["reshasha"]?.ToString();
+                        info.reshasha = current["name"]?.ToString() + "topvisor";
                         info.backresource = sanitizeResourcePath(current["backresource"]?.ToString());
-                        info.reshashb = current["reshashb"]?.ToString();
+                        info.reshashb = current["name"]?.ToString() + "topvisorack";
                         info.climbresource = sanitizeResourcePath(current["climbresource"]?.ToString());
-                        info.reshashc = current["reshashc"]?.ToString();
+                        info.reshashc = current["name"]?.ToString() + "topvisorclimb";
                         info.flipresource = sanitizeResourcePath(current["flipresource"]?.ToString());
-                        info.reshashf = current["reshashf"]?.ToString();
+                        info.reshashf = current["name"]?.ToString() + "topvisorflip";
                         info.backflipresource = sanitizeResourcePath(current["backflipresource"]?.ToString());
-                        info.reshashbf = current["reshashbf"]?.ToString();
+                        info.reshashbf = current["name"]?.ToString() + "topvisorbackflip";
 
                         info.author = current["author"]?.ToString();
                         info.condition = current["condition"]?.ToString();
@@ -356,7 +344,7 @@ namespace TownOfPlus {
 
                 List<string> markedfordownload = new List<string>();
 
-                string filePath = Path.GetDirectoryName(Application.dataPath) + @"\TOPHats\";
+                string filePath = Path.GetDirectoryName(Application.dataPath) + @"\TownOfPlus\TOPHats\";
                 MD5 md5 = MD5.Create();
                 foreach (CustomHatOnline data in hatdatas) {
     	            if (doesResourceRequireDownload(filePath + data.resource, data.reshasha, md5))

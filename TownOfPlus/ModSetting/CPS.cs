@@ -27,7 +27,6 @@ namespace TownOfPlus
         private static SpriteRenderer CPSUnderlay;
         private static TMPro.TextMeshPro CPStext;
         private static int count = 0;
-
         public static void Postfix(HudManager __instance)
         {
             if (!initializeOverlays()) return;
@@ -39,25 +38,25 @@ namespace TownOfPlus
             Transform parent;
             parent = hudManager.transform;
 
-            CPStext.transform.parent = parent;
-            CPSUnderlay.transform.parent = parent;
-            CPSUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
-            CPSUnderlay.transform.localScale = new Vector3(1f, 0.25f, 0.5f);
-            CPSUnderlay.transform.localPosition = new Vector3(main.CPSpositionX.Value, main.CPSpositionY.Value, -900f);
-
-            CPStext.transform.localPosition = new Vector3(main.CPSpositionX.Value, main.CPSpositionY.Value, -900f);
-            CPStext.text = count.ToString() + " CPS";
             if (main.CPS.Value)
             {
+                CPStext.transform.parent = parent;
+                CPSUnderlay.transform.parent = parent;
+                CPSUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
+                CPSUnderlay.transform.localScale = new Vector3(1f, 0.25f, 0.5f);
+                CPSUnderlay.transform.localPosition = new Vector3(main.CPSpositionX.Value, main.CPSpositionY.Value, -900f);
+                CPStext.transform.localPosition = new Vector3(main.CPSpositionX.Value, main.CPSpositionY.Value, -900f);
+                CPStext.text = count.ToString() + " CPS";
+
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     count += 1;
-                    new Timer(() => 
+                    new LateTask(() => 
                     {
-                        count -= 1;
+                        if (count != 0) count -= 1;
                     },1f);
                 }
-                if (main.SettingCPS)
+                if (main.SettingCPS && __instance.Chat.IsOpen)
                 {
                     if (Input.GetKey(KeyCode.RightArrow))
                     {
@@ -75,6 +74,16 @@ namespace TownOfPlus
                     {
                         main.CPSpositionY.Value += 0.05f;
                     }
+                    if (Input.GetMouseButton(1))
+                    {
+                        var MousePositon = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.localPosition;
+                        main.CPSpositionX.Value = MousePositon.x;
+                        main.CPSpositionY.Value = MousePositon.y;
+                    }  
+                }
+                else
+                {
+                    main.SettingCPS = false;
                 }
                 CPStext.enabled = true;
                 CPSUnderlay.enabled = true;

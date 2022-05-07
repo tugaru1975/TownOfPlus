@@ -37,8 +37,11 @@ namespace TownOfPlus
                     if (main.AddMIRAHQ.Value) RandomMaps.Add(1);
                     if (main.AddPolus.Value) RandomMaps.Add(2);
                     if (main.AddAirShip.Value) RandomMaps.Add(4);
-                    var MapsId = RandomMaps[rand.Next(RandomMaps.Count)];
-                    PlayerControl.GameOptions.MapId = MapsId;
+                    if (RandomMaps.Count != 0)
+                    {
+                        var MapsId = RandomMaps[rand.Next(RandomMaps.Count)];
+                        PlayerControl.GameOptions.MapId = MapsId;
+                    }
                 }
             }
         }

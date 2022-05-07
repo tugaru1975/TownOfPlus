@@ -37,17 +37,18 @@ namespace TownOfPlus
             Transform parent;
             parent = hudManager.transform;
 
-            DateTimetext.transform.parent = parent;
-            DateTimeUnderlay.transform.parent = parent;
-            DateTimeUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
-            DateTimeUnderlay.transform.localScale = new Vector3(2f, 0.25f, 0.5f);
-            DateTimeUnderlay.transform.localPosition = new Vector3(main.DateTimepositionX.Value, main.DateTimepositionY.Value, -900f);
-
-            DateTimetext.transform.localPosition = new Vector3(main.DateTimepositionX.Value, main.DateTimepositionY.Value, -900f);
-            DateTimetext.text = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
             if (main.DateTimeSetting.Value)
             {
-                if (main.SettingDateTime)
+                DateTimetext.transform.parent = parent;
+                DateTimeUnderlay.transform.parent = parent;
+                DateTimeUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
+                DateTimeUnderlay.transform.localScale = new Vector3(2f, 0.25f, 0.5f);
+                DateTimeUnderlay.transform.localPosition = new Vector3(main.DateTimepositionX.Value, main.DateTimepositionY.Value, -900f);
+                DateTimetext.transform.localPosition = new Vector3(main.DateTimepositionX.Value, main.DateTimepositionY.Value, -900f);
+
+                DateTimetext.text = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+
+                if (main.SettingDateTime && __instance.Chat.IsOpen)
                 {
                     if (Input.GetKey(KeyCode.RightArrow))
                     {
@@ -65,6 +66,16 @@ namespace TownOfPlus
                     {
                         main.DateTimepositionY.Value += 0.05f;
                     }
+                    if (Input.GetMouseButton(1))
+                    {
+                        var MousePositon = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.localPosition;
+                        main.DateTimepositionX.Value = MousePositon.x;
+                        main.DateTimepositionY.Value = MousePositon.y;
+                    }
+                }
+                else
+                {
+                    main.SettingDateTime = false;
                 }
                 DateTimetext.enabled = true;
                 DateTimeUnderlay.enabled = true;

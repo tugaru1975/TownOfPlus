@@ -26,7 +26,7 @@ namespace TownOfPlus
         //Modの詳細
         public const string Id = "com.tugaru.TownOfPlus";
         public const string Name = "TownOfPlus";
-        public const string Version = "1.6.2";
+        public const string Version = "1.7.0";
         public static System.Version VersionId = System.Version.Parse(Version);
 
         public Harmony Harmony { get; } = new Harmony(Id);
@@ -39,6 +39,9 @@ namespace TownOfPlus
 
         //帽子URL
         public static ConfigEntry<string> HatURL { get; private set; }
+
+        //帽子URL
+        public static ConfigEntry<string> VisorURL { get; private set; }
 
         //Mod設定
         public static ConfigEntry<bool> HideLobbyCodes { get; private set; }
@@ -67,6 +70,12 @@ namespace TownOfPlus
         public static ConfigEntry<bool> RoomOption { get; private set; }
         public static ConfigEntry<bool> NokillCool { get; private set; }
         public static ConfigEntry<bool> DateTimeSetting { get; private set; }
+        public static ConfigEntry<bool> HideFriendCode { get; private set; }
+        public static ConfigEntry<bool> OldPingPositon { get; private set; }
+        public static ConfigEntry<bool> CrewColorChat { get; private set; }
+        public static ConfigEntry<bool> TranslucentChat { get; private set; }
+        public static ConfigEntry<bool> CrewColorVoteArea { get; private set; }
+        public static ConfigEntry<bool> FPS { get; private set; }
 
         //Mod詳細設定
         //ランダムマップ
@@ -79,8 +88,6 @@ namespace TownOfPlus
         public static ConfigEntry<string> SetLobbyCode { get; private set; }
         public static ConfigEntry<string> SetCodeColor { get; private set; }
 
-        //偽のレベル
-        public static ConfigEntry<int> SetLevel { get; private set; }
 
         //参加者にチャットを送る
         public static ConfigEntry<string> SetSendJoinChat { get; private set; }
@@ -94,6 +101,8 @@ namespace TownOfPlus
         //半透明の名前
         public static ConfigEntry<int> SetTranslucentName { get; private set; }
 
+        //半透明のチャット
+        public static ConfigEntry<int> SetTranslucentChat { get; private set; }
         //プラットフォームKick
         public static ConfigEntry<string> SetOPkick { get; private set; }
 
@@ -109,14 +118,34 @@ namespace TownOfPlus
 
         public static bool SettingDateTime = false;
 
+        //FPS
+        public static ConfigEntry<float> FPSpositionX { get; private set; }
+        public static ConfigEntry<float> FPSpositionY { get; private set; }
+
+        public static bool SettingFPS = false;
 
         public static string NewHatURL = "";
 
+        public static string NewVisorURL = "";
+        //DM
+        public static bool DMmode = false;
         public override void Load()
         {
+            //TOPファイル作成
+            Directory.CreateDirectory(Path.GetDirectoryName(Application.dataPath) + @"\TownOfPlus\");
+
+            //テストファイル作成
+            Directory.CreateDirectory(Path.GetDirectoryName(Application.dataPath) + @"\TownOfPlus\SkinTest\");
+
             //Hatファイル作成
-            Directory.CreateDirectory(Path.GetDirectoryName(Application.dataPath) + @"\TOPHats\");
-            Directory.CreateDirectory(Path.GetDirectoryName(Application.dataPath) + @"\TOPHats\Test\");
+            Directory.CreateDirectory(Path.GetDirectoryName(Application.dataPath) + @"\TownOfPlus\TOPHats\");
+
+            //Visorファイル作成
+            Directory.CreateDirectory(Path.GetDirectoryName(Application.dataPath) + @"\TownOfPlus\TOPVisors\");
+
+            //Skinファイル作成
+            Directory.CreateDirectory(Path.GetDirectoryName(Application.dataPath) + @"\TownOfPlus\SkinData\");
+
 
             //アップデート
             ShowPopUpVersion = Config.Bind("Update", "Show PopUp", "0");
@@ -125,6 +154,11 @@ namespace TownOfPlus
             HatURL = Config.Bind("HatURL", "HatURL", "https://raw.githubusercontent.com/tugaru1975/TOPHats/master,https://raw.githubusercontent.com/ユーザー名/プロジェクト名/master");
 
             NewHatURL = HatURL.Value;
+
+            //バイザーURL
+            VisorURL = Config.Bind("VisorURL", "VisorURL", "https://raw.githubusercontent.com/tugaru1975/TOPVisors/master,https://raw.githubusercontent.com/ユーザー名/プロジェクト名/master");
+
+            NewVisorURL = VisorURL.Value;
 
             //設定項目
             HideLobbyCodes = Config.Bind("Client Options", "HideLobbyCodes", false);
@@ -153,7 +187,12 @@ namespace TownOfPlus
             RoomOption = Config.Bind("Client Options", "RoomOption", true);
             NokillCool = Config.Bind("Client Options", "NokillCool", false);
             DateTimeSetting = Config.Bind("Client Options", "DateTimeSetting", false);
-
+            HideFriendCode = Config.Bind("Client Options", "HideFriendCode", false);
+            OldPingPositon = Config.Bind("Client Options", "OldPingPositon", false);
+            CrewColorChat = Config.Bind("Client Options", "CrewColorChat", false);
+            TranslucentChat = Config.Bind("Client Options", "TranslucentChat", false);
+            CrewColorVoteArea = Config.Bind("Client Options", "CrewColorVoteArea", false);
+            FPS = Config.Bind("Client Options", "FPS", false);
 
             //ランダムマップ
             AddTheSkeld = Config.Bind("RandomMaps Options", "AddTheSkeld", true);
@@ -165,8 +204,6 @@ namespace TownOfPlus
             SetLobbyCode = Config.Bind("LobbyCode Options", "SetLobbyCode", Name);
             SetCodeColor = Config.Bind("LobbyCode Options", "SetCodeColor", "FFFFFF");
 
-            //偽のレベル
-            SetLevel = Config.Bind("FakeLevel Options", "SetLevel", 101);
 
             //参加者にチャットを送る
             SetSendJoinChat = Config.Bind("SendJoinPlayer Options", "SetSendJoinChat", "TownOfPlusを使用しています");
@@ -190,6 +227,13 @@ namespace TownOfPlus
             //DateTime
             DateTimepositionX = Config.Bind("DateTime Options", "DateTimepositionX", 0f);
             DateTimepositionY = Config.Bind("DateTime Options", "DateTimepositionY", 2.75f);
+
+            //半透明のチャット
+            SetTranslucentChat = Config.Bind("SetTranslucentChat Options", "SetTranslucentChat", 75);
+
+            //FPS
+            FPSpositionX = Config.Bind("FPS Options", "FPSpositionX", 0f);
+            FPSpositionY = Config.Bind("FPS Options", "FPSpositionY", 2.75f);
 
             Harmony.PatchAll();
         }
