@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Description>TownOfPlus</Description>
+		<langVersion>preview</langVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="$(AmongUs)\BepInEx\core\*.dll" />
+		<Reference Include="$(AmongUs)\BepInEx\unhollowed\*.dll" />
+	</ItemGroup>
+
+	<Target Name="Copy" AfterTargets="Build" Condition="'$(AmongUs)' != ''">
+		<Copy SourceFiles="$(TownOfPlus)\bin\Debug\netstandard2.1\TownOfPlus.dll" DestinationFolder="$(AmongUs)/BepInEx/plugins" />
+	</Target>
+</Project>
