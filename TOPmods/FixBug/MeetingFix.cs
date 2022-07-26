@@ -7,7 +7,7 @@ namespace TownOfPlus
 	{
 		static void Postfix(MeetingHud __instance)
 		{
-			if (!main.FixLeftPlayer.Value) return;
+			if (!main.FixLeftPlayer.Getbool()) return;
 			try
 			{
 				foreach (var area in __instance.playerStates)

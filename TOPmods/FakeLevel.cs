@@ -11,7 +11,7 @@ namespace TownOfPlus
         {
             if (PlayerControl.LocalPlayer == null) return;
             
-            if (main.FakeLevel.Value)
+            if (main.FakeLevel.Getbool())
             {
                 PlayerControl.LocalPlayer.RpcSetLevel((uint)new Random().Next(0,99));
             }

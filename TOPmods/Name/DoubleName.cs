@@ -10,9 +10,9 @@ namespace TownOfPlus
             if (PlayerControl.LocalPlayer == null) return;
             if (GameState.IsHost)
             {
-                if (main.DoubleName.Value && GameState.IsLobby)
+                if (main.DoubleName.Getbool() && GameState.IsLobby)
                 {
-                    PlayerControl.LocalPlayer.RpcSetName($"{main.SetDoubleName.Value}\n{SaveManager.PlayerName.SetColor("FFFFFF50")}\n");
+                    PlayerControl.LocalPlayer.RpcSetName($"{main.SetDoubleName.Getstring()}\n{SaveManager.PlayerName.SetColor("FFFFFF50")}\n");
                     Flag.NewFlag("DoubleName");
                 }
                 else

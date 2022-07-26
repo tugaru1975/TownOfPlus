@@ -12,9 +12,9 @@ namespace TownOfPlus
             __instance.text.text += main.ModNameText.AddLine();
             __instance.text.text += "https://is.gd/TownOfPlus".SetSize(2).AddLine();
             if (main.DebugMode.Value) __instance.text.text += "デバッグモード".SetColor("FF0000").SetSize(2).AddLine();
-            if (main.FakePing.Value) __instance.text.text = __instance.text.text.Replace(AmongUsClient.Instance?.Ping.ToString(), main.SetFakePing.Value.ToString());
+            if (main.FakePing.Getbool()) __instance.text.text = __instance.text.text.Replace($"Ping: {AmongUsClient.Instance?.Ping}", $"Ping: {main.SetFakePing.Getint()}");
             var pingpos = __instance.gameObject.GetComponent<AspectPosition>();
-            if (main.OldPingPositon.Value)
+            if (main.OldPingPositon.Getbool())
             {
                 if (GameState.IsChatActive && !GameState.IsMeeting) pingpos.SetPos(1.75f, null);
                 else pingpos.SetPos(1.25f, null);

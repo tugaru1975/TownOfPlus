@@ -26,7 +26,7 @@ namespace TownOfPlus
     {
         public static void Postfix(ChatController __instance)
         {
-            if (!GameState.IsCanKeyCommand || !main.KeyDelete.Value) return;
+            if (!GameState.IsCanKeyCommand || !main.KeyDelete.Getbool()) return;
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Backspace))
             {
                 __instance.TextArea.Clear();
@@ -43,7 +43,7 @@ namespace TownOfPlus
         public static int count = 1;
         public static void Postfix(ChatController __instance)
         {
-            if (!GameState.IsCanKeyCommand || !main.KeyUndoAndRedo.Value) return;
+            if (!GameState.IsCanKeyCommand || !main.KeyUndoAndRedo.Getbool()) return;
             IsChange.Run(() =>
             {
                 Flag.Run(() =>
@@ -94,13 +94,13 @@ namespace TownOfPlus
         public static void Postfix(ChatController __instance)
         {
             if (!GameState.IsCanKeyCommand) return;
-            if (main.KeyCut.Value && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.X))
+            if (main.KeyCut.Getbool() && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.X))
             {
                 TextPlus.Clipboard(__instance.TextArea.text);
                 __instance.TextArea.Clear();
                 __instance.quickChatMenu.ResetGlyphs();
             }
-            if (main.KeyCopy.Value && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.C))
+            if (main.KeyCopy.Getbool() && Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.C))
             {
                 TextPlus.Clipboard(__instance.TextArea.text);
             }
@@ -113,7 +113,7 @@ namespace TownOfPlus
     {
         public static void Postfix(ChatController __instance)
         {
-            if (!GameState.IsCanKeyCommand || !main.KeyPaste.Value) return;
+            if (!GameState.IsCanKeyCommand || !main.KeyPaste.Getbool()) return;
             if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl))
             {
                 //コピーしてあるのを調べる
@@ -152,9 +152,9 @@ namespace TownOfPlus
         public static void Postfix()
         {
             if (PlayerControl.LocalPlayer == null) return;
-            if (!main.WallWalk.Value) return;
+            if (!main.WallWalk.Getbool()) return;
             //壁抜け
-            if (Input.GetKeyDown(main.WallWalkKeyBind.Value))
+            if (Input.GetKeyDown(main.WallWalkKeyBind.Getkeycode()))
             {
                 if ((GameState.IsLobby || GameState.IsFreePlay) && GameState.IsCanMove)
                 {
@@ -164,7 +164,7 @@ namespace TownOfPlus
             //壁抜け解除
             if (PlayerControl.LocalPlayer.Collider.offset.y == 127f)
             {
-                if (!Input.GetKey(main.WallWalkKeyBind.Value) || GameState.IsGameStart)
+                if (!Input.GetKey(main.WallWalkKeyBind.Getkeycode()) || GameState.IsGameStart)
                 {
                     PlayerControl.LocalPlayer.Collider.offset = new Vector2(0f, -0.3636f);
                 }
@@ -178,10 +178,10 @@ namespace TownOfPlus
     {
         public static void Postfix(ShipStatus __instance)
         {
-            if (!GameState.IsShip || !main.EndGame.Value || !GameState.IsHost || !__instance.enabled) return;
-            if ((main.EndGameKeyBindFirst.Value == KeyCode.None || Input.GetKey(main.EndGameKeyBindFirst.Value)) &&
-                (main.EndGameKeyBindSecond.Value == KeyCode.None || Input.GetKey(main.EndGameKeyBindSecond.Value)) &&
-                (main.EndGameKeyBindThird.Value == KeyCode.None || Input.GetKey(main.EndGameKeyBindThird.Value)))
+            if (!GameState.IsShip || !main.EndGame.Getbool() || !GameState.IsHost || !__instance.enabled) return;
+            if ((main.EndGameKeyBindFirst.Getkeycode() == KeyCode.None || Input.GetKey(main.EndGameKeyBindFirst.Getkeycode())) &&
+                (main.EndGameKeyBindSecond.Getkeycode() == KeyCode.None || Input.GetKey(main.EndGameKeyBindSecond.Getkeycode())) &&
+                (main.EndGameKeyBindThird.Getkeycode() == KeyCode.None || Input.GetKey(main.EndGameKeyBindThird.Getkeycode())))
             {
                 __instance.enabled = false;
                 ShipStatus.RpcEndGame(GameOverReason.HumansDisconnect, false);
@@ -189,10 +189,10 @@ namespace TownOfPlus
         }
     }
 
-    [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
+    [HarmonyPatch(typeof(ModManager), nameof(ModManager.LateUpdate))]
     public static class DebugKeyCommand
     {
-        public static void Postfix()
+        public static void Postfix(ModManager __instance)
         {
             if (!main.DebugMode.Value) return;
             if (Input.GetKeyDown(KeyCode.F1) && Input.GetKey(KeyCode.LeftControl))
@@ -212,16 +212,26 @@ namespace TownOfPlus
             if (Input.GetKeyDown(KeyCode.F2) && Input.GetKey(KeyCode.LeftControl))
             {
                 var list = TextPlus.Clipboard().Split(',');
-                foreach (var op in ModOptionSetting.AllOptions)
+                foreach (var op in ModOption.AllOptions)
                 {
-                    try
-                    {
-                        op.Config.Value = list.Contains(op.Title);
-                    }
-                    catch { }
+                    if (op.ModType == ModType.Toggle) op.Config.Value = list.Contains(op.Title).ToString();
                 }
 
-                ModOptionSetting.UpdateColor();
+                ModSetting.UpdateColor();
+            }
+            if (Input.GetKeyDown(KeyCode.F5) && Input.GetKey(KeyCode.LeftControl))
+            {
+                Log.gamelog("TestLog");
+            }
+            if (Input.GetKeyDown(KeyCode.F6) && Input.GetKey(KeyCode.LeftControl))
+            {
+                AmongUsClient.Instance.ExitGame();
+                __instance.StartCoroutine(AmongUsClient.Instance.CoJoinOnlineGameFromCode(InnerNet.GameCode.GameNameToInt(TextPlus.Clipboard())));
+            }
+            if (Input.GetKeyDown(KeyCode.F7) && Input.GetKey(KeyCode.LeftControl))
+            {
+                AmongUsClient.Instance.ExitGame();
+                __instance.StartCoroutine(AmongUsClient.Instance.CoCreateOnlineGame());
             }
         }
     }

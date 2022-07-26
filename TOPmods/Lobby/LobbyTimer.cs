@@ -32,12 +32,12 @@ namespace TownOfPlus
                 // Lobby timer
                 if (!GameState.IsHost || !GameData.Instance || GameState.IsLocalGame) return;
                 if (update) currentText = __instance.PlayerCounter.text;
-                if (main.LobbyTimer.Value) __instance.PlayerCounter.text = currentText;
+                if (main.LobbyTimer.Getbool()) __instance.PlayerCounter.text = currentText;
                 timer = Mathf.Max(0f, timer -= Time.deltaTime);
                 int minutes = (int)timer / 60;
                 int seconds = (int)timer % 60;
                 string suffix = $" ({minutes:00}:{seconds:00})";
-                if (main.LobbyTimer.Value) 
+                if (main.LobbyTimer.Getbool()) 
                 { 
                     __instance.PlayerCounter.text = currentText + suffix;
                     __instance.PlayerCounter.autoSizeTextContainer = true;

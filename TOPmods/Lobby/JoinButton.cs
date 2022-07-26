@@ -8,16 +8,16 @@ namespace TownOfPlus
     {
         public static void Prefix(JoinGameButton __instance)
         {
-            if (!main.PasteCodeText.Value && !main.CodeTextPlus.Value) return;
+            if (!main.PasteCodeText.Getbool() && !main.CodeTextPlus.Getbool()) return;
             try
             {
                 var text = __instance.GameIdText.text;
                 var cbt = TextPlus.Clipboard();
-                if (main.PasteCodeText.Value && Regex.IsMatch(cbt, "[A-Z]{6}"))
+                if (main.PasteCodeText.Getbool() && Regex.IsMatch(cbt, "[A-Z]{6}"))
                 {
                     if (text == "") __instance.GameIdText.SetText(cbt);
                 }
-                if (main.CodeTextPlus.Value && __instance.GameIdText.text.Length == 5)
+                if (main.CodeTextPlus.Getbool() && __instance.GameIdText.text.Length == 5)
                 {
                     __instance.GameIdText.SetText(text + DestroyableSingleton<ServerManager>.Instance.CurrentRegion.TranslateName switch
                     {

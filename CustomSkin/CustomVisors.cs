@@ -32,7 +32,7 @@ namespace TownOfPlus
                 {
                     HttpStatusCode status = await FetchVisors(repo.log("チェック開始"));
                     if (status != HttpStatusCode.OK) repo.log("URLが見つかりませんでした", LogType.Error);
-                    else repo.log("チェック終了");
+                    else repo.log("チェック終了").gamelog("バイザーダウンロード終了");
                 }
                 catch { }
             }
@@ -135,14 +135,15 @@ namespace TownOfPlus
             public string flipresource { get; set; }
         }
 
-        public static bool isAdded = false;
+        private static bool RUNNING = false;
+        private static bool isadded = false;
         [HarmonyPatch(typeof(HatManager), nameof(HatManager.GetVisorById))]
         class UnlockedVisorPatch
         {
             public static void Prefix(HatManager __instance)
             {
-                if (isAdded) return;
-                isAdded = true;
+                if (RUNNING || isadded) return;
+                RUNNING = true;
                 try
                 {
                     try
@@ -163,11 +164,16 @@ namespace TownOfPlus
 
                     while (CustomVisorLoader.Visordetails.Count > 0)
                     {
+                        isadded = true;
                         __instance.allVisors.Add(CreateVisorBehaviour(CustomVisorLoader.Visordetails[0]));
                         CustomVisorLoader.Visordetails.RemoveAt(0);
                     }
                 }
                 catch { }
+            }
+            static void Postfix(HatManager __instance)
+            {
+                RUNNING = false;
             }
         }
 

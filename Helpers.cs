@@ -1,3 +1,4 @@
+using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using Hazel;
@@ -83,7 +84,7 @@ namespace TownOfPlus
             if (client == null) return false;
             return true;
         }
-        
+
 
         public static bool TryNamePlayer(string name, out string playername, out PlayerControl pc)
         {
@@ -124,7 +125,7 @@ namespace TownOfPlus
 
         public static string GetClientColor(ClientData client) =>
             TryGetPlayerColor(client.ColorId, out var color) ? ColorToHex(color) : null;
-        
+
 
         public static string ColorToHex(Color32 color) =>
             color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2") + color.a.ToString("X2");
@@ -139,7 +140,7 @@ namespace TownOfPlus
 
         public static void StartRpc(string value, uint targetid, RpcCalls rpccalls, int targetClientid = -1)
         {
-            var msg = AmongUsClient.Instance.StartRpcImmediately(targetid, (byte)rpccalls, SendOption.None, targetClientid);
+            var msg = AmongUsClient.Instance.StartRpcImmediately(targetid, (byte)rpccalls, SendOption.Reliable, targetClientid);
             msg.Write(value);
             AmongUsClient.Instance.FinishRpcImmediately(msg);
         }
@@ -196,9 +197,16 @@ namespace TownOfPlus
             return KeyCode.None;
         }
 
-        public static void Destroy(this GameObject ob)
+        public static GameObject Destroy(this GameObject ob, float f = 0)
         {
-            UnityEngine.Object.Destroy(ob);
+            UnityEngine.Object.Destroy(ob, f);
+            return ob;
+        }
+
+        public static GameObject DontDestroyOnLoad(this GameObject ob)
+        {
+            UnityEngine.Object.DontDestroyOnLoad(ob);
+            return ob;
         }
 
         public static bool Contains(this IEnumerable<string> list, string value, StringComparison stringcomparison)
@@ -323,7 +331,7 @@ namespace TownOfPlus
 
         public static string SetColor(ref string text, string color) => text = text.SetColor(color);
 
-        public static string SetColor(this string text, string color) => $"<color=#{color}>" + text + "</color>";
+        public static string SetColor(this string text, string color) => $"<color=#{color.TrimStart('#')}>" + text + "</color>";
 
         public static string SetSize(ref string text, float size) => text = text.SetSize(size);
 
@@ -366,15 +374,76 @@ namespace TownOfPlus
         {
             if (GameState.IsCanSendChat)
             {
-                HudManager.Instance.Chat.TimeSinceLastMessage = 0f;
                 PlayerControl.LocalPlayer.RpcSendChat(text);
+                HudManager.Instance.Chat.TimeSinceLastMessage = 0f;
             }
         }
 
         public static string GetTranslation(this StringNames name) => DestroyableSingleton<TranslationController>.Instance.GetString(name, new Il2CppReferenceArray<Il2CppSystem.Object>(0));
 
-        public static char ComWord => main.ChangeComWord.Value ? '.' : '/';
+
+        public static char ComWord => main.ChangeComWord?.Getbool() is true ? '/' : '.';
     }
+
+    public static class Overlay
+    {
+        public static SpriteRenderer CreateUnderlay(ConfigEntry<float> x, ConfigEntry<float> y, string name)
+        {
+            HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
+
+            var underlay = UnityEngine.Object.Instantiate(hudManager.FullScreen, hudManager.transform);
+            underlay.transform.localPosition = new Vector3(x.Value, y.Value, -900f);
+            underlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
+            underlay.name = name + "Underlay";
+            underlay.gameObject.SetActive(true);
+            underlay.enabled = true;
+            return underlay;
+        }
+
+        public static TMPro.TextMeshPro CreateText(ConfigEntry<float> x, ConfigEntry<float> y, string name)
+        {
+            HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
+
+            var text = UnityEngine.Object.Instantiate(hudManager.TaskText, hudManager.transform);
+            text.fontSize = text.fontSizeMin = text.fontSizeMax = 1.75f;
+            text.autoSizeTextContainer = false;
+            text.enableWordWrapping = false;
+            text.alignment = TMPro.TextAlignmentOptions.Center;
+            text.transform.localPosition = new Vector3(x.Value, y.Value, -900f);
+            text.color = Palette.White;
+            text.name = name + "text";
+            text.text = "0";
+            text.enabled = true;
+            return text;
+        }
+
+        public static Vector3 SettingPos(ConfigEntry<float> x, ConfigEntry<float> y)
+        {
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                x.Value += 0.05f;
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                x.Value -= 0.05f;
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                y.Value -= 0.05f;
+            }
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                y.Value += 0.05f;
+            }
+            if (Input.GetMouseButton(1))
+            {
+                x.Value = Helpers.ScreenToMousePositon.x;
+                y.Value = Helpers.ScreenToMousePositon.y;
+            }
+            return new Vector3(x.Value, y.Value, -900f);
+        }
+    }
+
     public static class GameState
     {
         public static bool IsLobby => AmongUsClient.Instance?.GameState is InnerNetClient.GameStates.Joined && !IsFreePlay;
@@ -388,7 +457,7 @@ namespace TownOfPlus
         public static bool IsChatActive => HudManager.Instance?.Chat?.isActiveAndEnabled is true;
         public static bool IsCanSendChat => HudManager.Instance?.Chat?.TimeSinceLastMessage >= 3f;
         public static bool IsFocusChatArea => HudManager.Instance?.Chat?.TextArea?.hasFocus is true;
-        public static bool IsCanKeyCommand => IsFocusChatArea && main.KeyCommand.Value;
+        public static bool IsCanKeyCommand => IsFocusChatArea && main.KeyCommand.Getbool();
         public static bool IsCanMove => PlayerControl.LocalPlayer?.CanMove is true;
         public static bool IsCountDown => GameStartManager.Instance?.startState is GameStartManager.StartingStates.Countdown;
         public static bool IsDead => PlayerControl.LocalPlayer?.Data?.IsDead is true;

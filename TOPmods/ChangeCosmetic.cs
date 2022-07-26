@@ -8,7 +8,7 @@ namespace TownOfPlus
     {
         public static void Postfix()
         {
-            if (main.RainbowHat.Value)
+            if (main.RainbowHat.Getbool())
             {
                 try
                 { 
@@ -29,7 +29,7 @@ namespace TownOfPlus
                 }, "RainbowHat");
             }
 
-            if (main.RainbowVisor.Value)
+            if (main.RainbowVisor.Getbool())
             {
                 try
                 {
@@ -50,7 +50,7 @@ namespace TownOfPlus
                 }, "RainbowVisor");
             }
 
-            if (main.RainbowSkin.Value)
+            if (main.RainbowSkin.Getbool())
             {
                 try
                 {
@@ -71,7 +71,7 @@ namespace TownOfPlus
             }, "RainbowSkin");
             }
 
-            if (main.RainbowPet.Value)
+            if (main.RainbowPet.Getbool())
             {
                 try
                 {

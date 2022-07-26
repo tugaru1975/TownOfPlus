@@ -8,7 +8,7 @@ namespace TownOfPlus
     {
         public static void Prefix()
         {
-            if (main.FixPlayerColor.Value)
+            if (main.FixPlayerColor.Getbool())
             {
                 if (PlayerControl.LocalPlayer?.Data?.DefaultOutfit?.ColorId is int colorid) SaveManager.BodyColor = (byte)colorid;
             }

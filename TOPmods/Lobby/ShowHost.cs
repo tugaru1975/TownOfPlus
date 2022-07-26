@@ -11,7 +11,7 @@ namespace TownOfPlus
         {
             public static void Prefix(LobbyBehaviour __instance)
             {
-                if (!main.ShowHost.Value) return;
+                if (!main.ShowHost.Getbool()) return;
                 var p = DestroyableSingleton<PlayerControl>.Instance.cosmetics;
 
                 HostText = UnityEngine.Object.Instantiate(p.nameText, __instance.transform);

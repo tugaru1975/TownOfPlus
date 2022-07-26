@@ -21,7 +21,7 @@ namespace TownOfPlus
         {
             public static void Prefix(ChatController __instance)
             {
-                if (!main.ChatCommand.Value) return;
+                if (!main.ChatCommand.Getbool()) return;
                 SendChat.Addchat(__instance, __instance.TextArea.text);
             }
         }
@@ -34,7 +34,7 @@ namespace TownOfPlus
             public static int Count = -1;
             public static void Postfix(ChatController __instance)
             {
-                if (!main.ChatCommand.Value || !main.ComTab.Value) return;
+                if (!main.ChatCommand.Getbool() || !main.ComTab.Getbool()) return;
                 if (!CommandList.AllCommand.Any(a => a.Command.Contains(__instance.TextArea.text, StringComparison.OrdinalIgnoreCase)))
                 {
                     ChatText = __instance.TextArea.text;
@@ -61,6 +61,7 @@ namespace TownOfPlus
                                     CommandText.Name => PlayerControl.AllPlayerControls.ToArray().Select(s => Command + s.Data.PlayerName.RemoveHTML()).ToList(),
                                     CommandText.FileName => Helpers.TryGetFileText(SkinDataPass, out var list) ? list.Select(s => Command + s[0]).ToList() : ChatCommand,
                                     CommandText.Reset => new() { Command + "Reset" },
+                                    CommandText.All => new() { Command + "All" },
                                     _ => ChatCommand,
                                 };
                             }
@@ -88,8 +89,7 @@ namespace TownOfPlus
                 if (text == "") return;
                 string[] args = text.Split(' ');
                 var AddChat = "";
-                var RpcSendChat = "";
-                bool ResetCom = false;
+                bool SetCom = false;
                 var IsSecCom = ComTuple.Item2 != CommandTag.None;
 
                 if (text[0] == TextPlus.ComWord)
@@ -112,7 +112,7 @@ namespace TownOfPlus
                                 AddChat = CommandList.GetHelpText();
                                 break;
 
-                                case CommandTag.LobbyMaxPlayer:
+                            case CommandTag.LobbyMaxPlayer:
                                 if (args.Length > 1)
                                 {
                                     if (int.TryParse(args[1], out var LobbyLimit))
@@ -128,40 +128,13 @@ namespace TownOfPlus
                                         else
                                         {
                                             AddChat = "最大人数が同じです";
-                                            ResetCom = true;
+                                            SetCom = true;
                                         }
                                         break;
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
-                                break;
-
-                            case CommandTag.ChangeLobbyCode:
-                                if (args.Length > 1)
-                                {
-                                    main.SetLobbyCode.Value = args[1];
-                                }
-                                else
-                                {
-                                    main.SetLobbyCode.Value = main.Name;
-                                }
-                                AddChat = ($"コードが[{main.SetLobbyCode.Value}]になりました");
-                                break;
-
-                            case CommandTag.ChangeCodeColor:
-                                if (args.Length > 1)
-                                {
-                                    if ((args[1].Length == 6 || args[1].Length == 8) && Regex.IsMatch(args[1], @"[0-Z]"))
-                                    {
-                                        main.SetCodeColor.Value = args[1];
-                                    }
-                                }
-                                else
-                                {
-                                    main.SetCodeColor.Value = "FFFFFF";
-                                }
-                                AddChat = ($"コードカラーが[#{main.SetCodeColor.Value}]になりました");
+                                SetCom = true;
                                 break;
 
                             case CommandTag.Kick:
@@ -181,7 +154,7 @@ namespace TownOfPlus
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.Ban:
@@ -201,7 +174,7 @@ namespace TownOfPlus
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.Tp:
@@ -218,7 +191,7 @@ namespace TownOfPlus
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.SpectatePlayer:
@@ -241,7 +214,7 @@ namespace TownOfPlus
                                     break;
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.Tpme:
@@ -255,21 +228,7 @@ namespace TownOfPlus
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
-                                break;
-
-                            case CommandTag.ChangeGameName:
-                                if (args.Length > 1)
-                                {
-                                    if (10 >= args[1].Length)
-                                    {
-                                        main.SetGameName.Value = text[(args[0].Length + 1)..];
-                                        AddChat = $"ゲーム中の名前が[{main.SetGameName.Value}]になりました";
-                                        break;
-                                    }
-                                }
-                                AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.Kill:
@@ -283,7 +242,7 @@ namespace TownOfPlus
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.Exiled:
@@ -297,7 +256,7 @@ namespace TownOfPlus
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.Revive:
@@ -311,41 +270,7 @@ namespace TownOfPlus
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
-                                break;
-
-                            case CommandTag.SendChat:
-                                if (args.Length > 1)
-                                {
-                                    main.SetSendJoinChat.Value = args[1].Length > 100 ? args[1].Remove(100) : args[1];
-                                    AddChat = $"送るチャットが\n{main.SetSendJoinChat.Value}\nになりました";
-                                }
-                                AddChat = $"送るチャットは\n{main.SetSendJoinChat.Value}\nです";
-                                break;
-
-                            case CommandTag.DoubleName:
-                                if (args.Length > 1)
-                                {
-                                    main.SetDoubleName.Value = text[(args[0].Length + 1)..];
-                                    AddChat = $"二段目の名前が\n{main.SetDoubleName.Value}\nになりました";
-                                }
-                                AddChat = info.Help;
-                                ResetCom = true;
-                                break;
-
-                            case CommandTag.TranslucentName:
-                                if (args.Length > 1)
-                                {
-                                    if (int.TryParse(args[1], out var TranslucentName))
-                                    {
-                                        TranslucentName = Math.Clamp(TranslucentName, 1, 100);
-                                        main.SetTranslucentName.Value = TranslucentName;
-                                        AddChat = ($"名前の透明度が[{main.SetTranslucentName.Value}%]になりました");
-                                        break;
-                                    }
-                                }
-                                AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.CPS:
@@ -401,7 +326,7 @@ namespace TownOfPlus
                                     if (Helpers.TryGetFileText(SkinDataPass, out var list) && list.Any(a => a[0].Equals(SkinName)))
                                     {
                                         AddChat = $"「{SkinName}」はすでに使われている名前です";
-                                        ResetCom = true;
+                                        SetCom = true;
                                         break;
                                     }
 
@@ -421,7 +346,7 @@ namespace TownOfPlus
                                     break;
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.LoadSkin:
@@ -465,13 +390,13 @@ namespace TownOfPlus
                                         else
                                         {
                                             AddChat = $"「{SkinName}」が見つかりませんでした";
-                                            ResetCom = true;
+                                            SetCom = true;
                                         }
                                         break;
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.DeleteSkin:
@@ -493,28 +418,13 @@ namespace TownOfPlus
                                         else
                                         {
                                             AddChat = $"「{SkinName}」が見つかりませんでした";
-                                            ResetCom = true;
+                                            SetCom = true;
                                         }
                                         break;
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
-                                break;
-
-                            case CommandTag.TranslucentChat:
-                                if (args.Length > 1)
-                                {
-                                    if (int.TryParse(args[1], out var SetTranslucentChat))
-                                    {
-                                        SetTranslucentChat = Math.Clamp(SetTranslucentChat, 1, 100);
-                                        main.SetTranslucentChat.Value = SetTranslucentChat;
-                                        AddChat = ($"チャットの透明度が[{main.SetTranslucentChat.Value}%]になりました");
-                                        break;
-                                    }
-                                }
-                                AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.DirectMessage:
@@ -522,9 +432,12 @@ namespace TownOfPlus
                                 {
                                     if (args[1].Equals("cancel", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        ResetComTuple(CommandTag.DirectMessage);
-                                        AddChat = "DMをキャンセルしました";
-                                        break;
+                                        if (ComTuple.Item2 == CommandTag.DirectMessage)
+                                        {
+                                            ResetComTuple();
+                                            AddChat = "DMをキャンセルしました";
+                                            break;
+                                        }
                                     }
                                     if (AmongUsClient.Instance != null)
                                     {
@@ -537,7 +450,7 @@ namespace TownOfPlus
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
 
                             case CommandTag.FPS:
@@ -572,28 +485,17 @@ namespace TownOfPlus
                                 AddChat = chat;
                                 break;
 
-                            case CommandTag.FakePing:
-                                if (args.Length > 1)
-                                {
-                                    if (int.TryParse(args[1], out var SetFakePing))
-                                    {
-                                        main.SetFakePing.Value = SetFakePing;
-                                        AddChat = $"Pingを{main.SetFakePing.Value}にしました";
-                                        break;
-                                    }
-                                }
-                                AddChat = info.Help;
-                                ResetCom = true;
-                                break;
-
                             case CommandTag.Color:
                                 if (args.Length > 1)
                                 {
                                     if (args[1].Equals("cancel", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        ResetComTuple(CommandTag.Color);
-                                        AddChat = "色の変更をキャンセルしました";
-                                        break;
+                                        if (ComTuple.Item2 == CommandTag.Color)
+                                        {
+                                            ResetComTuple();
+                                            AddChat = "色の変更をキャンセルしました";
+                                            break;
+                                        }
                                     }
                                     if (Helpers.TryNamePlayer(text[(args[0].Length + 1)..], out var playername, out var pc))
                                     {
@@ -609,27 +511,31 @@ namespace TownOfPlus
                                     }
                                 }
                                 AddChat = info.Help;
-                                ResetCom = true;
+                                SetCom = true;
                                 break;
+
+                            case CommandTag.JoinText:
+                                TextPlus.RpcSendChat(main.SetSendJoinChat.Getstring());
+                                return;
 
                             default:
                                 break;
                         }
-                        
+
                     }
 
-                    if (main.ComCancel.Value) IsChatCommand = true;
+                    if (main.ComCancel.Getbool()) IsChatCommand = true;
                 }
 
                 if (!IsChatCommand && IsSecCom)
                 {
-                    switch (ComTuple.Item2) 
+                    switch (ComTuple.Item2)
                     {
                         case CommandTag.DirectMessage:
                             if (ComTuple.Item1.TryGetClient(out var client))
                             {
                                 AddChat = $"「{client.PlayerName.RemoveHTML()}」に\n" + text + "\nを送りました";
-                                Helpers.DMChat(client, "TownOfPlusによる個別送信", text);
+                                Helpers.DMChat(client, "※TownOfPlusによる個別送信", text);
                             }
                             break;
 
@@ -654,41 +560,35 @@ namespace TownOfPlus
                             break;
                     }
                     if (AddChat == "") AddChat = "プレイヤーが見つかりませんでした";
-                    ResetComTuple(ComTuple.Item2);
+                    ResetComTuple();
                     IsChatCommand = true;
                 }
 
                 //コマンドのときは送らない
                 if (CopyAndPasteMode && !IsChatCommand)
                 {
-                    RpcSendChat = text;
+                    TextPlus.RpcSendChat(text);
                 }
                 //自分のみ
                 if (AddChat != "")
                 {
                     __instance.AddComChat(AddChat);
                 }
-                //全員見える
-                if (RpcSendChat != "")
-                {
-                    TextPlus.RpcSendChat(RpcSendChat);
-                }
                 if (IsChatCommand)
                 {
                     __instance.TextArea.Clear();
                     __instance.quickChatMenu.ResetGlyphs();
-                    __instance.TimeSinceLastMessage = 2.9f;
                 }
-                if (ResetCom)
+                if (SetCom)
                 {
                     __instance.TimeSinceLastMessage = 2.9f;
                     __instance.TextArea.SetText(args[0] + " ");
                 }
             }
 
-            public static void ResetComTuple(CommandTag tag)
+            public static void ResetComTuple()
             {
-                if (ComTuple.Item2 == tag) ComTuple = (byte.MaxValue, CommandTag.None);
+                ComTuple = (byte.MaxValue, CommandTag.None);
             }
         }
 
@@ -702,7 +602,6 @@ namespace TownOfPlus
             }
         }
     }
-
     class ChatCommandUI
     {
         public static bool IsChatCommand = false;
@@ -732,7 +631,7 @@ namespace TownOfPlus
     {
         public static void Postfix(HudManager __instance)
         {
-            if (!GameState.IsChatActive && GameState.IsFreePlay && main.AlwaysChat.Value)
+            if (!GameState.IsChatActive && GameState.IsFreePlay && main.AlwaysChat.Getbool())
                 __instance.Chat?.SetVisible(true);
         }
     }
@@ -742,7 +641,7 @@ namespace TownOfPlus
     {
         public static void Postfix(ChatController __instance)
         {
-            if (main.ChatLimitPlus.Value) __instance.TextArea.characterLimit = 120;
+            if (main.ChatLimitPlus.Getbool()) __instance.TextArea.characterLimit = 120;
         }
     }
 
@@ -751,7 +650,7 @@ namespace TownOfPlus
     {
         public static void Postfix(MapBehaviour __instance)
         {
-            if (main.CancelChatMap.Value && GameState.IsMeeting && GameState.IsFocusChatArea) __instance.Close();
+            if (main.CancelChatMap.Getbool() && GameState.IsMeeting && GameState.IsFocusChatArea) __instance.Close();
         }
     }
 }

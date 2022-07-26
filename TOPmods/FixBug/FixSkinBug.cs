@@ -3,10 +3,10 @@
 namespace TownOfPlus
 {
     //スキンがズレてるのを修正
-    class FixSkinBag
+    class FixSkinBug
     {
         [HarmonyPatch(typeof(PoolablePlayer), nameof(PoolablePlayer.Awake))]
-        public static class FixSkinBagAwake
+        public static class FixSkinBugAwake
         {
             public static void Postfix(PoolablePlayer __instance)
             {
@@ -15,7 +15,7 @@ namespace TownOfPlus
         }
 
         [HarmonyPatch(typeof(PoolablePlayer), nameof(PoolablePlayer.SetMaskLayer))]
-        public static class FixSkinBagSetMaskLayer
+        public static class FixSkinBugSetMaskLayer
         {
             public static void Postfix(PoolablePlayer __instance)
             {
@@ -25,7 +25,7 @@ namespace TownOfPlus
 
         public static void FixSkin(PoolablePlayer __instance)
         {
-            if (!main.FixSkinBag.Value) return;
+            if (!main.FixSkinBug.Getbool()) return;
             try
             {
                 __instance.cosmetics.visor.transform.SetPos(y: 0.575f);

@@ -12,55 +12,23 @@ namespace TownOfPlus
 
         public static void Postfix(HudManager __instance)
         {
-            if (main.DateTimeSetting.Value)
+            if (main.DateTimeSetting.Getbool())
             {
-                if (!initializeOverlays()) return;
-
-                HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
-                if (PlayerControl.LocalPlayer == null || hudManager == null)
-                    return;
-
-                var parent = hudManager.transform;
-
-                DateTimetext.transform.SetParent(parent);
-                DateTimeUnderlay.transform.SetParent(parent);
-                DateTimeUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
-                DateTimeUnderlay.transform.localScale = new Vector3(2f, 0.25f, 0.5f);
-                DateTimeUnderlay.transform.localPosition = new Vector3(main.DateTimepositionX.Value, main.DateTimepositionY.Value, -900f);
-                DateTimetext.transform.localPosition = new Vector3(main.DateTimepositionX.Value, main.DateTimepositionY.Value, -900f);
+                if (DestroyableSingleton<HudManager>.Instance == null) return;
+                if (DateTimeUnderlay == null) DateTimeUnderlay = Overlay.CreateUnderlay(main.DateTimepositionX, main.DateTimepositionY, "DateTime");
+                if (DateTimetext == null) DateTimetext = Overlay.CreateText(main.DateTimepositionX, main.DateTimepositionY, "DateTime");
+                DateTimeUnderlay.transform.localScale = new Vector3(1.75f, 0.25f, 0.5f);
 
                 DateTimetext.text = DateTime.Now.ToString("G");
 
                 if (main.SettingDateTime && GameState.IsChatOpen)
                 {
-                    if (Input.GetKey(KeyCode.RightArrow))
-                    {
-                        main.DateTimepositionX.Value += 0.05f;
-                    }
-                    if (Input.GetKey(KeyCode.LeftArrow))
-                    {
-                        main.DateTimepositionX.Value -= 0.05f;
-                    }
-                    if (Input.GetKey(KeyCode.DownArrow))
-                    {
-                        main.DateTimepositionY.Value -= 0.05f;
-                    }
-                    if (Input.GetKey(KeyCode.UpArrow))
-                    {
-                        main.DateTimepositionY.Value += 0.05f;
-                    }
-                    if (Input.GetMouseButton(1))
-                    {
-                        main.DateTimepositionX.Value = Helpers.ScreenToMousePositon.x;
-                        main.DateTimepositionY.Value = Helpers.ScreenToMousePositon.y;
-                    }
+                    DateTimetext.transform.localPosition = DateTimeUnderlay.transform.localPosition = Overlay.SettingPos(main.DateTimepositionX, main.DateTimepositionY);
                 }
                 else
                 {
                     main.SettingDateTime = false;
                 }
-                DateTimetext.enabled = true;
-                DateTimeUnderlay.enabled = true;
                 Flag.NewFlag("DateTime");
             }
             else
@@ -72,34 +40,5 @@ namespace TownOfPlus
                 }, "DateTime");
             }
         }
-        public static bool initializeOverlays()
-        {
-            HudManager hudManager = DestroyableSingleton<HudManager>.Instance;
-            if (hudManager == null) return false;
-            if (DateTimeUnderlay == null)
-            {
-                DateTimeUnderlay = UnityEngine.Object.Instantiate(hudManager.FullScreen, hudManager.transform);
-                DateTimeUnderlay.transform.localPosition = new Vector3(main.DateTimepositionX.Value, main.DateTimepositionY.Value, -900f);
-                DateTimeUnderlay.name = "DateTimeUnderlay";
-                DateTimeUnderlay.gameObject.SetActive(true);
-                DateTimeUnderlay.enabled = false;
-            }
-            if (DateTimetext == null)
-            {
-                DateTimetext = UnityEngine.Object.Instantiate(hudManager.TaskText, hudManager.transform);
-                DateTimetext.fontSize = DateTimetext.fontSizeMin = DateTimetext.fontSizeMax = 1.15f;
-                DateTimetext.autoSizeTextContainer = false;
-                DateTimetext.enableWordWrapping = false;
-                DateTimetext.alignment = TMPro.TextAlignmentOptions.Center;
-                DateTimetext.transform.localPosition = new Vector3(main.DateTimepositionX.Value, main.DateTimepositionY.Value, -900f);
-                DateTimetext.transform.localScale = Vector3.one * 1.5f;
-                DateTimetext.color = Palette.White;
-                DateTimetext.name = "DateTimetext";
-                DateTimetext.text = "0";
-                DateTimetext.enabled = false;
-            }
-            return true;
-        }
     }
-
 }

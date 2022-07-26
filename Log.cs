@@ -2,6 +2,7 @@ using BepInEx;
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -40,11 +41,11 @@ namespace TownOfPlus
                 "[発生したバグ]:\n\n" +
                 "[バグが発生した時の状況]:\n\n" +
                 "[有効にしている設定]:\n";
-            foreach (var op in ModOptionSetting.AllOptions.Where(w => w.Config?.Value is true || w.IsFile))
+            foreach (var op in ModOption.AllOptions.Where(w => w.Getbool() || w.ModType == ModType.File))
             {
-                if (op.IsFile)
+                if (op.ModType == ModType.File)
                 {
-                    if (ModOptionSetting.AllOptions.Any(w => w.Tag == op.Tag && w.IsChild && w.Config?.Value is true))
+                    if (ModOption.AllOptions.Any(a => a.Tag == op.Tag && a.IsChild && a.Getbool()))
                     {
                         log($"=====[{op.Title}Option]=====", null, LogType.Log, false);
                     }
@@ -52,7 +53,7 @@ namespace TownOfPlus
                 }
                 if (op.IsChild)
                 {
-                    if (!ModOptionSetting.AllOptions.Any(w => w.Tag == op.Tag && !w.IsChild && w.Config?.Value is true)) continue;
+                    if (!ModOption.AllOptions.Any(a => a.Tag == op.Tag && !a.IsChild && a.Getbool())) continue;
                 }
                 else log($"=====[{op.Title}Option]=====", null, LogType.Log, false);
                 text += $"{op.Title},";
@@ -90,6 +91,67 @@ namespace TownOfPlus
             }
             return log;
         }
+
+        public static T gamelog<T>(this T log, string note = "")
+        {
+            if (main.DebugMode.Value)
+            {
+                if (!note.IsNullOrWhiteSpace()) note += " : ";
+                GameLog.LogList.Add(note + log.ToString());
+            }
+            return log;
+        }
     }
 
+    [HarmonyPatch(typeof(ModManager), nameof(ModManager.LateUpdate))]
+    class GameLog
+    {
+        public static List<string> LogList = new();
+        public static List<TMPro.TextMeshPro> LogsList = new();
+        public static TMPro.TextMeshPro text;
+        public static void Postfix(ModManager __instance)
+        {
+            while (LogList.Count > 0)
+            {
+                var ob = UnityEngine.Object.Instantiate(text, null);
+                ob.gameObject.SetActive(true);
+                ob.gameObject.layer = 5;
+                ob.text = LogList[0];
+                ob.gameObject.DontDestroyOnLoad();
+                var show = new Color(1f, 1f, 0f, 0f);
+                var hide = new Color(1f, 1f, 0f, 1f);
+                ModManager.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t => ob.color = Color.Lerp(show, hide, t))));
+                new LateTask(() =>
+                {
+                    ModManager.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
+                    {
+                        ob.color = Color.Lerp(hide, show, t);
+                        if (t >= 1.0f) ob.gameObject.Destroy();
+                    })));
+                }, 5);
+                LogList.RemoveAt(0);
+                LogsList.Insert(0, ob);
+            }
+            for (int i = 0; i < LogsList.Count; i++)
+            {
+                var ob = LogsList[i];
+                if (ob != null)
+                {
+                    ob.transform.position = AspectPosition.ComputeWorldPosition(__instance.localCamera, AspectPosition.EdgeAlignments.Center, new Vector3(0, 2.75f - (0.25f * i), __instance.localCamera.nearClipPlane + 0.1f));
+                }
+                else LogsList.RemoveAt(i);
+            }
+        }
+
+        public static void SetText(MainMenuManager __instance)
+        {
+            if (text != null) return;
+            text = UnityEngine.Object.Instantiate(__instance.Announcement.AnnounceTextMeshPro, null);
+            text.alignment = TMPro.TextAlignmentOptions.Center;
+            text.enableWordWrapping = false;
+            text.fontSizeMax = text.fontSizeMin = text.fontSize = 2f;
+            text.gameObject.SetActive(false);
+            text.gameObject.DontDestroyOnLoad();
+        }
+    }
 }

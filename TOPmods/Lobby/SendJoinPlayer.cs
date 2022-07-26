@@ -5,16 +5,18 @@ namespace TownOfPlus
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.CoSpawnPlayer))]
     public static class SendJoinPlayer
     {
-        public static void Prefix(PlayerPhysics __instance)
+        public static void Postfix(PlayerControl __instance)
         {
-            if (main.SendJoinPlayer.Value && GameState.IsHost && GameState.IsLobby)
+            if (main.SendJoinPlayer.Getbool() && GameState.IsHost && GameState.IsLobby)
             {
-                if (AmongUsClient.Instance != null && __instance.myPlayer != PlayerControl.LocalPlayer)
+                new LateTask(() =>
                 {
-                    var client = AmongUsClient.Instance.GetClient(__instance.OwnerId);
-                    Helpers.DMChat(client, "※TownOfPlusによる自動送信", main.SetSendJoinChat.Value);
-                    HudManager.Instance?.Chat?.AddComChat(client.PlayerName.RemoveHTML() + "に参加メッセージを送りました。");
-                }
+                    if (__instance.PlayerId.TryGetClient(out var client))
+                    {
+                        Helpers.DMChat(client.log(), "※TownOfPlusによる自動送信", main.SetSendJoinChat.Getstring());
+                        HudManager.Instance?.Chat?.AddComChat(client.PlayerName.RemoveHTML() + "に参加メッセージを送りました。");
+                    }
+                }, 1f);
             }
         }
     }

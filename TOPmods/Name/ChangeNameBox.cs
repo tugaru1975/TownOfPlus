@@ -12,7 +12,7 @@ namespace TownOfPlus
     {
         public static void Postfix(CreateOptionsPicker __instance)
         {
-            if (!main.ChangeNameBox.Value) return;
+            if (!main.ChangeNameBox.Getbool()) return;
 
             var scene = SceneManager.GetActiveScene().name;
             if (scene is not "MMOnline" and not "FindAGame") return;
@@ -51,8 +51,8 @@ namespace TownOfPlus
         public static GameObject nameText;
         public static void Postfix(SinglePopHelp __instance)
         {
-            if (!main.ChangeNameBox.Value) return;
-            if (nameText != null && SceneManager.GetActiveScene().name.Equals("MMOnline")) return;
+            if (!main.ChangeNameBox.Getbool()) return;
+            if (nameText != null || !SceneManager.GetActiveScene().name.Equals("MMOnline")) return;
             var editName = DestroyableSingleton<AccountManager>.Instance.accountTab.editNameScreen;
             nameText = Object.Instantiate(editName.nameText.gameObject, __instance.transform);
 

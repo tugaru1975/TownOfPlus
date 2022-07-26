@@ -11,7 +11,7 @@ namespace TownOfPlus
             if (PlayerControl.LocalPlayer == null) return;
             if (GameState.IsHost)
             {
-                if (main.ChangeGameName.Value)
+                if (main.ChangeGameName.Getbool())
                 {
                     if (!GameState.IsGameStart)
                     {
@@ -24,7 +24,7 @@ namespace TownOfPlus
                         Flag.Run(() =>
                         {
                             name = SaveManager.PlayerName;
-                            SaveManager.PlayerName = main.SetGameName.Value;
+                            SaveManager.PlayerName = main.SetGameName.Getstring();
                             PlayerControl.LocalPlayer.RpcSetName(SaveManager.PlayerName);
                             Flag.NewFlag("ChangedGameName");
                         }, "CanChangeGameName");

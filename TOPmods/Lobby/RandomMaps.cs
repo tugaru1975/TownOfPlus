@@ -8,7 +8,7 @@ namespace TownOfPlus
     {
         public static void Prefix()
         {
-            if (main.RandomMaps.Value && GameState.IsHost)
+            if (main.RandomMaps.Getbool() && GameState.IsHost)
             {
                 var rand = new System.Random();
                 List<byte> RandomMaps = new();
@@ -17,10 +17,10 @@ namespace TownOfPlus
                   Polus      = 2
                   Dleks      = 3
                   TheAirShip = 4*/
-                if (main.AddTheSkeld.Value) RandomMaps.Add(0);
-                if (main.AddMIRAHQ.Value) RandomMaps.Add(1);
-                if (main.AddPolus.Value) RandomMaps.Add(2);
-                if (main.AddAirShip.Value) RandomMaps.Add(4);
+                if (main.AddTheSkeld.Getbool()) RandomMaps.Add(0);
+                if (main.AddMIRAHQ.Getbool()) RandomMaps.Add(1);
+                if (main.AddPolus.Getbool()) RandomMaps.Add(2);
+                if (main.AddAirShip.Getbool()) RandomMaps.Add(4);
                 if (RandomMaps.Count != 0)
                 {
                     var MapsId = RandomMaps[rand.Next(RandomMaps.Count)];

@@ -7,7 +7,7 @@ namespace TownOfPlus
     {
         public static void Postfix(GameStartManager __instance)
         {
-            if (main.AutoCopyCode.Value) __instance.CopyGameCode();
+            if (main.AutoCopyCode.Getbool()) __instance.CopyGameCode();
         }
     }
 }

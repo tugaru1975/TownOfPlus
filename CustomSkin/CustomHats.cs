@@ -14,16 +14,12 @@ namespace TownOfPlus
     [HarmonyPatch]
     public class CustomHats
     {
-        private static bool isadded = false;
         public static Material hatShader;
 
         public static Dictionary<string, HatExtension> CustomHatRegistry = new();
-        public static HatExtension TestExt = null;
 
         public class HatExtension
         {
-            public string author { get; set; }
-            public string condition { get; set; }
             public Sprite FlipImage { get; set; }
             public Sprite BackFlipImage { get; set; }
         }
@@ -161,13 +157,15 @@ namespace TownOfPlus
             return CreateHatData(chd);
         }
 
+        private static bool RUNNING = false;
+        private static bool isadded = false;
         [HarmonyPatch(typeof(HatManager), nameof(HatManager.GetHatById))]
         private static class HatManagerPatch
         {
             static void Prefix(HatManager __instance)
             {
-                if (isadded) return;
-                isadded = true; 
+                if (RUNNING || isadded) return;
+                RUNNING = true; 
                 try
                 {
                     try
@@ -189,11 +187,16 @@ namespace TownOfPlus
                     
                     while (CustomHatLoader.hatdetails.Count > 0)
                     {
+                        isadded = true;
                         __instance.allHats.Add(CreateHatBehaviour(CustomHatLoader.hatdetails[0]));
                         CustomHatLoader.hatdetails.RemoveAt(0);
                     }
                 }
                 catch { }
+            }
+            static void Postfix(HatManager __instance)
+            {
+                RUNNING = false;
             }
         }
 
@@ -256,7 +259,7 @@ namespace TownOfPlus
                 {
                     HttpStatusCode status = await FetchHats(repo.log("チェック開始"));
                     if (status != HttpStatusCode.OK) repo.log("URLが見つかりませんでした", LogType.Error);
-                    else repo.log("チェック終了");
+                    else repo.log("チェック終了").gamelog("ハットダウンロード終了");
                 }
                 catch { }
             }
@@ -365,10 +368,6 @@ namespace TownOfPlus
     {
         public static CustomHats.HatExtension getHatExtension(this HatData hat)
         {
-            if (CustomHats.TestExt != null && CustomHats.TestExt.condition.Equals(hat.name))
-            {
-                return CustomHats.TestExt;
-            }
             CustomHats.CustomHatRegistry.TryGetValue(hat.name, out var ret);
             return ret;
         }

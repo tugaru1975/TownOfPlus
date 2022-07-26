@@ -7,7 +7,7 @@ namespace TownOfPlus
     {
         public static void Postfix(MeetingHud __instance)
         {
-            if (main.CrewColorVoteArea.Value)
+            if (main.CrewColorVoteArea.Getbool())
             {
                 if (__instance.playerStates is null) return;
                 foreach (PlayerVoteArea pva in __instance.playerStates)

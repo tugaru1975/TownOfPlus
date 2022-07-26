@@ -8,7 +8,7 @@ namespace TownOfPlus
     {
         public static void Postfix()
         {
-            if (main.Zoom.Value && GameState.IsShip && !GameState.IsMeeting && GameState.IsCanMove)
+            if (main.Zoom.Getbool() && GameState.IsShip && !GameState.IsMeeting && GameState.IsCanMove)
             {
                 if (Input.mouseScrollDelta.y > 0)
                 {
