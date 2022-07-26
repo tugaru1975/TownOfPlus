@@ -20,19 +20,17 @@ namespace TownOfPlus
             CustomVisorLoader.LaunchVisorFetcher();
             CustomNamePlateLoader.LaunchNamePlateFetcher();
             ModUpdater.LaunchUpdater();
+            GameLog.SetText(__instance);
             if (ModUpdater.hasUpdate)
             {
                 var OnlineButton = GameObject.Find("PlayOnlineButton");
-                UnityEngine.Object.Destroy(OnlineButton.GetComponent<BoxCollider2D>());
+                Object.Destroy(OnlineButton.GetComponent<BoxCollider2D>());
 
                 var OnlineButtonText = OnlineButton.transform.FindChild("Text_TMP");
-                var text = UnityEngine.Object.Instantiate(OnlineButtonText.GetComponent<TextMeshPro>(), OnlineButton.transform);
+                var text = Object.Instantiate(OnlineButtonText.GetComponent<TextMeshPro>(), OnlineButton.transform);
                 text.enableWordWrapping = true;
                 OnlineButtonText.gameObject.Destroy();
-                new LateTask(() =>
-                {
-                    text.text = "TownOfPlusを最新版にアップデートしてください";
-                });
+                new LateTask(() => text.text = "TownOfPlusを最新版にアップデートしてください");
             }
             if (ModUpdater.hasUpdate && !ModUpdater.IsUpdated || main.ShowPopUpVersion.Value != main.Version)
             {

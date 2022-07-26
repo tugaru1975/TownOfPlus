@@ -9,25 +9,25 @@ namespace TownOfPlus
     {
         public static void Postfix(PlayerControl __instance)
         {
-            if (main.RainbowName.Value || main.TranslucentName.Value)
+            if (main.RainbowName.Getbool() || main.TranslucentName.Getbool())
             {
                 var p = PlayerControl.LocalPlayer;
                 if (p?.Data is null || p?.Data?.Role is null) return;
                 Color color = Helpers.GetPlayerRoleColor(p.Data.Role.Role);
-                if (main.NameOutline.Value) color = Palette.Black;
+                if (main.NameOutline.Getbool()) color = Palette.Black;
                 IsChange.Run(() =>
                 {
                     Reset();
-                }, main.NameOutline.Value, "NameOutline");
-                if (main.RainbowName.Value)
+                }, main.NameOutline.Getbool(), "NameOutline");
+                if (main.RainbowName.Getbool())
                 {
                     color = Color.HSVToRGB(Time.time % 1, 1, 1);
                 }
-                if (main.TranslucentName.Value)
+                if (main.TranslucentName.Getbool())
                 {
-                    color.a = (100f - main.SetTranslucentName.Value) / 100f;
+                    color.a = (100f - main.SetTranslucentName.Getint()) / 100f;
                 }
-                if (main.NameOutline.Value) p.cosmetics.nameText.outlineColor = color;
+                if (main.NameOutline.Getbool()) p.cosmetics.nameText.outlineColor = color;
                 else p.cosmetics.nameText.color = color;
                 Flag.NewFlag("NamePlus");
             }

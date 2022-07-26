@@ -32,7 +32,7 @@ namespace TownOfPlus
                 {
                     HttpStatusCode status = await FetchNamePlates(repo.log("チェック開始"));
                     if (status != HttpStatusCode.OK) repo.log("URLが見つかりませんでした", LogType.Error);
-                    else repo.log("チェック終了");
+                    else repo.log("チェック終了").gamelog("ネームプレートダウンロード終了");
                 }
                 catch { }
             }
@@ -130,15 +130,15 @@ namespace TownOfPlus
             public string resource { get; set; }
         }
 
-        public static bool isAdded = false;
-
+        private static bool RUNNING = false;
+        private static bool isadded = false;
         [HarmonyPatch(typeof(HatManager), nameof(HatManager.GetNamePlateById))]
         class UnlockedNamePlatePatch
         {
             public static void Prefix(HatManager __instance)
             {
-                if (isAdded) return;
-                isAdded = true;
+                if (RUNNING || isadded) return;
+                RUNNING = true;
                 try
                 {
                     try
@@ -155,15 +155,20 @@ namespace TownOfPlus
                             }
                         }
                     }
-                    catch (System.Exception e) { e.log(); }
+                    catch { }
 
                     while (CustomNamePlateLoader.NamePlatedetails.Count > 0)
                     {
+                        isadded = true;
                         __instance.allNamePlates.Add(CreateNamePlateBehaviour(CustomNamePlateLoader.NamePlatedetails[0]));
                         CustomNamePlateLoader.NamePlatedetails.RemoveAt(0);
                     }
                 }
                 catch { }
+            }
+            static void Postfix(HatManager __instance)
+            {
+                RUNNING = false;
             }
         }
 

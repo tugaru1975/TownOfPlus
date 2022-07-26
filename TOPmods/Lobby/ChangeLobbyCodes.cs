@@ -7,18 +7,18 @@ namespace TownOfPlus
     {
         public static void Postfix(GameStartManager __instance)
         {
-            if (!SaveManager.StreamerMode && GameState.IsLocalGame) return;
+            if (GameState.IsLocalGame) return;
 
-            if (main.ChangeLobbyCodes.Value)
+            if (SaveManager.StreamerMode && main.ChangeLobbyCodes.Getbool())
             {
-                __instance.GameRoomNameCode.text = main.SetLobbyCode.Value.SetColor(main.SetCodeColor.Value);
+                __instance.GameRoomNameCode.text = main.SetLobbyCode.Getstring().SetColor(main.SetCodeColor.Getstring());
                 Flag.NewFlag("ChangeLobbyCodes");
             }
             else
             {
                 Flag.Run(() =>
                 {
-                    __instance.GameRoomNameCode.text = "******";
+                    if (!SaveManager.StreamerMode)__instance.GameRoomNameCode.text = "******";
                 }, "ChangeLobbyCodes");
             }
         }

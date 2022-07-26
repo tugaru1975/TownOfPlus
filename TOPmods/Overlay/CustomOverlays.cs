@@ -58,7 +58,6 @@ namespace TownOfPlus
             if (infoOverlayPlayer == null)
             {
                 infoOverlayPlayer = UnityEngine.Object.Instantiate(infoOverlayRules, hudManager.transform);
-                infoOverlayPlayer.maxVisibleLines = 28;
                 infoOverlayPlayer.fontSize = infoOverlayPlayer.fontSizeMin = infoOverlayPlayer.fontSizeMax = 1.10f;
                 infoOverlayPlayer.outlineWidth += 0.02f;
                 infoOverlayPlayer.autoSizeTextContainer = false;
@@ -84,8 +83,6 @@ namespace TownOfPlus
                 return;
 
             if (!initializeOverlays()) return;
-
-            if (GameState.IsMeeting) hudManager.SetHudActive(false);
 
             overlayShown = true;
 
@@ -114,9 +111,6 @@ namespace TownOfPlus
         public static void hideInfoOverlay()
         {
             if (!overlayShown) return;
-
-            if (!GameState.IsMeeting && GameState.IsShip) DestroyableSingleton<HudManager>.Instance.SetHudActive(true);
-
             overlayShown = false;
             var underlayTransparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
             var underlayOpaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
@@ -156,8 +150,8 @@ namespace TownOfPlus
         {
             public static void Postfix(KeyboardJoystick __instance)
             {
-                if (!main.CustomOverlay.Value) return;
-                if (Input.GetKeyDown(main.CustomOverlayKeyBind.Value))
+                if (!main.CustomOverlay.Getbool()) return;
+                if (Input.GetKeyDown(main.CustomOverlayKeyBind.Getkeycode()))
                 {
                     toggleInfoOverlay();
                 }
@@ -168,7 +162,7 @@ namespace TownOfPlus
         {
             public static void Postfix(HudManager __instance)
             {
-                if (!main.CustomOverlay.Value)
+                if (!main.CustomOverlay.Getbool())
                 {
                     resetOverlays();
                     return;
@@ -181,7 +175,7 @@ namespace TownOfPlus
 
                 GameOptionsData o = PlayerControl.GameOptions;
                 var op = o.ToString();
-                if (main.ShowRoleSetting.Value)
+                if (main.ShowRolesSetting.Getbool())
                 {
                     GetRoleInfo(ref op, StringNames.ScientistRole, RoleTypes.Scientist);
                     GetRoleInfo(ref op, StringNames.GuardianAngelRole, RoleTypes.GuardianAngel);
@@ -200,30 +194,28 @@ namespace TownOfPlus
 
                         var FriendCodeText = "";
                         var LevelText = "";
-                        if (Client.Character != null)
+                        if (main.ShowFriendText.Getbool())
                         {
-                            if (main.ShowFriendText.Value)
-                            {
-                                var FriendCode = Client.Character.Data.FriendCode.Trim();
-                                if (FriendCode != "") FriendCodeText = $" FriendCode : {FriendCode}";
-                            }
-                            if (main.ShowLevelText.Value)
-                            {
-                                var Level = Client.Character.Data.PlayerLevel;
-                                LevelText = $" Lv.{Level + 1}";
-                            }
+                            var FriendCode = Client.FriendCode.Trim();
+                            if (FriendCode != "") FriendCodeText = $" FriendCode : {FriendCode}";
+                        }
+                        if (main.ShowLevelText.Getbool())
+                        {
+                            var Level = Client.PlayerLevel;
+                            LevelText = $" Lv.{Level + 1}";
                         }
                         var InfoText = LevelText + FriendCodeText;
                         if (InfoText != "") TextPlus.SetSize(ref InfoText, 0.75f);
 
                         var HEXcolor = Helpers.GetClientColor(Client) ?? "FF000000";
-
+                        
                         var ColorText = Helpers.GetColorName(Client);
-                        if (!main.ShowColorName.Value || ColorText == "") ColorText = "■";
-                        if (main.FirstColorName.Value) ColorText = ColorText.FirstOrDefault().ToString();
+                        if (!main.ShowColorName.Getbool() || ColorText == "") ColorText = "■";
+                        if (main.FirstColorName.Getbool()) ColorText = ColorText.FirstOrDefault().ToString();
 
                         var PlayerName = Client.PlayerName.RemoveHTML();
-                        if (main.ShowHostColor.Value && Client.Id == AmongUsClient.Instance.GetHost().Id) TextPlus.SetColor(ref PlayerName, "00FFFF");
+                        if (main.ShowBlockedPlayer.Getbool() && DestroyableSingleton<FriendsListManager>.Instance.IsPlayerBlockedUsername(Client.FriendCode)) TextPlus.SetColor(ref PlayerName, "FF0000");
+                        if (main.ShowHostColor.Getbool() && Client.Id == AmongUsClient.Instance.GetHost().Id) TextPlus.SetColor(ref PlayerName, "00FFFF");
                         TextPlus.AddLine(ref PlayerText, $"{ColorText.SetColor(HEXcolor)}{PlayerName} : {Platform.TrimAll("Standalone")}");
                         if (InfoText != "") TextPlus.AddLine(ref PlayerText, InfoText);
                     }

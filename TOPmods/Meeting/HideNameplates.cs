@@ -15,7 +15,7 @@ namespace TownOfPlus
             blankNameplate ??= HatManager.Instance.GetNamePlateById("nameplate_NoPlate")?.viewData?.viewData?.Image;
 
             var nameplate = blankNameplate;
-            if (!main.HideNameplates.Value)
+            if (!main.HideNameplates.Getbool())
             {
                 Helpers.TryGetPlayer(playerId != byte.MaxValue ? playerId : pva.TargetPlayerId, out var p);
                 var nameplateId = p?.CurrentOutfit?.NamePlateId;

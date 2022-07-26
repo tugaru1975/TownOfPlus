@@ -8,7 +8,7 @@ namespace TownOfPlus
     {
         public static void Postfix()
         {
-            if (main.CrewColorText.Value)
+            if (main.CrewColorText.Getbool())
             {
                 foreach (var p in PlayerControl.AllPlayerControls)
                 {
@@ -34,7 +34,7 @@ namespace TownOfPlus
     {
         public static void Postfix(PlayerVoteArea __instance)
         {
-            if (main.CrewColorText.Value) __instance.PlayerIcon.cosmetics.colorBlindText.color = __instance.PlayerIcon.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
+            if (main.CrewColorText.Getbool()) __instance.PlayerIcon.cosmetics.colorBlindText.color = __instance.PlayerIcon.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
         }
     }
 
@@ -43,7 +43,7 @@ namespace TownOfPlus
     {
         public static void Postfix(PoolablePlayer __instance)
         {
-            if (main.CrewColorText.Value) __instance.cosmetics.colorBlindText.color = __instance.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
+            if (main.CrewColorText.Getbool()) __instance.cosmetics.colorBlindText.color = __instance.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
         }
     }
 }

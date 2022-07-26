@@ -12,7 +12,7 @@ namespace TownOfPlus
         {
             public static void Prefix(GameSettingMenu __instance)
             {
-                if (!main.RoomOption.Value || !main.ShowMapSelect.Value) return;
+                if (!main.RoomOption.Getbool() || !main.ShowMapSelect.Getbool()) return;
                 // オンラインモードで部屋を立て直さなくてもマップを変更できるように変更
                 __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
             }
@@ -23,7 +23,7 @@ namespace TownOfPlus
         {
             public static void Postfix(GameOptionsMenu __instance)
             {
-                if (!main.RoomOption.Value) return;
+                if (!main.RoomOption.Getbool()) return;
                 foreach (var ob in __instance.Children)
                 {
                     switch (ob.Title)
@@ -36,6 +36,7 @@ namespace TownOfPlus
                             break;
 
                         case StringNames.GameRecommendedSettings:
+                            if (!main.RemoveReset.Getbool()) break;
                             ob.enabled = false;
                             ob.gameObject.SetActive(false);
                             break;
@@ -49,7 +50,7 @@ namespace TownOfPlus
         {
             public static void Postfix(RolesSettingsMenu __instance)
             {
-                if (!main.RoomOption.Value) return;
+                if (!main.RoomOption.Getbool()) return;
                 foreach (var ob in __instance.Children)
                 {
                     switch (ob.Title)
@@ -63,7 +64,7 @@ namespace TownOfPlus
                         case StringNames.ShapeshifterCooldown:
                         case StringNames.ShapeshifterDuration:
                             ob.Cast<NumberOption>().ValidRange = new FloatRange(0, 180);
-                            if (main.AdvancedNum.Value) SetIncrement(ob, 1f, 5f);
+                            if (main.AdvancedNum.Getbool()) SetIncrement(ob, 1f, 5f);
                             break;
                     }
                 }
@@ -75,7 +76,7 @@ namespace TownOfPlus
         {
             public static void Postfix(GameOptionsMenu __instance)
             {
-                if (!main.RoomOption.Value || !main.AdvancedNum.Value) return;
+                if (!main.RoomOption.Getbool() || !main.AdvancedNum.Getbool()) return;
                 foreach (var ob in __instance.Children)
                 {
                     switch (ob.Title)
@@ -108,7 +109,7 @@ namespace TownOfPlus
         {
             public static void Postfix(RolesSettingsMenu __instance)
             {
-                if (!main.RoomOption.Value || !main.AdvancedNum.Value) return;
+                if (!main.RoomOption.Getbool() || !main.AdvancedNum.Getbool()) return;
                 foreach (var ob in __instance.Children)
                 {
                     switch (ob.Title)

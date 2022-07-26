@@ -8,7 +8,8 @@ namespace TownOfPlus
         None,
         Name,
         FileName,
-        Reset
+        Reset,
+        All,
     }
 
     public enum CommandTag
@@ -30,17 +31,10 @@ namespace TownOfPlus
         Exiled,
         Revive,
         Color,
-        ChangeGameName,
-        ChangeLobbyCode,
-        ChangeCodeColor,
-        SendChat,
-        DoubleName,
-        TranslucentName,
         CPS,
         DateTime,
-        TranslucentChat,
         FPS,
-        FakePing,
+        JoinText,
     }
 
     public static class CommandList
@@ -51,7 +45,7 @@ namespace TownOfPlus
             {
                 new ChatCommandList(new (){"Help" },
                     true,
-                    CommandText.None,
+                    CommandText.All,
                     "",
                     CommandTag.Help),
 
@@ -145,81 +139,43 @@ namespace TownOfPlus
                     "Color [名前] : 指定した人の色を変更します",
                     CommandTag.Color),
 
-                new ChatCommandList(new (){"ChangeGameName", "CGN"},
-                    main.ChangeGameName.Value && ((GameState.IsLobby && GameState.IsHost) || GameState.IsFreePlay),
+                new ChatCommandList(new (){"JoinText", "JT"},
+                    main.SendJoinPlayer.Getbool() && GameState.IsLobby && GameState.IsHost,
                     CommandText.None,
-                    "ChangeGameName(CGN) [変更したい名前(10文字)] : ゲーム中の名前を変えられます",
-                    CommandTag.ChangeGameName),
-
-                new ChatCommandList(new (){"ChangeLobbyCode", "CLC"},
-                    main.ChangeLobbyCodes.Value && GameState.IsLobby,
-                    CommandText.None,
-                    "ChangeLobbyCode(CLC) [任意の名前] : ロビーコードの名前を変更できます",
-                    CommandTag.ChangeLobbyCode),
-
-                new ChatCommandList(new (){"ChangeCodeColor", "CCC"},
-                    main.ChangeLobbyCodes.Value && GameState.IsLobby && !GameState.IsLocalGame,
-                    CommandText.None,
-                    "ChangeCodeColor(CCC) [HEXコード] : ロビーコードの色を変更できます",
-                    CommandTag.ChangeCodeColor),
-
-                new ChatCommandList(new (){"SendChat", "SC"},
-                    main.SendJoinPlayer.Value && GameState.IsLobby && GameState.IsHost,
-                    CommandText.None,
-                    "SendChat(SC) [送るチャット] : 指定したチャットを参加者に送ります",
-                    CommandTag.SendChat),
-
-                new ChatCommandList(new (){"DoubleName", "DN"},
-                    main.DoubleName.Value && GameState.IsLobby && GameState.IsHost,
-                    CommandText.None,
-                    "DoubleName(DN) [任意の名前] : 名前に二段目を追加します",
-                    CommandTag.DoubleName),
-
-                new ChatCommandList(new (){"TranslucentName", "TN"},
-                    main.TranslucentName.Value,
-                    CommandText.None,
-                    "TranslucentName(TN) [数値] : 名前の透明度を変更します",
-                    CommandTag.TranslucentName),
+                    "JoinText : 参加時のチャットを送信します。",
+                    CommandTag.JoinText),
 
                 new ChatCommandList(new (){"CPS"},
-                    main.CPS.Value,
+                    main.CPS.Getbool(),
                     CommandText.Reset,
                     "CPS : CPSの位置設定を有効/無効にできます。",
                     CommandTag.CPS),
 
                 new ChatCommandList(new (){"DateTime", "DT"},
-                    main.DateTimeSetting.Value,
+                    main.DateTimeSetting.Getbool(),
                     CommandText.Reset,
                     "DateTime(DT) : DateTimeの位置設定を有効/無効にできます。",
                     CommandTag.DateTime),
 
-                new ChatCommandList(new (){"TranslucentChat", "TC"},
-                    main.TranslucentChat.Value,
-                    CommandText.None,
-                    "TranslucentChat(TC) [数値] : チャットの透明度を変更します",
-                    CommandTag.TranslucentChat),
-
                 new ChatCommandList(new (){"FPS"},
-                    main.FPS.Value,
+                    main.FPS.Getbool(),
                     CommandText.Reset,
                     "FPS : FPSの位置設定を有効/無効にできます。",
                     CommandTag.FPS),
-
-                new ChatCommandList(new (){"FakePing", "FP"},
-                    main.FakePing.Value,
-                    CommandText.None,
-                    "FakePing(FP) : Pingの数値を変更します。",
-                    CommandTag.FakePing),
             };
 
         public static string ChatComHelp(params CommandTag[] com)
         {
             var help = "\n\n===チャットコマンド===";
-            foreach (var args in com)
+            try
             {
-                var info = AllCommand.FirstOrDefault(w => w.Tag.Equals(args));
-                help += "\n" + info.Help.SetSize(1.5f);
+                foreach (var args in com)
+                {
+                    var info = AllCommand.FirstOrDefault(w => w.Tag.Equals(args));
+                    help += "\n" + info.Help.SetSize(1.5f);
+                }
             }
+            catch { }
             return help;
         }
 

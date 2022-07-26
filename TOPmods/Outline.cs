@@ -9,7 +9,7 @@ namespace TownOfPlus
         public static void Postfix()
         {
             //キル対象
-            if (main.RainbowOutline.Value)
+            if (main.RainbowOutline.Getbool())
             {
                 if (PlayerControl.LocalPlayer == null) return;
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
@@ -17,7 +17,7 @@ namespace TownOfPlus
                     if (p != PlayerControl.LocalPlayer) p.cosmetics.currentBodySprite.BodySprite.material.SetColor("_OutlineColor", Color.HSVToRGB(Time.time % 1, 1, 1));
                 }
             }
-            if (main.CrewColorOutline.Value)
+            if (main.CrewColorOutline.Getbool())
             {
                 if (PlayerControl.LocalPlayer == null) return;
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
@@ -27,7 +27,7 @@ namespace TownOfPlus
             }
 
             //ベント
-            if (main.RainbowVent.Value)
+            if (main.RainbowVent.Getbool())
             {
                 if (!GameState.IsShip) return;
                 foreach (Vent vent in ShipStatus.Instance.AllVents)
@@ -35,7 +35,7 @@ namespace TownOfPlus
                     vent.myRend.material.SetColor("_OutlineColor", Color.HSVToRGB(Time.time % 1, 1, 1));
                 }
             }
-            if (main.CrewColorVent.Value)
+            if (main.CrewColorVent.Getbool())
             {
                 if (!GameState.IsShip) return;
                 foreach (Vent vent in ShipStatus.Instance.AllVents)
