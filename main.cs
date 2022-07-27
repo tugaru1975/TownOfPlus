@@ -17,7 +17,7 @@ namespace TownOfPlus
         //Modの詳細
         public const string Id = "com.tugaru.TownOfPlus";
         public const string Name = "TownOfPlus";
-        public const string Version = "1.8.0";
+        public const string Version = "1.8.1";
         public static Version VersionId = System.Version.Parse(Version);
         internal static ManualLogSource Logger;
         public Harmony Harmony { get; } = new Harmony(Id);
